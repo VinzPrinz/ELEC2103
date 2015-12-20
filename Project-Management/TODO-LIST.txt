@@ -1,9 +1,0 @@
-TODO :
-- Re-think game after preliminary meeting
-- Wait for January/February to start working for real!
-
-DONE :
-- Write down preliminary meeting feedback
-- Create Git
-- Preliminary meeting
-- First project requirements

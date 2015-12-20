@@ -1,6 +1,0 @@
-PRELIMINARY MEETING (18/12/15) : 
-- Good comments on interactivity, must continue in this direction to avoid a boring game (see last year) (Vinz idea : minigame for player B when not in combat)
-- Not necessary to make the map with tiles, we could do it without (free movement)
-- Start working on software ASAP as it is a critical part of our game
-- Don't forget to think about all the game endings
-- Anticipate the upgrades for the game from the start to avoid re-coding the entire game to bring one little update

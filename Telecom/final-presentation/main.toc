@@ -1,0 +1,9 @@
+\beamer@endinputifotherversion {3.36pt}
+\beamer@sectionintoc {1}{Frame detection \& Frequency Offset Correction}{3}{0}{1}
+\beamer@subsectionintoc {1}{1}{Objectives and method}{3}{0}{1}
+\beamer@subsectionintoc {1}{2}{Practical results}{6}{0}{1}
+\beamer@sectionintoc {2}{OFDM}{7}{0}{2}
+\beamer@subsectionintoc {2}{1}{Narrowband vs wideband channels}{7}{0}{2}
+\beamer@subsectionintoc {2}{2}{OFDM overview}{12}{0}{2}
+\beamer@subsectionintoc {2}{3}{Sensitivity to frequency offset}{14}{0}{2}
+\beamer@subsectionintoc {2}{4}{Parameters of a OFDM modulation}{17}{0}{2}
