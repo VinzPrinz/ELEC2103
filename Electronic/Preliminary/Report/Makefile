@@ -1,4 +1,4 @@
-file=main
+file=preli*
 pdfviewer=evince
 latexcompile=pdflatex
 
