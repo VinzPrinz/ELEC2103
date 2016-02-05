@@ -92,9 +92,9 @@
 /*--------------------------------------------*/
 /* Default settings for Connection Management */
 /*--------------------------------------------*/
-#define MY_DEFAULT_SSID_NAME                "MicrochipDemoAP"
+#define MY_DEFAULT_SSID_NAME                "obronchain"
 
-#define MY_DEFAULT_NETWORK_TYPE             WF_ADHOC   /* WF_INFRASTRUCTURE or WF_ADHOC     */
+#define MY_DEFAULT_NETWORK_TYPE             WF_INFRASTRUCTURE   /* WF_INFRASTRUCTURE or WF_ADHOC     */
 
 #define MY_DEFAULT_SCAN_TYPE                WF_ACTIVE_SCAN      /* WF_ACTIVE_SCAN or WF_PASSIVE_SCAN */
 
@@ -111,7 +111,7 @@
 
 #define MY_DEFAULT_PS_POLL                   WF_DISABLED         /* WF_DISABLED or WF_ENABLED */
 
-#define MY_DEFAULT_WIFI_SECURITY_MODE        WF_SECURITY_OPEN
+#define MY_DEFAULT_WIFI_SECURITY_MODE        WF_SECURITY_WPA2_WITH_PASS_PHRASE
 
 //#define USE_MRF24W_HOST_BUFFER
 
@@ -143,7 +143,7 @@
 
 // Default pass phrase used for WF_SECURITY_WPA_WITH_PASS_PHRASE and
 // WF_SECURITY_WPA2_WITH_PASS_PHRASE security modes
-#define MY_DEFAULT_PSK_PHRASE               "Microchip 802.11 Secret PSK Password"
+#define MY_DEFAULT_PSK_PHRASE               "olivier1"
 
 
 // If using security mode of WF_SECURITY_WPA_WITH_KEY or WF_SECURITY_WPA2_WITH_KEY, then this section
@@ -161,7 +161,7 @@
 //-----------------------------------------------------------------------------------
 // Default WEP keys used in WF_SECURITY_WEP_40  and WF_SECURITY_WEP_104 security mode
 //-----------------------------------------------------------------------------------
-#define MY_DEFAULT_WEP_PHRASE           "WEP Phrase"
+#define MY_DEFAULT_WEP_PHRASE           "olivier1"
 
 // string 4 40-bit WEP keys -- corresponding to passphraseof "WEP Phrase"
 #define MY_DEFAULT_WEP_KEYS_40 "\

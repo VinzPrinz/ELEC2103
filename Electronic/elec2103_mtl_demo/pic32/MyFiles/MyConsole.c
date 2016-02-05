@@ -27,6 +27,9 @@
 
 #include "MyApp.h"
 
+int EnableChat = 0;
+
+
 void MyConsole_Init(void)
 {
     UARTConfigure(UART2A, UART_ENABLE_PINS_TX_RX_ONLY);
@@ -77,23 +80,30 @@ BOOL MyConsole_GetCmd(void)
 void MyConsole_Task(void)
 {
     unsigned char theStr[64];
-
+    
     if (!MyConsole_GetCmd()) return;
 
     if (strcmp(theCmd, "MyTest") == 0) {
 
         MyConsole_SendMsg("MyTest ok\n>");
 
+    } else if (strcmp(theCmd, "EnableChat") == 0) {
+        EnableChat = 1;
+        MyConsole_SendMsg("Chat Enabled\n>");
+    } else if (strcmp(theCmd, "DisableChat") == 0) {
+        EnableChat = 0;
+        MyConsole_SendMsg("Chat Disabled\n>");
     } else if (strcmp(theCmd, "MyCAN") == 0) {
 
         MyCAN_TxMsg(0x200, "0123456");
         MyConsole_SendMsg("Send CAN Msg 0x200 '0123456'\n>");
 
     } else if (strcmp(theCmd, "MyMIWI-B") == 0) {
-
         MyMIWI_TxMsg(myMIWI_EnableBroadcast, "0123456");
         MyConsole_SendMsg("Send MIWI Broadcast Msg '0123456'\n>");
-
+    }else if (strcmp(theCmd, "MyMIWIHello") == 0) {
+        MyMIWI_TxMsg(myMIWI_EnableBroadcast, "Coucou Vincent");
+        MyConsole_SendMsg("Message sended to Vincent\n>");
     } else if (strcmp(theCmd, "MyMIWI-U") == 0) {
 
         MyMIWI_TxMsg(myMIWI_DisableBroadcast, "0123456");
@@ -116,7 +126,8 @@ void MyConsole_Task(void)
 
         MyRTCC_GetTime();
 
-    } else if (strcmp(theCmd, "MyFlash") == 0) {
+    } 
+    else if (strcmp(theCmd, "MyFlash") == 0) {
 
         MyFlash_Erase();
         MyFlash_Test();
@@ -147,9 +158,13 @@ void MyConsole_Task(void)
     } else if (strcmp(theCmd, "MyCam_Reset")    == 0) { MyCamera_Reset();
     } else if (strcmp(theCmd, "MyCam")          == 0) { MyCamera_Picture();
     } else if (strcmp(theCmd, "MyCam_Debug")    == 0) { MyCamera_Debug();
+    } else if (EnableChat){
+        MyMIWI_TxMsg(myMIWI_EnableBroadcast, theCmd);
+        MyConsole_SendMsg("Send MIWI Broadcast Msg\n>");
     } else {
-        MyConsole_SendMsg("Unknown Command\n>");
+        MyConsole_SendMsg("Unknown Command \n>");
     }
+      
 }
 
 /*******************************************************************************

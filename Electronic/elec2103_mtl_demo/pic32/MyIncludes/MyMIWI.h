@@ -10,7 +10,7 @@
 * Constants                                                                    *
 *******************************************************************************/
 
-#define myMIWI_Channel              25
+#define myMIWI_Channel              42
 #define myMIWI_EnableBroadcast      1
 #define myMIWI_DisableBroadcast     0
 

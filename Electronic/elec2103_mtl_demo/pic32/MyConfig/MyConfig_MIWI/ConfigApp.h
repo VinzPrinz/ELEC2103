@@ -185,7 +185,7 @@
 // range. To enable PA/LNA on RF board without power amplifier and
 // low noise amplifier may be harmful to the transceiver.
 /*********************************************************************/
-//#define ENABLE_PA_LNA
+#define ENABLE_PA_LNA
 
 
 /*********************************************************************/
