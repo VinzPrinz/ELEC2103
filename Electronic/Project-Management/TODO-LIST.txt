@@ -1,8 +1,17 @@
 TODO :
 - Re-think game after preliminary meeting
-- Wait for January/February to start working for real!
+- First chain of command with a text string (Zigbee + WiFi + SD card)
+- First chain of command with an image
+- Beginning of website
+- Re-learn C
+- Master HTML
+
 
 DONE :
+- Zigbee test (+chat)
+- WiFi test + website test
+- MTL tutorial
+- Wait for January/February to start working for real!
 - Write down preliminary meeting feedback
 - Create Git
 - Preliminary meeting
