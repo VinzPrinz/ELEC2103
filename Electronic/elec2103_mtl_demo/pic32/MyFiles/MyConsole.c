@@ -28,6 +28,7 @@
 #include "MyApp.h"
 
 int EnableChat = 0;
+int EnableWeb = 0;
 
 
 void MyConsole_Init(void)
@@ -93,7 +94,13 @@ void MyConsole_Task(void)
     } else if (strcmp(theCmd, "DisableChat") == 0) {
         EnableChat = 0;
         MyConsole_SendMsg("Chat Disabled\n>");
-    } else if (strcmp(theCmd, "MyCAN") == 0) {
+    }else if (strcmp(theCmd, "EnableWeb") == 0) {
+        EnableWeb = 1;
+        MyConsole_SendMsg("Web Enabled\n>");
+    } else if (strcmp(theCmd, "DisableWeb") == 0) {
+        EnableWeb = 0;
+        MyConsole_SendMsg("Web Disabled\n>");
+    }  else if (strcmp(theCmd, "MyCAN") == 0) {
 
         MyCAN_TxMsg(0x200, "0123456");
         MyConsole_SendMsg("Send CAN Msg 0x200 '0123456'\n>");
@@ -161,7 +168,11 @@ void MyConsole_Task(void)
     } else if (EnableChat){
         MyMIWI_TxMsg(myMIWI_EnableBroadcast, theCmd);
         MyConsole_SendMsg("Send MIWI Broadcast Msg\n>");
-    } else {
+    } else if (EnableWeb){
+        MyConsole_SendMsg("Sended To Website \n>");
+        MyWebMessage = "Tu viens d'utiliser la console";
+    }
+      else {
         MyConsole_SendMsg("Unknown Command \n>");
     }
       

@@ -14,7 +14,6 @@
 
 #if defined(STACK_USE_HTTP2_SERVER)
 
-extern HTTP_CONN curHTTP;
 extern HTTP_STUB httpStubs[MAX_HTTP_CONNECTIONS];
 extern BYTE curHTTPID;
 
@@ -52,6 +51,7 @@ void HTTPPrint_read_comm(WORD);
 void HTTPPrint_write_comm(WORD);
 void HTTPPrint_smtps_en(void);
 void HTTPPrint_snmp_en(void);
+void HTTPPrint_MyWebMessage(void);
 
 void HTTPPrint(DWORD callbackID)
 {
@@ -230,6 +230,9 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x00000049:
 			HTTPPrint_snmp_en();
+			break;
+        case 0x0000004a:
+			HTTPPrint_MyWebMessage();
 			break;
 		default:
 			// Output notification for undefined values

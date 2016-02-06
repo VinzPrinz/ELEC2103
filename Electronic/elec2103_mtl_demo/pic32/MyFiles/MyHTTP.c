@@ -1845,3 +1845,8 @@ void HTTPPrint_status_fail(void)
 }
 
 #endif
+
+void HTTPPrint_MyWebMessage(void){
+    TCPPutString(sktHTTP , MyWebMessage);
+    
+}

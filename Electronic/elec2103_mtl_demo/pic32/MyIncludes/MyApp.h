@@ -115,6 +115,8 @@ MyAPP_EXT  int      MyMail_Flag MyAPP_INIT;
 MyAPP_EXT  int      MyCyclone_LED;
 MyAPP_EXT  int      MyCyclone_Switch;
 
+MyAPP_EXT  unsigned char*      MyWebMessage MyAPP_INIT;
+
 /*******************************************************************************
 * System Macros                                                                *
 *******************************************************************************/
