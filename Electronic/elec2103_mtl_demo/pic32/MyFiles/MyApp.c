@@ -93,8 +93,6 @@ int main(void)
     MyWIFI_Start();
     //MyCamera_Start();
     
-    MyWebMessage = "You didn't use the WebMessage";
-
     // Execute forever
     while (1)
     {

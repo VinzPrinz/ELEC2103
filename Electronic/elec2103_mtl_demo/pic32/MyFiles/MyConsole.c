@@ -170,7 +170,8 @@ void MyConsole_Task(void)
         MyConsole_SendMsg("Send MIWI Broadcast Msg\n>");
     } else if (EnableWeb){
         MyConsole_SendMsg("Sended To Website \n>");
-        MyWebMessage = "Tu viens d'utiliser la console";
+        char str[64] = "Lolllll";
+        strcpy(MyWebMessage, theCmd);
     }
       else {
         MyConsole_SendMsg("Unknown Command \n>");
