@@ -92,7 +92,7 @@
 /*--------------------------------------------*/
 /* Default settings for Connection Management */
 /*--------------------------------------------*/
-#define MY_DEFAULT_SSID_NAME                "WiFi-2.4-708C"
+#define MY_DEFAULT_SSID_NAME                "obronchain"
 
 #define MY_DEFAULT_NETWORK_TYPE             WF_INFRASTRUCTURE   /* WF_INFRASTRUCTURE or WF_ADHOC     */
 
@@ -143,7 +143,7 @@
 
 // Default pass phrase used for WF_SECURITY_WPA_WITH_PASS_PHRASE and
 // WF_SECURITY_WPA2_WITH_PASS_PHRASE security modes
-#define MY_DEFAULT_PSK_PHRASE               "6ddzR3H55KkT"
+#define MY_DEFAULT_PSK_PHRASE               "olivier1"
 
 
 // If using security mode of WF_SECURITY_WPA_WITH_KEY or WF_SECURITY_WPA2_WITH_KEY, then this section
@@ -161,7 +161,7 @@
 //-----------------------------------------------------------------------------------
 // Default WEP keys used in WF_SECURITY_WEP_40  and WF_SECURITY_WEP_104 security mode
 //-----------------------------------------------------------------------------------
-#define MY_DEFAULT_WEP_PHRASE           "6ddzR3H55KkT"
+#define MY_DEFAULT_WEP_PHRASE           "olivier1"
 
 // string 4 40-bit WEP keys -- corresponding to passphraseof "WEP Phrase"
 #define MY_DEFAULT_WEP_KEYS_40 "\

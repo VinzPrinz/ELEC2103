@@ -269,6 +269,56 @@ void MyMIWI_TxMsg(BOOL enableBroadcast, char *theMsg)
     }
 }
 
+void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE)
+{
+    /*******************************************************************/
+    // First call MiApp_FlushTx to reset the Transmit buffer. Then fill
+    // the buffer one byte by one byte by calling function
+    // MiApp_WriteData
+    /*******************************************************************/
+
+    char *pMode;
+    pMode = &MODE;
+    MiApp_FlushTx();
+    MiApp_WriteData(MODE);
+    char str[64];
+    sprintf(str , "MODE %x %x \n" , *pMode, pMode);
+    MyConsole_SendMsg(str);
+    while (*theMsg != '\0')
+        MiApp_WriteData(*theMsg++);
+
+    if (enableBroadcast) {
+
+        /*******************************************************************/
+        // Function MiApp_BroadcastPacket is used to broadcast a message
+        //    The only parameter is the boolean to indicate if we need to
+        //       secure the frame
+        /*******************************************************************/
+        MiApp_BroadcastPacket(FALSE);
+
+    } else {
+
+        /*******************************************************************/
+        // Function MiApp_UnicastConnection is one of the functions to
+        //  unicast a message.
+        //    The first parameter is the index of Connection Entry for
+        //       the peer device. In this demo, since there are only two
+        //       devices involved, the peer device must be stored in the
+        //       first Connection Entry
+        //    The second parameter is the boolean to indicate if we need to
+        //       secure the frame. If encryption is applied, the security
+        //       key are defined in ConfigApp.h
+        //
+        // Another way to unicast a message is by calling function
+        //  MiApp_UnicastAddress. Instead of supplying the index of the
+        //  Connection Entry of the peer device, this function requires the
+        //  input parameter of destination address.
+        /*******************************************************************/
+        if( MiApp_UnicastConnection(0, FALSE) == FALSE )
+            Printf("\r\nUnicast Failed\r\n");
+    }
+}
+
 /******************************************************************************/
 
 // Implementation of MSPI.c
@@ -283,6 +333,21 @@ void MyMIWI_Task(void) {
     char theData[64], theStr[128];
 
     if (MyMIWI_RxMsg(theData)) {
+        char MODE;
+        MODE = theData[0];
+        switch(MODE){
+            case myMIWI_Chat:
+                MyConsole_SendMsg("Message from Chat\n");
+                break;
+            case myMIWI_Data:
+                MyConsole_SendMsg("Message for Data\n");
+                break;
+            case myMIWI_Web:
+                MyConsole_SendMsg("Message for webSite\n");
+                strcpy(MyWebMessage , theData);
+                break;
+        }
+
         sprintf(theStr, "Receive MIWI Msg '%s'\n>", theData);
         MyConsole_SendMsg(theStr);
         if (strcmp(theData, "Ack MIWI") != 0)

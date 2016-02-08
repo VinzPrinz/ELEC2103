@@ -67,17 +67,29 @@ int main(void)
     
     // Do MyInitializations
     MyConsole_Init();
+//    MyConsole_SendMsg("MyConsole_Init() passed\n");
     MyCamera_Init();
+ //   MyConsole_SendMsg("MyCamera_Init() passed\n");
     MyRTCC_Init();
+ //   MyConsole_SendMsg("MyRTCC_Init() passed\n");
     MyLED_Init();
+ //   MyConsole_SendMsg("MyLED_Init() passed\n");
     MySPI_Init();
+ //   MyConsole_SendMsg("MySPI_Init() passed\n");
     MyCyclone_Init();
+ //   MyConsole_SendMsg("MyCyclone_Init() passed\n");
     MyCAN_Init();
+ //   MyConsole_SendMsg("MyCAN_Init() passed\n");
     MyIO_Init();
+ //   MyConsole_SendMsg("MyIO_Init() passed\n");
     MyFlash_Init();
+ //   MyConsole_SendMsg("MyFlash_Init() passed\n");
     MyTemperature_Init();
+ //   MyConsole_SendMsg("MyTemperature_Init() passed\n");
     MyMIWI_Init();
+//    MyConsole_SendMsg("MyMIWI_Init() passed\n");
     MyWIFI_Init();
+//    MyConsole_SendMsg("MyWIFI_Init() passed\n");
     
     // Configure for multi-vectored mode
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
@@ -97,11 +109,17 @@ int main(void)
     while (1)
     {
         MyRTCC_Task();
+//        MyConsole_SendMsg("MyRTCC_Task Passed \n");
         MyConsole_Task();
+//        MyConsole_SendMsg("MyConsole_Task Passed \n");
         MyCAN_Task();
+//        MyConsole_SendMsg("MyCAN_Task Passed \n");
         MyMIWI_Task();
+//        MyConsole_SendMsg("MyMIWI_Task Passed \n");
         MyWIFI_Task();
+ //       MyConsole_SendMsg("MyWIFI_Task Passed \n");
         MyMiniProjet_Task();
+  //      MyConsole_SendMsg("MyMiniProjet_Task Passed \n");
     }
 }
 

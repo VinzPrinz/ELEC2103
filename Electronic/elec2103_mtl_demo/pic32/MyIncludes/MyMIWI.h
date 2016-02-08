@@ -10,9 +10,13 @@
 * Constants                                                                    *
 *******************************************************************************/
 
-#define myMIWI_Channel              42
+#define myMIWI_Channel              21
 #define myMIWI_EnableBroadcast      1
 #define myMIWI_DisableBroadcast     0
+
+#define myMIWI_Chat                 0
+#define myMIWI_Data                 1
+#define myMIWI_Web                  2
 
 /*******************************************************************************
 * Functions Prototypes                                                         *
@@ -22,6 +26,7 @@ void    MyMIWI_Init(void);
 void    MyMIWI_Start(void);
 BOOL    MyMIWI_RxMsg(char *theMsg);
 void    MyMIWI_TxMsg(BOOL enableBroadcast, char *theMsg);
+void    MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg , char MODE);
 void    MyMIWI_Task(void);
 
 /*******************************************************************************

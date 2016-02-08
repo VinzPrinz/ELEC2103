@@ -267,9 +267,11 @@ void MyWIFI_Task() {
     // for incoming packet, type of packet and calling
     // appropriate stack entity to process it.
     StackTask();
+ //   MyConsole_SendMsg ("StackTask  passed\n");
 
     // This tasks invokes each of the core stack application tasks
     StackApplications();
+//    MyConsole_SendMsg ("StackApplication  passed\n");
 
     // Process application specific tasks
 

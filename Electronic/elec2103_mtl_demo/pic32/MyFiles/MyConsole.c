@@ -166,12 +166,12 @@ void MyConsole_Task(void)
     } else if (strcmp(theCmd, "MyCam")          == 0) { MyCamera_Picture();
     } else if (strcmp(theCmd, "MyCam_Debug")    == 0) { MyCamera_Debug();
     } else if (EnableChat){
-        MyMIWI_TxMsg(myMIWI_EnableBroadcast, theCmd);
+        MyMIWI_TxMsg_Mode(myMIWI_EnableBroadcast, theCmd , myMIWI_Chat);
         MyConsole_SendMsg("Send MIWI Broadcast Msg\n>");
     } else if (EnableWeb){
         MyConsole_SendMsg("Sended To Website \n>");
-        char str[64] = "Lolllll";
         strcpy(MyWebMessage, theCmd);
+        MyMIWI_TxMsg_Mode(myMIWI_EnableBroadcast, MyWebMessage , myMIWI_Web);
     }
       else {
         MyConsole_SendMsg("Unknown Command \n>");
