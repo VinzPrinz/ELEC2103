@@ -344,7 +344,8 @@ void MyMIWI_Task(void) {
                 break;
             case myMIWI_Web:
                 MyConsole_SendMsg("Message for webSite\n");
-                strcpy(MyWebMessage , theData);
+                char str[64];
+                strcpy(MyWebMessage ,&theData[1]);
                 break;
         }
 
