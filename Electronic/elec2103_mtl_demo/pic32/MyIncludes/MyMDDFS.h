@@ -22,6 +22,8 @@ void MyMDDFS_loadSlideshow(char* theCmd);
 int  MyMDDFS_ReadImg (char* name);
 long MyMDDFS_getImageInfo(FSFILE* inputFile, long offset, int numberOfChars);
 void MyMDDFS_Test(void);
+void MyMDDFS_Send_Image(void);
+int  MyMDDFS_ReadImg_Send(char* name);
 
 
 #endif /* MyFDDFS_H_ */

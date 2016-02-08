@@ -17,6 +17,11 @@
 #define myMIWI_Chat                 0
 #define myMIWI_Data                 1
 #define myMIWI_Web                  2
+#define myMIWI_Image_Info           3
+#define myMIWI_Image_Red            4
+#define myMIWI_Image_Green          5
+#define myMIWI_Image_Blue           6
+
 
 /*******************************************************************************
 * Functions Prototypes                                                         *

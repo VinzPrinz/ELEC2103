@@ -102,6 +102,7 @@ void MyMDDFS_loadSlideshow(char* theCmd) {
             break;
     }
 
+    
     //Sends to the FPGA the number of images that will be loaded.
     MyCyclone_Write(CYCLONE_IMGNUM, num_img);
 
@@ -220,7 +221,7 @@ int MyMDDFS_ReadImg (char* name)
    MyConsole_SendMsg(tabWrite);
    sprintf(tabWrite, "Bits/pixel: %d\n\t", bitsPixel);
    MyConsole_SendMsg(tabWrite);
-
+   
    // Allocates space to store the color values read from the SD card.
    // The size of the array will be sufficient to store data for a number
    // 'MULT_BUF' of rows.
@@ -574,11 +575,239 @@ void MyMDDFS_Test (void)
 }
 
 
+void MyMDDFS_Send_Image(){
+
+    unsigned char tabWrite[100];
+    char* end;
+    int num_img;
+    char base_name[15];
+    char curr_img_name[21] = "SLIDE1.bmp";
+    int i;
+
+    num_img = 1;
+    
+    char str[64];
+    sprintf(str , "Opening the Image '%s' \n\t", curr_img_name);
+    MyConsole_SendMsg(str);
+    
+    //Sends to the FPGA the number of images that will be loaded.
+    MyCyclone_Write(CYCLONE_IMGNUM, num_img);
 
 
+    //Loads the slideshow image per image and displays some info about the
+    //current progress.
+    //If anything goes wrong, the loading is stopped and the user is warned.
+    if (MyMDDFS_ReadImg_Send(&curr_img_name[0])) {
+        MyConsole_SendMsg("An error occurred while opening a file.\n\t");
+        MyConsole_SendMsg("Verify the SD card and your inputs, then try again!\n\t");
+    }
 
+    MyConsole_SendMsg("\n\r>");
+    return;
+}
 
+int MyMDDFS_ReadImg_Send (char* name)
+{
+   FSFILE		*bmpInput;
+   int                  rows, columns;
+   unsigned char	*pChar;
+   long			fileSize;
+   int			bitsPixel;
+   int			r=1, c=0, i=0, j=0;
+   unsigned char        *red_buf_data;
+   unsigned char        *green_buf_data;
+   unsigned char        *blue_buf_data;
+   unsigned char        tabWrite[100];
 
+   /*
+    * To communicate with the SD Card in SPI, all other SPI communications
+    * are halted and their status are saved; interrupts are disabled.
+    *
+    * As one can't send data over SPI to the FPGA when SPI is reserved for the
+    * SD card, the values just read must be stored in arrays and sent
+    * to the FPGA later.
+    * However, the memory size of the PIC is limited and isn't sufficient to
+    * store a whole BMP file.
+    * The memory area allocated to store the read values is close to the maximum
+    * allowed and, multiple times, SPI is restored to send data to the FPGA.
+    * SPI is then saved again to reopen the BMP file and continue reading.
+    *
+    * Finally, all the allocated resources are freed.
+    * 
+    * In order to send the Image to the other DEO this works like this:
+    *   - First send a myMIWI_Image_Info will the the usefull info:
+    *       -> we will use a structure for the usefull info:
+    *           
+    *   - Send packet of 63 with the the myMIWI_Image_Color. 
+    * 
+    *   - Send my_MIWI_Image_End message
+    */
+   MyMDDFS_SaveSPI();
 
+   // Checks if an SD card is detected.
+   // If not, restores the SPI.
+   if (!MDD_MediaDetect()) {
+       MyMDDFS_RestoreSPI();
+       MyConsole_SendMsg(">MyMDDFS - Error MDD_MediaDetect\n>");
+       return 1;
+   }
 
+   // Initializes the library.
+   // If there is an error, restores the SPI.
+   if (!FSInit()) {
+       MyMDDFS_RestoreSPI();
+       MyConsole_SendMsg(">MyMDDFS - Error FSInit\n>");
+       return 1;
+   }
 
+   // Warns the user that initialization was successful.
+   sprintf(tabWrite, ">MyMDDFS - Currently opening image %s.\n\t", name);
+   MyConsole_SendMsg(tabWrite);
+
+   // Opens the image file.
+   // If it doesn't exist, restores the SPI.
+   bmpInput = FSfopen(name, "r");
+   if (bmpInput == NULL) {
+       MyMDDFS_RestoreSPI();
+       MyConsole_SendMsg(">MyMDDFS - Image not found\n\t");
+       return 1;
+   }
+
+   // Places the cursor at the beginning of the file.
+   FSfseek(bmpInput, 0L, SEEK_END);
+
+   // Gets general information about the BMP file, as
+   //   - the size of the file (should be 1152054),
+   //   - the number of columns (should be 800),
+   //   - the number of rows (should be 480),
+   //   - the number of bits per pixel (should be 24 bits, so 3 bytes).
+   // The size of the file is found as follows :
+   //   - 54 bytes for the general information,
+   //   - 800x480 pixels * 3 bytes = 152000 bytes for the image data.
+   fileSize  =      MyMDDFS_getImageInfo(bmpInput, 2, 4);
+   columns   = (int)MyMDDFS_getImageInfo(bmpInput, 18, 4);
+   rows      = (int)MyMDDFS_getImageInfo(bmpInput, 22, 4);
+   bitsPixel = (int)MyMDDFS_getImageInfo(bmpInput, 28, 4);
+
+   // Prints the general information to the console, so you can check your
+   // image format is correct. This algorithm is general with every image size,
+   // but the controller in the FPGA will not work for image sizes different
+   // from 800x480.
+   // Note that for a number of columns higher than 800, the PIC32 could
+   // encounter some memory problems during the dynamic allocation (see below).
+   // If you ever need to acquire data from such an image, you can reduce
+   // 'MULT_BUF' (on the top of this file) to save memory.
+   sprintf(tabWrite, "Width: %d\n\t", columns);
+   MyConsole_SendMsg(tabWrite);
+   sprintf(tabWrite, "Height: %d\n\t", rows);
+   MyConsole_SendMsg(tabWrite);
+   sprintf(tabWrite, "File size: %ld\n\t", fileSize);
+   MyConsole_SendMsg(tabWrite);
+   sprintf(tabWrite, "Bits/pixel: %d\n\t", bitsPixel);
+   MyConsole_SendMsg(tabWrite);
+   
+   // Allocates space to store the color values read from the SD card.
+   // The size of the array will be sufficient to store data for a number
+   // 'MULT_BUF' of rows.
+   red_buf_data = (unsigned char*)malloc(MULT_BUF*columns*sizeof(unsigned char));
+   green_buf_data = (unsigned char*)malloc(MULT_BUF*columns*sizeof(unsigned char));
+   blue_buf_data = (unsigned char*)malloc(MULT_BUF*columns*sizeof(unsigned char));
+   // Initializes the read pointer.
+   pChar = (unsigned char*)malloc(sizeof(unsigned char));
+
+   // Processes the image until the last row has been read.
+   while (r<=rows) {
+
+        // Just warns the user that half the process has been done.
+        if (r==rows/2) {
+            MyConsole_SendMsg("First half of the image is loaded.\n\t");
+        }
+
+        // Sets the cursor so as to process the rows in reverse order (please
+        // refer to introductory slides).
+        // r is incremented each time a row has been processed.
+        FSfseek(bmpInput, fileSize - 3*columns*r, SEEK_SET);
+
+        // Reads data for each column in the current row.
+        // For each pixel, there are three bytes for color information.
+        // For each of those bytes, the value is read and then stored in
+        // an array, waiting to be transmitted to the FPGA when SPI will be
+        // available.
+        for (c=0; c<columns; c++) {
+
+            // Reads the first byte to get the blue value of the current pixel.
+            FSfread(pChar, sizeof(char), 1, bmpInput);
+            blue_buf_data[c+i*columns] = *pChar;
+
+            // Reads the second byte to get the green value of the current pixel.
+            FSfread(pChar, sizeof(char), 1, bmpInput);
+            green_buf_data[c+i*columns] = *pChar;
+
+            // Reads the third byte to get the red value of the current pixel.
+            FSfread(pChar, sizeof(char), 1, bmpInput);
+            red_buf_data[c+i*columns] = *pChar;
+        }
+
+        // i is a small variable to keep track of the number of rows which are
+        // stored in the color arrays.
+        i++;
+
+        // When i becomes equal to the maximum number of rows the array can
+        // store or when the whole image has been processed, it is time to
+        // restore the SPI, send data to the FPGA, then save the SPI again and
+        // continue reading the image file if there is still something to read.
+        if ((i==MULT_BUF) || (r==rows)) {
+
+            // Closes the file and restores SPI.
+            FSfclose(bmpInput);
+            MyMDDFS_RestoreSPI();
+
+            // Sends data to the FPGA.
+            for (j=0; j<columns*i; j++) {
+                MyCyclone_Write(CYCLONE_RED, red_buf_data[j]);
+                MyCyclone_Write(CYCLONE_GREEN, green_buf_data[j]);
+                MyCyclone_Write(CYCLONE_BLUE, blue_buf_data[j]);
+            }
+
+            i = 0;
+
+            // If there is still something to read, open back the file.
+            // There is no need to check again for an SD card and to initialize
+            // the library.
+            if (r != rows) {
+
+                MyMDDFS_SaveSPI();
+
+                // Here, in the case there is a problem in opening back the
+                // file, one shall not forget to free the allocated resources.
+                bmpInput = FSfopen(name, "r");
+                if (bmpInput == NULL) {
+                    MyMDDFS_RestoreSPI();
+                    free(red_buf_data);
+                    free(green_buf_data);
+                    free(blue_buf_data);
+                    free(pChar);
+                    MyConsole_SendMsg(">MyMDDFS - Problem while reading the image\n\t>");
+                    return 1;
+                }
+            }
+        }
+
+        // After that, a whole row of the image will have been processed.
+        r++;
+   }
+
+   // The full image has now been acquired.
+   // Resources must absolutely be freed, otherwise there won't be enough
+   // remaining space to allocate resources when reading another file.
+
+   sprintf(tabWrite, ">MyMDDFS - Image %s acquired.\n\t", name);
+   MyConsole_SendMsg(tabWrite);
+
+   free(red_buf_data);
+   free(green_buf_data);
+   free(blue_buf_data);
+   free(pChar);
+
+   return 0;
+}
