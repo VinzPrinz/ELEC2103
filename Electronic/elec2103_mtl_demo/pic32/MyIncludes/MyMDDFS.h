@@ -30,5 +30,6 @@ void MyMDDFS_Test(void);
 void MyMDDFS_Send_Image(void);
 int  MyMDDFS_ReadImg_Send(char* name);
 void MyMDDFS_InitReceive(struct Image_Info*);
+void MyMDDFS_Init(void);
 
 #endif /* MyFDDFS_H_ */

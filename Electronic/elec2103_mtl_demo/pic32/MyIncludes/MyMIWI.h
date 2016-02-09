@@ -13,6 +13,7 @@
 #define myMIWI_Channel              21
 #define myMIWI_EnableBroadcast      1
 #define myMIWI_DisableBroadcast     0
+#define myMIWI_Max                  64
 
 #define myMIWI_Chat                 0
 #define myMIWI_Data                 1

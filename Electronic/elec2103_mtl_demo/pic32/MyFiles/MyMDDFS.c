@@ -731,10 +731,12 @@ int MyMDDFS_ReadImg_Send (char* name)
    pImage_Info->columns = columns;
    pImage_Info->mult_buf = MULT_BUF;
    
-   
+   MyMDDFS_RestoreSPI();
+   MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast, (void *) pImage_Info , myMIWI_Image_Info , sizeof(struct Image_Info));
+ //  MyMDDFS_SaveSPI();
    
    // Processes the image until the last row has been read.
-   while (r<=rows) {
+   while (r<=rows && 0) {
 
         // Just warns the user that half the process has been done.
         if (r==rows/2) {
@@ -858,5 +860,123 @@ void MyMDDFS_InitReceive(struct Image_Info* image_info){
     }
     
     
+
+}
+
+void MyMDDFS_Init(void)
+
+{
+
+   FSFILE * pointer;
+
+   char path[30];
+
+   char count = 30;
+
+   char * pointer2;
+
+   SearchRec rec;
+
+   unsigned char attributes;
+
+   unsigned char size = 0, i;
+
+   MyMDDFS_SaveSPI();
+
+   if (!MDD_MediaDetect()) {
+
+       MyMDDFS_RestoreSPI();
+
+       MyConsole_SendMsg("MyMDDFS - Error MDD_MediaDetect\n>");
+
+       return;
+
+   }
+
+   // Initialize the library
+
+   if (!FSInit()) {
+
+       MyMDDFS_RestoreSPI();
+
+       MyConsole_SendMsg("MyMDDFS - Error FSInit\n>");
+
+       return;
+
+   }
+
+#ifdef ALLOW_WRITES
+
+   // Create a file
+
+   pointer = FSfopen ("FILE2.TXT", "w");
+
+   if (pointer == NULL)
+
+      MyConsole_SendMsg("MyMDDFS - Error FSfopen\n>");
+
+   // Write 21 1-byte objects from sendBuffer into the file
+
+   if (FSfwrite (sendBuffer, 1, 21, pointer) != 21)
+
+      MyConsole_SendMsg("MyMDDFS - Error FSfwrite\n>");
+
+   // Close the file
+
+   if (FSfclose (pointer))
+
+      MyConsole_SendMsg("MyMDDFS - Error FSfclose\n>");
+
+#endif
+
+#ifdef ALLOW_FILESEARCH
+
+   // Set attributes
+
+   attributes = ATTR_ARCHIVE | ATTR_READ_ONLY | ATTR_HIDDEN;
+
+   // Functions "FindFirst" & "FindNext" can be used to find files
+
+   // and directories with required attributes in the current working directory.
+
+   // Find the first TXT file with any (or none) of those attributes that
+
+   // has a name beginning with the letters "FILE"
+
+   // These functions are more useful for finding out which files are
+
+   // in your current working directory
+
+   if (FindFirst ("FILE*.TXT", attributes, &rec))
+
+      MyConsole_SendMsg("MyMDDFS - Error FindFirst\n>");
+
+   // Keep finding files until we get FILE2.TXT
+
+   while(rec.filename[4] != '2')
+
+   {
+
+      if (FindNext (&rec))
+
+         MyConsole_SendMsg("MyMDDFS - Error FindNext\n>");
+
+   }
+
+   // Delete file 2
+
+   // NOTE : "FSremove" function deletes specific file not directory.
+
+   //        To delete directories use "FSrmdir" function
+
+   if (FSremove (rec.filename))
+
+      MyConsole_SendMsg("MyMDDFS - Error FSremove\n>");
+
+#endif
+
+   MyConsole_SendMsg("MyMDDFS - Init ok\n>");
+
+   MyMDDFS_RestoreSPI();
 
 }

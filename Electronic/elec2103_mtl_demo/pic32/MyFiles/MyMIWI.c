@@ -28,6 +28,7 @@
 
 #define  MyMIWI
 
+
 #include "MyApp.h"
 
 void MyMIWI_Init(void) {
@@ -276,9 +277,6 @@ void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE)
     // the buffer one byte by one byte by calling function
     // MiApp_WriteData
     /*******************************************************************/
-
-    char *pMode;
-    pMode = &MODE;
     MiApp_FlushTx();
     MiApp_WriteData(MODE);
 
@@ -317,7 +315,7 @@ void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE)
     }
 }
 
-void MyMIWI_TxMsg_Mode_Size(BOOL enableBroadcast, char *theMsg, char MODE , int size)
+void MyMIWI_TxMsg_Mode_Size(BOOL enableBroadcast, void *theMsg, char MODE , int size)
 {
     /*******************************************************************/
     // First call MiApp_FlushTx to reset the Transmit buffer. Then fill
@@ -325,14 +323,20 @@ void MyMIWI_TxMsg_Mode_Size(BOOL enableBroadcast, char *theMsg, char MODE , int 
     // MiApp_WriteData
     /*******************************************************************/
 
-    char *pMode;
-    pMode = &MODE;
+    char *pChar;
     MiApp_FlushTx();
+    
+    // Write the first 32 bits word
     MiApp_WriteData(MODE);
+    MiApp_WriteData(0);
+    MiApp_WriteData(0);
+    MiApp_WriteData(0);
+    
     int i = 0;
+    pChar = (char *)theMsg;
     
     while (i<size){
-        MiApp_WriteData(*theMsg++);
+        MiApp_WriteData(*pChar++);
         i++;
     }
     if (enableBroadcast) {
@@ -387,7 +391,7 @@ void MyMIWI_Task(void) {
         struct Image_Info *image_info;
         switch(MODE){
             case myMIWI_Chat:
-                sprintf(theStr, "Message from Chat '%s'\n" , theData);
+                sprintf(theStr, "Message from Chat '%s'\n" , &theData[1]);
                 MyConsole_SendMsg(theStr);
                 break;
             case myMIWI_Data:
@@ -399,9 +403,12 @@ void MyMIWI_Task(void) {
                 strcpy(MyWebMessage ,&theData[1]);
                 break;
             case myMIWI_Image_Info:
-                image_info = (struct Image_Info *) &theData[1];
-                sprintf(theStr, "New Image will be send \n rows: %d \n columns: %d\n mult_buf: %d\n", image_info->rows , image_info->columns, image_info->mult_buf);
+                image_info = (struct Image_Info *) &theData[4];
+                sprintf(theStr, "New Image_Info received \n rows: %d \n columns: %d\n mult_buf: %d\n", image_info->rows , image_info->columns, image_info->mult_buf);
                 MyConsole_SendMsg(theStr);
+                break;
+            default:
+                sprintf(theStr, "Unknown MODE: %x %x %x %x" , theData[0], theData[1], theData[2], theData[3]);
                 break;
         }
 
