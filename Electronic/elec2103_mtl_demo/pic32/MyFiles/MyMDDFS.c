@@ -859,6 +859,18 @@ void MyMDDFS_InitReceive(struct Image_Info* image_info){
         Image_Receive_Current = 1;
     }
     
+    int i;
+    int j;
+    for(i = 0 ; i<Image_Receive_rows ; i++){
+        for(j=0 ; j<Image_Receive_columns ; j++){
+            MyCyclone_Write(CYCLONE_RED, 200);
+            MyCyclone_Write(CYCLONE_GREEN, 145);
+            MyCyclone_Write(CYCLONE_BLUE, 145);
+        }
+    } 
+    
+
+    
     
 
 }

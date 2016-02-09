@@ -406,6 +406,7 @@ void MyMIWI_Task(void) {
                 image_info = (struct Image_Info *) &theData[4];
                 sprintf(theStr, "New Image_Info received \n rows: %d \n columns: %d\n mult_buf: %d\n", image_info->rows , image_info->columns, image_info->mult_buf);
                 MyConsole_SendMsg(theStr);
+                MyMDDFS_InitReceive(image_info);
                 break;
             default:
                 sprintf(theStr, "Unknown MODE: %x %x %x %x" , theData[0], theData[1], theData[2], theData[3]);
