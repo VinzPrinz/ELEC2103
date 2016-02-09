@@ -281,9 +281,7 @@ void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE)
     pMode = &MODE;
     MiApp_FlushTx();
     MiApp_WriteData(MODE);
-    char str[64];
-    sprintf(str , "MODE %x %x \n" , *pMode, pMode);
-    MyConsole_SendMsg(str);
+
     while (*theMsg != '\0')
         MiApp_WriteData(*theMsg++);
 
@@ -319,6 +317,57 @@ void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE)
     }
 }
 
+void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE , int size)
+{
+    /*******************************************************************/
+    // First call MiApp_FlushTx to reset the Transmit buffer. Then fill
+    // the buffer one byte by one byte by calling function
+    // MiApp_WriteData
+    /*******************************************************************/
+
+    char *pMode;
+    pMode = &MODE;
+    MiApp_FlushTx();
+    MiApp_WriteData(MODE);
+    int i = 0;
+    
+    while (i<size){
+        MiApp_WriteData(*theMsg++);
+        i++;
+    }
+    if (enableBroadcast) {
+
+        /*******************************************************************/
+        // Function MiApp_BroadcastPacket is used to broadcast a message
+        //    The only parameter is the boolean to indicate if we need to
+        //       secure the frame
+        /*******************************************************************/
+        MiApp_BroadcastPacket(FALSE);
+
+    } else {
+
+        /*******************************************************************/
+        // Function MiApp_UnicastConnection is one of the functions to
+        //  unicast a message.
+        //    The first parameter is the index of Connection Entry for
+        //       the peer device. In this demo, since there are only two
+        //       devices involved, the peer device must be stored in the
+        //       first Connection Entry
+        //    The second parameter is the boolean to indicate if we need to
+        //       secure the frame. If encryption is applied, the security
+        //       key are defined in ConfigApp.h
+        //
+        // Another way to unicast a message is by calling function
+        //  MiApp_UnicastAddress. Instead of supplying the index of the
+        //  Connection Entry of the peer device, this function requires the
+        //  input parameter of destination address.
+        /*******************************************************************/
+        if( MiApp_UnicastConnection(0, FALSE) == FALSE )
+            Printf("\r\nUnicast Failed\r\n");
+    }
+}
+
+
 /******************************************************************************/
 
 // Implementation of MSPI.c
@@ -337,22 +386,27 @@ void MyMIWI_Task(void) {
         MODE = theData[0];
         switch(MODE){
             case myMIWI_Chat:
-                MyConsole_SendMsg("Message from Chat\n");
+                sprintf(theStr, "Message from Chat '%s'\n" , theData);
+                MyConsole_SendMsg(theStr);
                 break;
             case myMIWI_Data:
                 MyConsole_SendMsg("Message for Data\n");
                 break;
             case myMIWI_Web:
-                MyConsole_SendMsg("Message for webSite\n");
-                char str[64];
+                sprintf(theStr, "Message for website '%s'\n", &theData[1]);
+                MyConsole_SendMsg(theStr);
                 strcpy(MyWebMessage ,&theData[1]);
+                break;
+            case myMIWI_Image_Info:
+                struct Image_Info *image_info;
+                image_info = (struct *Image_Info) &theData[1];
+                sprintf("New Image will be send \nrows: %d\ncolumns: %d\nmult_buf: %d\n", image_info->rows , image_info->columns, image_info->mult_buf);
+                MyConsole_SendMsg(theStr);
                 break;
         }
 
-        sprintf(theStr, "Receive MIWI Msg '%s'\n>", theData);
-        MyConsole_SendMsg(theStr);
-        if (strcmp(theData, "Ack MIWI") != 0)
-            MyMIWI_TxMsg(myMIWI_EnableBroadcast, "Ack MIWI");
+//        if (strcmp(theData, "Ack MIWI") != 0)
+//            MyMIWI_TxMsg(myMIWI_EnableBroadcast, "Ack MIWI");
     }
 }
 

@@ -31,6 +31,13 @@
 #include <math.h>
 #include <string.h>
 
+struct Image_Info{
+    int rows;
+    int columns;
+    int mult_buf;
+};
+
+
 /******************************************************************************/
 
 int MDDFS_IntStatus;
@@ -618,6 +625,7 @@ int MyMDDFS_ReadImg_Send (char* name)
    unsigned char        *green_buf_data;
    unsigned char        *blue_buf_data;
    unsigned char        tabWrite[100];
+   struct   Image_Info  *pImage_Info;
 
    /*
     * To communicate with the SD Card in SPI, all other SPI communications
@@ -714,7 +722,16 @@ int MyMDDFS_ReadImg_Send (char* name)
    blue_buf_data = (unsigned char*)malloc(MULT_BUF*columns*sizeof(unsigned char));
    // Initializes the read pointer.
    pChar = (unsigned char*)malloc(sizeof(unsigned char));
-
+   // Initializes the pointer to the Image_Info;
+   pImage_Info = (struct Image_Info*) malloc(sizeof(struct Image_Info));
+  
+   //Send to other DEO the informations about the image to send.
+   pImage_Info->rows = rows;
+   pImage_Info->columns = columns;
+   pImage_Info->mult_buf = MULT_BUF;
+   
+   
+   
    // Processes the image until the last row has been read.
    while (r<=rows) {
 
@@ -808,6 +825,6 @@ int MyMDDFS_ReadImg_Send (char* name)
    free(green_buf_data);
    free(blue_buf_data);
    free(pChar);
-
+   free(pImage_Info);
    return 0;
 }
