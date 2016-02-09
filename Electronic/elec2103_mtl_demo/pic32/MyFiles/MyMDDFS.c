@@ -31,11 +31,6 @@
 #include <math.h>
 #include <string.h>
 
-struct Image_Info{
-    int rows;
-    int columns;
-    int mult_buf;
-};
 
 
 /******************************************************************************/
@@ -43,6 +38,15 @@ struct Image_Info{
 int MDDFS_IntStatus;
 int MDDFS_SPICON_save;
 int MDDFS_SPIBRG_save;
+
+int Image_Receive_rows;
+int Image_Receive_columns;
+int Image_Receive_mult_buf;
+char Image_Receive_Current;
+
+int Image_Receive_Red;
+int Image_Receive_Green;
+int Image_Receive_Blue;
 
 void MyMDDFS_SaveSPI(void)
 {
@@ -597,9 +601,6 @@ void MyMDDFS_Send_Image(){
     sprintf(str , "Opening the Image '%s' \n\t", curr_img_name);
     MyConsole_SendMsg(str);
     
-    //Sends to the FPGA the number of images that will be loaded.
-    MyCyclone_Write(CYCLONE_IMGNUM, num_img);
-
 
     //Loads the slideshow image per image and displays some info about the
     //current progress.
@@ -827,4 +828,35 @@ int MyMDDFS_ReadImg_Send (char* name)
    free(pChar);
    free(pImage_Info);
    return 0;
+}
+
+/* This function init the receiving Image.
+ * - first init the Cyclone
+ * - Put the data in memory
+ * - Take some 
+ *
+ *
+ *
+ */
+void MyMDDFS_InitReceive(struct Image_Info* image_info){
+   
+    mPORTBSetPinsDigitalIn(USD_CD);
+    
+    //Sends to the FPGA the number of images that will be loaded.
+    MyCyclone_Write(CYCLONE_IMGNUM, 1);
+    
+    if(!Image_Receive_Current){
+        Image_Receive_rows = image_info->rows;
+        Image_Receive_columns = image_info->columns;
+        Image_Receive_mult_buf = image_info->mult_buf;
+        
+        Image_Receive_Red = 0;
+        Image_Receive_Green = 0;
+        Image_Receive_Blue = 0;
+        
+        Image_Receive_Current = 1;
+    }
+    
+    
+
 }

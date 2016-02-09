@@ -11,6 +11,11 @@
 * Constants                                                                    *
 *******************************************************************************/
 
+struct Image_Info{
+    int rows;
+    int columns;
+    int mult_buf;
+};
 
 
 /*******************************************************************************
@@ -24,6 +29,6 @@ long MyMDDFS_getImageInfo(FSFILE* inputFile, long offset, int numberOfChars);
 void MyMDDFS_Test(void);
 void MyMDDFS_Send_Image(void);
 int  MyMDDFS_ReadImg_Send(char* name);
-
+void MyMDDFS_InitReceive(struct Image_Info*);
 
 #endif /* MyFDDFS_H_ */

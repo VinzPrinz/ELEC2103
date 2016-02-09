@@ -317,7 +317,7 @@ void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE)
     }
 }
 
-void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE , int size)
+void MyMIWI_TxMsg_Mode_Size(BOOL enableBroadcast, char *theMsg, char MODE , int size)
 {
     /*******************************************************************/
     // First call MiApp_FlushTx to reset the Transmit buffer. Then fill
@@ -384,6 +384,7 @@ void MyMIWI_Task(void) {
     if (MyMIWI_RxMsg(theData)) {
         char MODE;
         MODE = theData[0];
+        struct Image_Info *image_info;
         switch(MODE){
             case myMIWI_Chat:
                 sprintf(theStr, "Message from Chat '%s'\n" , theData);
@@ -398,9 +399,8 @@ void MyMIWI_Task(void) {
                 strcpy(MyWebMessage ,&theData[1]);
                 break;
             case myMIWI_Image_Info:
-                struct Image_Info *image_info;
-                image_info = (struct *Image_Info) &theData[1];
-                sprintf("New Image will be send \nrows: %d\ncolumns: %d\nmult_buf: %d\n", image_info->rows , image_info->columns, image_info->mult_buf);
+                image_info = (struct Image_Info *) &theData[1];
+                sprintf(theStr, "New Image will be send \n rows: %d \n columns: %d\n mult_buf: %d\n", image_info->rows , image_info->columns, image_info->mult_buf);
                 MyConsole_SendMsg(theStr);
                 break;
         }
