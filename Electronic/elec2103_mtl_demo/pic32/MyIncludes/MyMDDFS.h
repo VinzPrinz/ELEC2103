@@ -28,7 +28,7 @@ int  MyMDDFS_ReadImg (char* name);
 long MyMDDFS_getImageInfo(FSFILE* inputFile, long offset, int numberOfChars);
 void MyMDDFS_Test(void);
 void MyMDDFS_Send_Image(void);
-int  MyMDDFS_ReadImg_Send(char* name);
+int  MyMDDFS_ReadImg_Send(struct Image_Info*);
 void MyMDDFS_InitReceive(struct Image_Info*);
 void MyMDDFS_Init(void);
 

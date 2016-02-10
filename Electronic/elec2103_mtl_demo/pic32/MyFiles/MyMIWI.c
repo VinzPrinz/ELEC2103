@@ -270,6 +270,10 @@ void MyMIWI_TxMsg(BOOL enableBroadcast, char *theMsg)
     }
 }
 
+
+/* Send message via zigbee with unicast or broadcast.
+ * Send a character chain with the given myMIWI mode. 
+ */
 void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE)
 {
     /*******************************************************************/
@@ -315,6 +319,9 @@ void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE)
     }
 }
 
+/* Send message via zigbee with unicast or broadcast.
+ * Send a *void of given size with the given myMIWI mode. 
+ */
 void MyMIWI_TxMsg_Mode_Size(BOOL enableBroadcast, void *theMsg, char MODE , int size)
 {
     /*******************************************************************/
@@ -326,7 +333,7 @@ void MyMIWI_TxMsg_Mode_Size(BOOL enableBroadcast, void *theMsg, char MODE , int 
     char *pChar;
     MiApp_FlushTx();
     
-    // Write the first 32 bits word
+    // Write the first 32 bits word (get words align @ receiver)
     MiApp_WriteData(MODE);
     MiApp_WriteData(0);
     MiApp_WriteData(0);
@@ -381,6 +388,16 @@ BYTE SPIGet(void)   { return ((BYTE) MySPI_GetC()); }
 
 /******************************************************************************/
 
+/*
+ * function: MyMIWI_Task()
+ * post: Handel the received data on MIWI. The first byte of data is a tag used
+ *      to describe why the packet was send. There is a few possibility:
+ *          -myMIWI_Chat: Used for chat. Simply display it 
+ *          -myMIWI_Web: Change the value of MyWebMessage (this value is displayed
+ *                       on the web site.
+ *          -myMIWI_Image_Info: Will display an image on the MTL screen given the 
+ *                       informations. To do so we recover the structur Image_Info 
+ */
 void MyMIWI_Task(void) {
 
     char theData[64], theStr[128];
@@ -393,9 +410,6 @@ void MyMIWI_Task(void) {
             case myMIWI_Chat:
                 sprintf(theStr, "Message from Chat '%s'\n" , &theData[1]);
                 MyConsole_SendMsg(theStr);
-                break;
-            case myMIWI_Data:
-                MyConsole_SendMsg("Message for Data\n");
                 break;
             case myMIWI_Web:
                 sprintf(theStr, "Message for website '%s'\n", &theData[1]);
