@@ -283,7 +283,7 @@ void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE)
     /*******************************************************************/
     MiApp_FlushTx();
     MiApp_WriteData(MODE);
-
+    
     while (*theMsg != '\0')
         MiApp_WriteData(*theMsg++);
 
@@ -346,6 +346,7 @@ void MyMIWI_TxMsg_Mode_Size(BOOL enableBroadcast, void *theMsg, char MODE , int 
         MiApp_WriteData(*pChar++);
         i++;
     }
+    
     if (enableBroadcast) {
 
         /*******************************************************************/
@@ -418,7 +419,7 @@ void MyMIWI_Task(void) {
                 break;
             case myMIWI_Image_Info:
                 image_info = (struct Image_Info *) &theData[4];
-                sprintf(theStr, "New Image_Info received \n rows: %d \n columns: %d\n mult_buf: %d\n", image_info->rows , image_info->columns, image_info->mult_buf);
+                sprintf(theStr, "New Image_Info received\nred: %d\ngreen: %d\nblue%d\n",image_info->color_r, image_info->color_g , image_info->color_b);
                 MyConsole_SendMsg(theStr);
                 MyMDDFS_InitReceive(image_info);
                 break;

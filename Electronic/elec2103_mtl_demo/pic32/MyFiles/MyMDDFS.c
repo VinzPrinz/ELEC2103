@@ -600,9 +600,7 @@ void MyMDDFS_Send_Image(char *theCmd){
     if (MyMDDFS_ReadImg_Send(pImage_Info , theCmd)) {
         MyConsole_SendMsg("An error occurred while running MyMDDFS_ReadImg_Send.\n\t");
     }
-
-    MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast, (void *) pImage_Info , myMIWI_Image_Info , sizeof(struct Image_Info));
-    free(pImage_Info);
+    
     return;
 }
 
@@ -694,6 +692,9 @@ int MyMDDFS_ReadImg_Send (struct Image_Info *pImage_Info, char *theCmd)
         else
             break;
     }
+   
+   MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast, (void *) pImage_Info , myMIWI_Image_Info , sizeof(struct Image_Info));
+   free(pImage_Info);
    
    return 0;
 }
