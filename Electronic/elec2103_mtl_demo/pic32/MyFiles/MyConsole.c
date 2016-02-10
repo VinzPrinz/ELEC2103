@@ -89,7 +89,7 @@ void MyConsole_Task(void)
         MyConsole_SendMsg("MyTest ok\n>");
 
     } else if (strcmp(theCmd, "SendImage")==0){
-        MyMDDFS_Send_Image();
+        MyMDDFS_Send_Image(theCmd);
     } else if (strcmp(theCmd, "EnableChat") == 0) {
         EnableChat = 1;
         MyConsole_SendMsg("Chat Enabled\n>");

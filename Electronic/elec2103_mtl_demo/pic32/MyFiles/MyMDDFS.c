@@ -44,9 +44,9 @@ int Image_Receive_columns;
 int Image_Receive_mult_buf;
 char Image_Receive_Current;
 
-int Image_Receive_Red;
-int Image_Receive_Green;
-int Image_Receive_Blue;
+unsigned char Image_Receive_Red;
+unsigned char Image_Receive_Green;
+unsigned char Image_Receive_Blue;
 
 void MyMDDFS_SaveSPI(void)
 {
@@ -587,7 +587,7 @@ void MyMDDFS_Test (void)
 
 
 // Is read to send image via Zigbee
-void MyMDDFS_Send_Image(){
+void MyMDDFS_Send_Image(char *theCmd){
 
     struct Image_Info *pImage_Info;
 
@@ -597,7 +597,7 @@ void MyMDDFS_Send_Image(){
     //Loads the slideshow image per image and displays some info about the
     //current progress.
     //If anything goes wrong, the loading is stopped and the user is warned.
-    if (MyMDDFS_ReadImg_Send(pImage_Info)) {
+    if (MyMDDFS_ReadImg_Send(pImage_Info , theCmd)) {
         MyConsole_SendMsg("An error occurred while running MyMDDFS_ReadImg_Send.\n\t");
     }
 
@@ -606,16 +606,94 @@ void MyMDDFS_Send_Image(){
     return;
 }
 
-// Retreive image information and store un a Image_Info structure. 
-int MyMDDFS_ReadImg_Send (struct Image_Info *pImage_Info)
+// Retreive image information and store in a Image_Info structure. 
+int MyMDDFS_ReadImg_Send (struct Image_Info *pImage_Info, char *theCmd)
 {
 
+   unsigned char tabWrite[100];
+   char* end;
+   char color_r , color_g , color_b; 
+   
    pImage_Info = (struct Image_Info*) malloc(sizeof(struct Image_Info));
   
    //Send to other DEO the informations about the image to send.
    pImage_Info->rows = 480;
    pImage_Info->columns = 800;
    pImage_Info->mult_buf = MULT_BUF;
+  
+   
+   // Retreive the wanted color from user
+   
+    MyConsole_SendMsg("What is the color you want on the screen R?\n\t");
+    sprintf(tabWrite, "Please enter an integer smaller or equal to %d : ", 255);
+    MyConsole_SendMsg(tabWrite);
+
+    while(1) {
+        //Waits for the user to type something.
+        //Input pointer theCmd is modified.
+        while (!MyConsole_GetCmd());
+        
+        //Converts to a number the string the user has just written.
+        pImage_Info->color_r = (unsigned char)strtol(theCmd, &end, 10);
+
+        //Verifies if what the user has written is valid.
+        //If not, asks for another number.
+        if (*end) {
+            sprintf(tabWrite, "\tConversion error, wrong format %s.\n\t", end);
+            MyConsole_SendMsg(tabWrite);
+            MyConsole_SendMsg("Please enter a correct number : ");
+        }
+        else
+            break;
+    }
+
+    
+    MyConsole_SendMsg("What is the color you want on the screen G?\n\t");
+    sprintf(tabWrite, "Please enter an integer smaller or equal to %d : ", 255);
+    MyConsole_SendMsg(tabWrite);
+
+    while(1) {
+        //Waits for the user to type something.
+        //Input pointer theCmd is modified.
+        while (!MyConsole_GetCmd());
+        
+        //Converts to a number the string the user has just written.
+        pImage_Info->color_g = (unsigned char)strtol(theCmd, &end, 10);
+
+        //Verifies if what the user has written is valid.
+        //If not, asks for another number.
+        if (*end) {
+            sprintf(tabWrite, "\tConversion error, wrong format %s.\n\t", end);
+            MyConsole_SendMsg(tabWrite);
+            MyConsole_SendMsg("Please enter a correct number : ");
+        }
+        else
+            break;
+    }
+    
+    
+    MyConsole_SendMsg("What is the color you want on the screen B?\n\t");
+    sprintf(tabWrite, "Please enter an integer smaller or equal to %d : ", 255);
+    MyConsole_SendMsg(tabWrite);
+
+    while(1) {
+        //Waits for the user to type something.
+        //Input pointer theCmd is modified.
+        while (!MyConsole_GetCmd());
+        
+        //Converts to a number the string the user has just written.
+        pImage_Info->color_b = (unsigned char)strtol(theCmd, &end, 10);
+
+        //Verifies if what the user has written is valid.
+        //If not, asks for another number.
+        if (*end) {
+            sprintf(tabWrite, "\tConversion error, wrong format %s.\n\t", end);
+            MyConsole_SendMsg(tabWrite);
+            MyConsole_SendMsg("Please enter a correct number : ");
+        }
+        else
+            break;
+    }
    
    return 0;
 }
@@ -640,9 +718,9 @@ void MyMDDFS_InitReceive(struct Image_Info* image_info){
         Image_Receive_columns = image_info->columns;
         Image_Receive_mult_buf = image_info->mult_buf;
         
-        Image_Receive_Red = 0;
-        Image_Receive_Green = 0;
-        Image_Receive_Blue = 0;
+        Image_Receive_Red = image_info->color_r;
+        Image_Receive_Green = image_info->color_g;
+        Image_Receive_Blue = image_info->color_b;
         
         Image_Receive_Current = 1;
     }
@@ -651,9 +729,9 @@ void MyMDDFS_InitReceive(struct Image_Info* image_info){
     int j;
     for(i = 0 ; i<Image_Receive_rows ; i++){
         for(j=0 ; j<Image_Receive_columns ; j++){
-            MyCyclone_Write(CYCLONE_RED, 200);
-            MyCyclone_Write(CYCLONE_GREEN, 145);
-            MyCyclone_Write(CYCLONE_BLUE, 145);
+            MyCyclone_Write(CYCLONE_RED, Image_Receive_Red);
+            MyCyclone_Write(CYCLONE_GREEN, Image_Receive_Green);
+            MyCyclone_Write(CYCLONE_BLUE, Image_Receive_Blue);
         }
     } 
     
