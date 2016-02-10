@@ -463,8 +463,8 @@ end
 
 //--- Touch controller -------------------------
 
-logic [9:0] reg_x1, reg_x2;
-logic [8:0] reg_y1, reg_y2;
+logic [9:0] reg_x1, reg_x2, reg_x3, reg_x4, reg_x5;
+logic [8:0] reg_y1, reg_y2, reg_y3, reg_y4, reg_y5;
 logic [1:0] reg_touch_count;
 logic [7:0] reg_gesture;
 logic			touch_ready;	
@@ -479,20 +479,26 @@ logic 		pulse_w, pulse_e;
 // For details about the inputs and outputs, you can refer to
 // section 3.3 of the MTL datasheet available in the project
 // file folder.
-i2c_touch_config  i2c_touch_config_inst (
-	.iCLK(CLOCK_50),
-	.iRSTN(~dly_rst),
-	.iTRIG(!MTL_TOUCH_INT_n),
-	.oREADY(touch_ready),
-	.oREG_X1(reg_x1),								
-	.oREG_Y1(reg_y1),								
-	.oREG_X2(reg_x2),								
-	.oREG_Y2(reg_y2),								
-	.oREG_TOUCH_COUNT(reg_touch_count),								
-	.oREG_GESTURE(reg_gesture),								
-	.I2C_SCLK(MTL_TOUCH_I2C_SCL),
-	.I2C_SDAT(MTL_TOUCH_I2C_SDA)
-);
+i2c_touch_config i2c_touch_config_inst(
+    .iCLK(CLOCK_50),
+    .iRSTN(~dly_rst),
+    .INT_n(!MTL_TOUCH_INT_n),
+    .oREADY(touch_ready),
+    .oREG_X1(reg_x1),                                
+    .oREG_Y1(reg_y1),                                
+    .oREG_X2(reg_x2),                                
+    .oREG_Y2(reg_y2),    
+   .oREG_X3(reg_x3),
+    .oREG_Y3(reg_y3),
+    .oREG_X4(reg_x4),
+    .oREG_Y4(reg_y4),    
+    .oREG_X5(reg_x5),
+    .oREG_Y5(reg_y5),        
+    .oREG_TOUCH_COUNT(reg_touch_count),                                
+    .oREG_GESTURE(reg_gesture),                                
+    .I2C_SCLK(MTL_TOUCH_I2C_SCL),
+    .I2C_SDAT(MTL_TOUCH_I2C_SDA)
+); 
 
 
 // These two modules are small buffers for the touch
