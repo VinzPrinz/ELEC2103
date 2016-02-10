@@ -3,7 +3,8 @@ TODO :
 - Beginning of website
 - Master HTML
 - First chain of command with an image
-
+- Change image on the web site
+- Test change color screen
 
 DONE :
 - Zigbee test (+chat)
