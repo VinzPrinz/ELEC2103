@@ -1,10 +1,8 @@
 TODO :
 - Re-think game after preliminary meeting
-- First chain of command with a text string (Zigbee + WiFi + SD card)
-- First chain of command with an image
 - Beginning of website
-- Re-learn C
 - Master HTML
+- First chain of command with an image
 
 
 DONE :
@@ -16,3 +14,5 @@ DONE :
 - Create Git
 - Preliminary meeting
 - First project requirements
+- Re-learn C
+- First chain of command with a text string (Zigbee + WiFi + SD card)
