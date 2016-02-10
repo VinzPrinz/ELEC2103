@@ -1,10 +1,10 @@
-/* Quartus II 64-Bit Version 13.1.4 Build 182 03/12/2014 SJ Web Edition */
+/* Quartus Prime Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition */
 JedecChain;
 	FileRevision(JESD32A);
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE22F17) Path("C:/Users/Lolo/Desktop/QUARTUS_MPLAB/MTL_TouchScreen/MTL_DEMO/DE0_Nano/") File("DE0_NANO.sof") MfrSpec(OpMask(1));
+		Device PartName(EP4CE22) Path("E:/Vinc/Documents/Student/ELEC/ELEC2103-Projet/elec2103_mtl_demo/elec2103_mtl_demo/de0_nano/") File("my_slideshow_mtl.jic") MfrSpec(OpMask(1) SEC_Device(EPCS64) Child_OpMask(1 7));
 
 ChainEnd;
 
