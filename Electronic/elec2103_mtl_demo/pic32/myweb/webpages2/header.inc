@@ -11,11 +11,10 @@
 <div id="shadow-one"><div id="shadow-two"><div id="shadow-three"><div id="shadow-four">
 <div id="page">
 
-<div style="padding:0 0 5px 5px"><img src="/mchp.gif" alt="Microchip" /></div>
+<!-- <div style="padding:0 0 5px 5px"><img src="/mchp.gif" alt="Microchip" /></div> -->
 
-<div id="title"><div class="right">TCP/IP Stack Demo Application</div><span id="hello">&nbsp;</span></div>
-
-<div id="menu">
+<!-- <div id="title"><div class="right">TCP/IP Stack Demo Application</div><span id="hello">&nbsp;</span></div> -->
+<!-- <div id="menu">
 <a href="/index.htm">Overview</a>
 <a href="/dynvars.htm">Dynamic Variables</a>
 <a href="/forms.htm">Form Processing</a>
@@ -26,4 +25,4 @@
 <a href="/dyndns">Dynamic DNS</a>
 <a href="/protect/config.htm">Network Configuration</a>
 <a href="/snmp/snmpconfig.htm">SNMP Configuration</a>
-</div>
+</div> -->
