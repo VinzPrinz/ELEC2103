@@ -19,6 +19,7 @@
 #define myMIWI_Data                 1
 #define myMIWI_Web                  2
 #define myMIWI_Image_Info           3
+#define myMIWI_Image                4
 
 
 /*******************************************************************************

@@ -406,7 +406,8 @@ void MyMIWI_Task(void) {
     if (MyMIWI_RxMsg(theData)) {
         char MODE;
         MODE = theData[0];
-        struct Image_Info *image_info;
+        struct Image_Info *pimage_info;
+        struct Image *pimage;
         switch(MODE){
             case myMIWI_Chat:
                 sprintf(theStr, "Message from Chat '%s'\n" , &theData[1]);
@@ -418,10 +419,14 @@ void MyMIWI_Task(void) {
                 strcpy(MyWebMessage ,&theData[1]);
                 break;
             case myMIWI_Image_Info:
-                image_info = (struct Image_Info *) &theData[4];
-                sprintf(theStr, "New Image_Info received\nred: %d\ngreen: %d\nblue%d\n",image_info->color_r, image_info->color_g , image_info->color_b);
+                pimage_info = (struct Image_Info *) &theData[4];
+                sprintf(theStr, "New Image_Info received\nrows: %d\ncolumns %d\nn:%d\n",pimage_info->rows , pimage_info->columns, pimage_info->n);
                 MyConsole_SendMsg(theStr);
-                MyMDDFS_InitReceive(image_info);
+                MyMDDFS_InitReceive(pimage_info);
+                break;
+            case myMIWI_Image:
+                pimage = (struct Image *) &theData[4];
+                MyMDDFS_ReceiveImage(pimage);
                 break;
             default:
                 sprintf(theStr, "Unknown MODE: %x %x %x %x" , theData[0], theData[1], theData[2], theData[3]);

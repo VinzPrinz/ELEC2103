@@ -41,7 +41,7 @@ int MDDFS_SPIBRG_save;
 
 int Image_Receive_rows;
 int Image_Receive_columns;
-int Image_Receive_mult_buf;
+int Image_Receive_n;
 char Image_Receive_Current;
 
 unsigned char Image_Receive_Red;
@@ -589,39 +589,66 @@ void MyMDDFS_Test (void)
 // Is read to send image via Zigbee
 void MyMDDFS_Send_Image(char *theCmd){
 
-    struct Image_Info *pImage_Info;
-
+    struct Image_Info image_info;
+    struct Image *image;
+    
+    char tabWrite[64];
+    char* end;
+    int n,i;
     MyConsole_SendMsg("Running MyMDDFS_SendImage\n");
     
+        
+    MyConsole_SendMsg("How Many image do you want to send B?\n\t");
+    sprintf(tabWrite, "Please enter an integer smaller or equal to %d : ", 10);
+    MyConsole_SendMsg(tabWrite);
 
-    //Loads the slideshow image per image and displays some info about the
-    //current progress.
-    //If anything goes wrong, the loading is stopped and the user is warned.
-    if (MyMDDFS_ReadImg_Send(pImage_Info , theCmd)) {
-        MyConsole_SendMsg("An error occurred while running MyMDDFS_ReadImg_Send.\n\t");
+    while(1) {
+        //Waits for the user to type something.
+        //Input pointer theCmd is modified.
+        while (!MyConsole_GetCmd());
+        
+        //Converts to a number the string the user has just written.
+        n = (unsigned char)strtol(theCmd, &end, 10);
+
+        //Verifies if what the user has written is valid.
+        //If not, asks for another number.
+        if (*end) {
+            sprintf(tabWrite, "\tConversion error, wrong format %s.\n\t", end);
+            MyConsole_SendMsg(tabWrite);
+            MyConsole_SendMsg("Please enter a correct number : ");
+        }
+        else
+            break;
+    }
+    
+    image_info.rows = 480;
+    image_info.columns = 800;
+    image_info.n = n;
+    
+    MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast, (void *) &image_info , myMIWI_Image_Info , sizeof(struct Image_Info));
+
+    
+    i = 0;
+    while(i<n){
+        if (MyMDDFS_ReadImg_Send(image , theCmd)) {
+            MyConsole_SendMsg("An error occurred while running MyMDDFS_ReadImg_Send.\n\t");
+        }
+        i++;
     }
     
     return;
 }
 
 // Retreive image information and store in a Image_Info structure. 
-int MyMDDFS_ReadImg_Send (struct Image_Info *pImage_Info, char *theCmd)
+int MyMDDFS_ReadImg_Send (struct Image *pImage, char *theCmd)
 {
 
    unsigned char tabWrite[100];
    char* end;
-   char color_r , color_g , color_b; 
    
-   pImage_Info = (struct Image_Info*) malloc(sizeof(struct Image_Info));
-  
-   //Send to other DEO the informations about the image to send.
-   pImage_Info->rows = 480;
-   pImage_Info->columns = 800;
-   pImage_Info->mult_buf = MULT_BUF;
-  
    
-   // Retreive the wanted color from user
-   
+   pImage = (struct Image*) malloc(sizeof(struct Image));
+     
     MyConsole_SendMsg("What is the color you want on the screen R?\n\t");
     sprintf(tabWrite, "Please enter an integer smaller or equal to %d : ", 255);
     MyConsole_SendMsg(tabWrite);
@@ -632,7 +659,7 @@ int MyMDDFS_ReadImg_Send (struct Image_Info *pImage_Info, char *theCmd)
         while (!MyConsole_GetCmd());
         
         //Converts to a number the string the user has just written.
-        pImage_Info->color_r = (unsigned char)strtol(theCmd, &end, 10);
+        pImage->color_r = (unsigned char)strtol(theCmd, &end, 10);
 
         //Verifies if what the user has written is valid.
         //If not, asks for another number.
@@ -656,7 +683,7 @@ int MyMDDFS_ReadImg_Send (struct Image_Info *pImage_Info, char *theCmd)
         while (!MyConsole_GetCmd());
         
         //Converts to a number the string the user has just written.
-        pImage_Info->color_g = (unsigned char)strtol(theCmd, &end, 10);
+        pImage->color_g = (unsigned char)strtol(theCmd, &end, 10);
 
         //Verifies if what the user has written is valid.
         //If not, asks for another number.
@@ -680,7 +707,7 @@ int MyMDDFS_ReadImg_Send (struct Image_Info *pImage_Info, char *theCmd)
         while (!MyConsole_GetCmd());
         
         //Converts to a number the string the user has just written.
-        pImage_Info->color_b = (unsigned char)strtol(theCmd, &end, 10);
+        pImage->color_b = (unsigned char)strtol(theCmd, &end, 10);
 
         //Verifies if what the user has written is valid.
         //If not, asks for another number.
@@ -693,8 +720,8 @@ int MyMDDFS_ReadImg_Send (struct Image_Info *pImage_Info, char *theCmd)
             break;
     }
    
-   MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast, (void *) pImage_Info , myMIWI_Image_Info , sizeof(struct Image_Info));
-   free(pImage_Info);
+   MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast, (void *) pImage , myMIWI_Image , sizeof(struct Image));
+   free(pImage);
    
    return 0;
 }
@@ -709,37 +736,39 @@ int MyMDDFS_ReadImg_Send (struct Image_Info *pImage_Info, char *theCmd)
  */
 void MyMDDFS_InitReceive(struct Image_Info* image_info){
    
-    mPORTBSetPinsDigitalIn(USD_CD);
-    
-    //Sends to the FPGA the number of images that will be loaded.
-    MyCyclone_Write(CYCLONE_IMGNUM, 1);
-    
     if(!Image_Receive_Current){
         Image_Receive_rows = image_info->rows;
         Image_Receive_columns = image_info->columns;
-        Image_Receive_mult_buf = image_info->mult_buf;
-        
-        Image_Receive_Red = image_info->color_r;
-        Image_Receive_Green = image_info->color_g;
-        Image_Receive_Blue = image_info->color_b;
+        Image_Receive_n = image_info->n;
         
         Image_Receive_Current = 1;
     }
     
+    mPORTBSetPinsDigitalIn(USD_CD);
+    //Sends to the FPGA the number of images that will be loaded.
+    MyCyclone_Write(CYCLONE_IMGNUM, Image_Receive_n);
+    
+}
+
+void MyMDDFS_ReceiveImage(struct Image* pimage){
     int i;
     int j;
+    static int n = 0;
+    
     for(i = 0 ; i<Image_Receive_rows ; i++){
         for(j=0 ; j<Image_Receive_columns ; j++){
-            MyCyclone_Write(CYCLONE_RED, Image_Receive_Red);
-            MyCyclone_Write(CYCLONE_GREEN, Image_Receive_Green);
-            MyCyclone_Write(CYCLONE_BLUE, Image_Receive_Blue);
+            MyCyclone_Write(CYCLONE_RED, pimage->color_r);
+            MyCyclone_Write(CYCLONE_GREEN, pimage->color_g );
+            MyCyclone_Write(CYCLONE_BLUE, pimage->color_b);
         }
     } 
     
-
-    
-    
-
+    n++;
+    if(n>= Image_Receive_n){
+        MyConsole_SendMsg("All Images receive \n");
+        n = 0;
+        Image_Receive_Current = 0;
+    }
 }
 
 void MyMDDFS_Init(void)

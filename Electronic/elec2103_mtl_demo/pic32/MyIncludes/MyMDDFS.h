@@ -14,13 +14,14 @@
 struct Image_Info{
     int rows;
     int columns;
-    int mult_buf;
+    int n;
+};
+
+struct Image{
     unsigned char color_r;
     unsigned char color_g;
     unsigned char color_b;
-    unsigned char file_the_gap;
 };
-
 
 /*******************************************************************************
 * Functions Prototypes                                                         *
@@ -32,8 +33,9 @@ int  MyMDDFS_ReadImg (char* name);
 long MyMDDFS_getImageInfo(FSFILE* inputFile, long offset, int numberOfChars);
 void MyMDDFS_Test(void);
 void MyMDDFS_Send_Image(char *theCmd);
-int  MyMDDFS_ReadImg_Send(struct Image_Info*, char *theCmd);
+int  MyMDDFS_ReadImg_Send(struct Image *pImage, char *theCmd);
 void MyMDDFS_InitReceive(struct Image_Info*);
+void MyMDDFS_ReceiveImage(struct Image* pImage);
 void MyMDDFS_Init(void);
 
 #endif /* MyFDDFS_H_ */
