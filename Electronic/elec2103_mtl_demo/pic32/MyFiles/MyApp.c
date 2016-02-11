@@ -105,6 +105,8 @@ int main(void)
     MyMIWI_Start();
 //    MyWIFI_Start();
     //MyCamera_Start();
+   
+    
     
     // Execute forever
     while (1)
