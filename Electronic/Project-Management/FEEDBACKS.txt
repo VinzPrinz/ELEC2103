@@ -4,3 +4,8 @@ PRELIMINARY MEETING (18/12/15) :
 - Start working on software ASAP as it is a critical part of our game
 - Don't forget to think about all the game endings
 - Anticipate the upgrades for the game from the start to avoid re-coding the entire game to bring one little update
+
+WEEK2:
+- Add a system to make MIWI robust ( FIFO ?)
+- Why not check the integrity of the frames ? 
+

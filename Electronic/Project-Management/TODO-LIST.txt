@@ -1,12 +1,16 @@
 TODO :
 - Re-think game after preliminary meeting
-- Beginning of website
 - Master HTML
-- First chain of command with an image
 - Change image on the web site
-- Test change color screen
+- Create ack for MIWI
+- communicate with the Website (in both ways), web->de0 remainning
+- Add the LT24
+
 
 DONE :
+- Test change color screen
+- First chain of command with an image
+- Beginning of website
 - Zigbee test (+chat)
 - WiFi test + website test
 - MTL tutorial
