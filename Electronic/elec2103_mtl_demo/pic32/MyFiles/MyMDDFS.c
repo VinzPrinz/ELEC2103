@@ -33,6 +33,7 @@
 
 
 
+
 /******************************************************************************/
 
 int MDDFS_IntStatus;
@@ -48,6 +49,8 @@ unsigned char Image_Receive_Red;
 unsigned char Image_Receive_Green;
 unsigned char Image_Receive_Blue;
 
+
+
 void MyMDDFS_SaveSPI(void)
 {
     /* Disable all Interrupts */
@@ -58,6 +61,8 @@ void MyMDDFS_SaveSPI(void)
     MDDFS_SPIBRG_save = SPIBRG;
 
 }
+
+
 
 
 void MyMDDFS_RestoreSPI(void)
@@ -707,7 +712,7 @@ int MyMDDFS_ReadImg_Send (struct Image *pImage, char *theCmd)
         while (!MyConsole_GetCmd());
         
         //Converts to a number the string the user has just written.
-        pImage->color_b = (unsigned char)strtol(theCmd, &end, 10);
+            pImage->color_b = (unsigned char)strtol(theCmd, &end, 10);
 
         //Verifies if what the user has written is valid.
         //If not, asks for another number.
@@ -774,6 +779,7 @@ void MyMDDFS_ReceiveImage(struct Image* pimage){
 void MyMDDFS_Init(void)
 
 {
+
 
    FSFILE * pointer;
 

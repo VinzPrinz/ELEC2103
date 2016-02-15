@@ -30,9 +30,127 @@
 
 
 #include "MyApp.h"
+#include <time.h>
 
+
+unsigned char tag;
+unsigned char data_sended;
+long  last_sended;
+
+
+float timedifference_msec(struct timeval t0, struct timeval t1)
+{
+        return (t1.tv_sec - t0.tv_sec) * 1000.0f + (t1.tv_usec - t0.tv_usec) / 1000.0f;
+}
+
+int MyMIWI_Encapsulate_Frame(BOOL enableBroadcast , void *data , int size){
+    struct Frame *pFrame;
+    pFrame = (struct Frame*) malloc(sizeof(struct Frame));
+    
+    if(!pFrame)
+        return -1; 
+    
+    pFrame-> enableBroadcast = enableBroadcast;
+    pFrame-> data = data;
+    pFrame-> size = size;
+    
+    MyFIFO_Push(pFrame , sizeof(struct Frame));
+    MyMIWI_Check_FIFO();
+    return 0;
+}
+
+int MyMIWI_Check_FIFO(void){
+    long now;
+    struct Frame *pFrame;
+    void *head;
+    
+
+    head = MyFIFO_getHead();
+    
+    if(!head)
+        return -1;
+    else{
+        now  = (long)MyRTCC_GetTime_Seconds();
+        pFrame = (struct Frame *) head;
+        float diff = now - last_sended;
+        char str[64];
+        sprintf(str, "The delay is %f \n", diff);
+        MyConsole_SendMsg(str);
+        if(diff>myMIWI_Retransmit_Delay || !data_sended){
+            MyMIWI_SendFrame(pFrame);
+            MyConsole_SendMsg("Sended Frame out\n");
+//            gettimeofday(&last_sended_t, NULL);
+            last_sended = now;
+            data_sended=1;
+        }
+    }
+    return 0;
+}
+
+int MyMIWI_SendFrame(struct Frame *pFrame){
+    int size = pFrame->size;
+    void *data  = pFrame -> data;
+    BOOL enableBroadcast = pFrame->enableBroadcast;
+    
+    /*******************************************************************/
+    // First call MiApp_FlushTx to reset the Transmit buffer. Then fill
+    // the buffer one byte by one byte by calling function
+    // MiApp_WriteData
+    /*******************************************************************/
+
+    char *pChar;
+    MiApp_FlushTx();
+    
+    int i = 0;
+    pChar = (char *)data;
+    
+    while (i<size){
+        MiApp_WriteData(*pChar++);
+        i++;
+    }
+    
+    if (enableBroadcast) {
+
+        /*******************************************************************/
+        // Function MiApp_BroadcastPacket is used to broadcast a message
+        //    The only parameter is the boolean to indicate if we need to
+        //       secure the frame
+        /*******************************************************************/
+        MiApp_BroadcastPacket(FALSE);
+
+    } else {
+
+        /*******************************************************************/
+        // Function MiApp_UnicastConnection is one of the functions to
+        //  unicast a message.
+        //    The first parameter is the index of Connection Entry for
+        //       the peer device. In this demo, since there are only two
+        //       devices involved, the peer device must be stored in the
+        //       first Connection Entry
+        //    The second parameter is the boolean to indicate if we need to
+        //       secure the frame. If encryption is applied, the security
+        //       key are defined in ConfigApp.h
+        //
+        // Another way to unicast a message is by calling function
+        //  MiApp_UnicastAddress. Instead of supplying the index of the
+        //  Connection Entry of the peer device, this function requires the
+        //  input parameter of destination address.
+        /*******************************************************************/
+        if( MiApp_UnicastConnection(0, FALSE) == FALSE )
+            Printf("\r\nUnicast Failed\r\n");
+    }
+    MyConsole_SendMsg("Frame transmitted \n");
+    return 0;
+    
+}
 void MyMIWI_Init(void) {
 
+    
+    last_sended  = MyRTCC_GetTime_Seconds();
+    
+    MyFIFO_Init();
+//    gettimeofday(&last_sended_t, NULL);
+    data_sended=0;
     // Configure Pins for MRF24J40MB
     mPORTESetBits(RST_MIWI);
     mPORTESetPinsDigitalOut(RST_MIWI);
@@ -227,6 +345,49 @@ BOOL MyMIWI_RxMsg(char *theMsg) {
 
 /******************************************************************************/
 
+void MyMIWI_Ack(BOOL enableBroadcast)
+{
+    /*******************************************************************/
+    // First call MiApp_FlushTx to reset the Transmit buffer. Then fill
+    // the buffer one byte by one byte by calling function
+    // MiApp_WriteData
+    /*******************************************************************/
+    MiApp_FlushTx();
+    MiApp_WriteData(myMIWI_Ack);
+
+    if (enableBroadcast) {
+
+        /*******************************************************************/
+        // Function MiApp_BroadcastPacket is used to broadcast a message
+        //    The only parameter is the boolean to indicate if we need to
+        //       secure the frame
+        /*******************************************************************/
+        MiApp_BroadcastPacket(FALSE);
+
+    } else {
+
+        /*******************************************************************/
+        // Function MiApp_UnicastConnection is one of the functions to
+        //  unicast a message.
+        //    The first parameter is the index of Connection Entry for
+        //       the peer device. In this demo, since there are only two
+        //       devices involved, the peer device must be stored in the
+        //       first Connection Entry
+        //    The second parameter is the boolean to indicate if we need to
+        //       secure the frame. If encryption is applied, the security
+        //       key are defined in ConfigApp.h
+        //
+        // Another way to unicast a message is by calling function
+        //  MiApp_UnicastAddress. Instead of supplying the index of the
+        //  Connection Entry of the peer device, this function requires the
+        //  input parameter of destination address.
+        /*******************************************************************/
+        if( MiApp_UnicastConnection(0, FALSE) == FALSE )
+            Printf("\r\nUnicast Failed\r\n");
+    }
+}
+
+
 void MyMIWI_TxMsg(BOOL enableBroadcast, char *theMsg)
 {
     /*******************************************************************/
@@ -281,42 +442,26 @@ void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE)
     // the buffer one byte by one byte by calling function
     // MiApp_WriteData
     /*******************************************************************/
-    MiApp_FlushTx();
-    MiApp_WriteData(MODE);
     
-    while (*theMsg != '\0')
-        MiApp_WriteData(*theMsg++);
-
-    if (enableBroadcast) {
-
-        /*******************************************************************/
-        // Function MiApp_BroadcastPacket is used to broadcast a message
-        //    The only parameter is the boolean to indicate if we need to
-        //       secure the frame
-        /*******************************************************************/
-        MiApp_BroadcastPacket(FALSE);
-
-    } else {
-
-        /*******************************************************************/
-        // Function MiApp_UnicastConnection is one of the functions to
-        //  unicast a message.
-        //    The first parameter is the index of Connection Entry for
-        //       the peer device. In this demo, since there are only two
-        //       devices involved, the peer device must be stored in the
-        //       first Connection Entry
-        //    The second parameter is the boolean to indicate if we need to
-        //       secure the frame. If encryption is applied, the security
-        //       key are defined in ConfigApp.h
-        //
-        // Another way to unicast a message is by calling function
-        //  MiApp_UnicastAddress. Instead of supplying the index of the
-        //  Connection Entry of the peer device, this function requires the
-        //  input parameter of destination address.
-        /*******************************************************************/
-        if( MiApp_UnicastConnection(0, FALSE) == FALSE )
-            Printf("\r\nUnicast Failed\r\n");
+    char *data;
+    int i;
+    int size;
+    
+    
+    size = strlen(theMsg)+2;
+    data = (char *)malloc(strlen(theMsg)+2);
+    i = 0;
+    
+    data[i] = MODE;
+    i++;
+    
+    while (i<size){
+        data[i]=*theMsg++;
+        i++;
     }
+    
+    MyMIWI_Encapsulate_Frame(enableBroadcast , (void*)data , size);
+
 }
 
 /* Send message via zigbee with unicast or broadcast.
@@ -402,7 +547,6 @@ BYTE SPIGet(void)   { return ((BYTE) MySPI_GetC()); }
 void MyMIWI_Task(void) {
 
     char theData[64], theStr[128];
-
     if (MyMIWI_RxMsg(theData)) {
         char MODE;
         MODE = theData[0];
@@ -436,6 +580,7 @@ void MyMIWI_Task(void) {
 //        if (strcmp(theData, "Ack MIWI") != 0)
 //            MyMIWI_TxMsg(myMIWI_EnableBroadcast, "Ack MIWI");
     }
+    MyMIWI_Check_FIFO();
 }
 
 /******************************************************************************/

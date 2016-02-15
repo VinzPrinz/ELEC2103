@@ -7,6 +7,7 @@
 
 // Adds support for PIC32 Peripheral library functions and macros
 #include <plib.h>
+#include <sys/time.h>
 
 // My Includes
 #include "MySPI.h"
@@ -23,6 +24,7 @@
 #include "MyMDDFS.h"
 #include "MyCamera.h"
 #include "MyMiniProjet.h"
+#include "MyFIFO.h"
 
 /*******************************************************************************
 * Constants                                                                    *

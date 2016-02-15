@@ -20,6 +20,9 @@
 #define myMIWI_Web                  2
 #define myMIWI_Image_Info           3
 #define myMIWI_Image                4
+#define myMIWI_Ack                  5
+
+#define myMIWI_Retransmit_Delay     2
 
 
 /*******************************************************************************
@@ -32,6 +35,8 @@ BOOL    MyMIWI_RxMsg(char *theMsg);
 void    MyMIWI_TxMsg(BOOL enableBroadcast, char *theMsg);
 void    MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg , char MODE);
 void    MyMIWI_Task(void);
+int     MyMIWI_Check_FIFO(void);
+int     MyMIWI_Encapsulate_Frame(BOOL enableBroadcast , void *data , int size);
 
 /*******************************************************************************
 * MiApp Interfaces Functions                                                   *
@@ -66,6 +71,11 @@ BOOL    MiApp_UnicastAddress(BYTE *DestinationAddress, BOOL PermanentAddr, BOOL 
 
 #define MY_ADDRESS_LENGTH       4       // Has to be equal to the value defined in ConfigApp.h
 
+struct Frame{
+    void *data;
+    int size;
+    BOOL enableBroadcast;
+};
 typedef struct
     {
         union

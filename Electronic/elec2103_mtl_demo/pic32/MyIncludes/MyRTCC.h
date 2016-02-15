@@ -13,6 +13,7 @@ void MyRTCC_Init(void);
 void MyRTCC_SetTime(void);
 void MyRTCC_GetTime(void);
 void MyRTCC_Task(void);
+int MyRTCC_GetTime_Seconds(void);
 
 /*******************************************************************************
 * Global Variables for MyRTCC Functions                                        *

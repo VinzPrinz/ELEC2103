@@ -81,6 +81,13 @@ void MyRTCC_GetTime(void) {
     MyConsole_SendMsg(theStr);
 }
 
+int MyRTCC_GetTime_Seconds(void) {
+    rtccTime    MyTime;
+    rtccDate    MyDate;
+
+    RtccGetTimeDate(&MyTime, &MyDate);
+    return (((MyTime.sec>>4)*10) + (MyTime.sec %16) + (((MyTime.min  >> 4) * 10) + (MyTime.min  % 16))*60 + (((MyTime.hour >> 4) * 10) + (MyTime.hour % 16))*3600);
+}
 /******************************************************************************/
 
 void MyRTCC_Task(void) {

@@ -88,7 +88,7 @@ int main(void)
  //   MyConsole_SendMsg("MyTemperature_Init() passed\n");
     MyMIWI_Init();
 //    MyConsole_SendMsg("MyMIWI_Init() passed\n");
-    MyWIFI_Init();
+//    MyWIFI_Init();
 //    MyConsole_SendMsg("MyWIFI_Init() passed\n");
     MyMDDFS_Init();
     
@@ -103,7 +103,7 @@ int main(void)
 
     // Start Wireless and Camera connections
     MyMIWI_Start();
-    MyWIFI_Start();
+ //   MyWIFI_Start();
     //MyCamera_Start();
    
     
@@ -112,17 +112,17 @@ int main(void)
     while (1)
     {
         MyRTCC_Task();
-//        MyConsole_SendMsg("MyRTCC_Task Passed \n");
+       // MyConsole_SendMsg("MyRTCC_Task Passed \n");
         MyConsole_Task();
-//        MyConsole_SendMsg("MyConsole_Task Passed \n");
+     //   MyConsole_SendMsg("MyConsole_Task Passed \n");
         MyCAN_Task();
-//        MyConsole_SendMsg("MyCAN_Task Passed \n");
+   //     MyConsole_SendMsg("MyCAN_Task Passed \n");
         MyMIWI_Task();
-//        MyConsole_SendMsg("MyMIWI_Task Passed \n");
-        MyWIFI_Task();
+ //       MyConsole_SendMsg("MyMIWI_Task Passed \n");
+//        MyWIFI_Task();
  //       MyConsole_SendMsg("MyWIFI_Task Passed \n");
         MyMiniProjet_Task();
-  //      MyConsole_SendMsg("MyMiniProjet_Task Passed \n");
+//        MyConsole_SendMsg("MyMiniProjet_Task Passed \n");
     }
 }
 
