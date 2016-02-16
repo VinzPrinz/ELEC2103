@@ -35,6 +35,7 @@
 #pragma config DEBUG    = OFF           // Background Debugger Enable
 
 
+
 const char startMsg[] =
 {
     "\r\n\r\n"\
@@ -64,6 +65,7 @@ int main(void)
     mPORTBSetBits(CS_USD);
     mPORTBClearBits(CS_TEMP);
     mPORTBSetPinsDigitalOut(CS_TEMP | CS_USD);
+    
     
     // Do MyInitializations
     MyConsole_Init();

@@ -34,14 +34,11 @@
 
 
 unsigned char tag;
+unsigned char received_tag;
 unsigned char data_sended;
 long  last_sended;
 
 
-float timedifference_msec(struct timeval t0, struct timeval t1)
-{
-        return (t1.tv_sec - t0.tv_sec) * 1000.0f + (t1.tv_usec - t0.tv_usec) / 1000.0f;
-}
 
 int MyMIWI_Encapsulate_Frame(BOOL enableBroadcast , void *data , int size){
     struct Frame *pFrame;
@@ -73,13 +70,9 @@ int MyMIWI_Check_FIFO(void){
         now  = (long)MyRTCC_GetTime_Seconds();
         pFrame = (struct Frame *) head;
         float diff = now - last_sended;
-        char str[64];
-        sprintf(str, "The delay is %f \n", diff);
-        MyConsole_SendMsg(str);
-        if(diff>myMIWI_Retransmit_Delay || !data_sended){
+        if(diff>=myMIWI_Retransmit_Delay || !data_sended){
+            MyConsole_SendMsg("Data will be transmited \n");
             MyMIWI_SendFrame(pFrame);
-            MyConsole_SendMsg("Sended Frame out\n");
-//            gettimeofday(&last_sended_t, NULL);
             last_sended = now;
             data_sended=1;
         }
@@ -88,6 +81,7 @@ int MyMIWI_Check_FIFO(void){
 }
 
 int MyMIWI_SendFrame(struct Frame *pFrame){
+    
     int size = pFrame->size;
     void *data  = pFrame -> data;
     BOOL enableBroadcast = pFrame->enableBroadcast;
@@ -108,7 +102,7 @@ int MyMIWI_SendFrame(struct Frame *pFrame){
         MiApp_WriteData(*pChar++);
         i++;
     }
-    
+   
     if (enableBroadcast) {
 
         /*******************************************************************/
@@ -139,17 +133,19 @@ int MyMIWI_SendFrame(struct Frame *pFrame){
         if( MiApp_UnicastConnection(0, FALSE) == FALSE )
             Printf("\r\nUnicast Failed\r\n");
     }
-    MyConsole_SendMsg("Frame transmitted \n");
-    return 0;
     
+    return 0;
 }
 void MyMIWI_Init(void) {
 
     
     last_sended  = MyRTCC_GetTime_Seconds();
+    tag = 1;
+    received_tag = 0;
     
     MyFIFO_Init();
-//    gettimeofday(&last_sended_t, NULL);
+    srand(time(NULL)); // initialisation de rand
+
     data_sended=0;
     // Configure Pins for MRF24J40MB
     mPORTESetBits(RST_MIWI);
@@ -345,15 +341,21 @@ BOOL MyMIWI_RxMsg(char *theMsg) {
 
 /******************************************************************************/
 
-void MyMIWI_Ack(BOOL enableBroadcast)
+void MyMIWI_Ack(BOOL enableBroadcast, char tag)
 {
     /*******************************************************************/
     // First call MiApp_FlushTx to reset the Transmit buffer. Then fill
     // the buffer one byte by one byte by calling function
     // MiApp_WriteData
     /*******************************************************************/
+    
+    MyConsole_SendMsg("This is in MyMIWI_Ack \n");
     MiApp_FlushTx();
+    
     MiApp_WriteData(myMIWI_Ack);
+    MiApp_WriteData(tag);
+    MiApp_WriteData(0);
+    MiApp_WriteData(0);
 
     if (enableBroadcast) {
 
@@ -448,14 +450,19 @@ void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE)
     int size;
     
     
-    size = strlen(theMsg)+2;
-    data = (char *)malloc(strlen(theMsg)+2);
-    i = 0;
+    size = strlen(theMsg)+2+2;
+    data = (char *)malloc(strlen(theMsg)+4+1);
     
-    data[i] = MODE;
-    i++;
+    data[0] = MODE;
+    data[1] = tag;
+    data[2] = 0;
+    data[3] = 0;
     
-    while (i<size){
+    tag ++;
+    
+    i=4;
+    
+    while (i<(size-1)){
         data[i]=*theMsg++;
         i++;
     }
@@ -475,53 +482,30 @@ void MyMIWI_TxMsg_Mode_Size(BOOL enableBroadcast, void *theMsg, char MODE , int 
     // MiApp_WriteData
     /*******************************************************************/
 
+    char *data;
     char *pChar;
-    MiApp_FlushTx();
+    int i;
+    
+    data = (char *)malloc(size + 4);
     
     // Write the first 32 bits word (get words align @ receiver)
-    MiApp_WriteData(MODE);
-    MiApp_WriteData(0);
-    MiApp_WriteData(0);
-    MiApp_WriteData(0);
+    data[0] = MODE;
+    data[1] = tag;
+    data[2] = 0;
+    data[3] = 0;
     
-    int i = 0;
+    tag++;
     pChar = (char *)theMsg;
     
+    i=4;
     while (i<size){
-        MiApp_WriteData(*pChar++);
+        data[i]= *pChar++;
         i++;
     }
     
-    if (enableBroadcast) {
+    MyMIWI_Encapsulate_Frame(enableBroadcast , (void*)data , size);
 
-        /*******************************************************************/
-        // Function MiApp_BroadcastPacket is used to broadcast a message
-        //    The only parameter is the boolean to indicate if we need to
-        //       secure the frame
-        /*******************************************************************/
-        MiApp_BroadcastPacket(FALSE);
-
-    } else {
-
-        /*******************************************************************/
-        // Function MiApp_UnicastConnection is one of the functions to
-        //  unicast a message.
-        //    The first parameter is the index of Connection Entry for
-        //       the peer device. In this demo, since there are only two
-        //       devices involved, the peer device must be stored in the
-        //       first Connection Entry
-        //    The second parameter is the boolean to indicate if we need to
-        //       secure the frame. If encryption is applied, the security
-        //       key are defined in ConfigApp.h
-        //
-        // Another way to unicast a message is by calling function
-        //  MiApp_UnicastAddress. Instead of supplying the index of the
-        //  Connection Entry of the peer device, this function requires the
-        //  input parameter of destination address.
-        /*******************************************************************/
-        if( MiApp_UnicastConnection(0, FALSE) == FALSE )
-            Printf("\r\nUnicast Failed\r\n");
-    }
+ 
 }
 
 
@@ -552,33 +536,52 @@ void MyMIWI_Task(void) {
         MODE = theData[0];
         struct Image_Info *pimage_info;
         struct Image *pimage;
+        sprintf(theStr , "Tag %x \n", theData[1]);
+        MyConsole_SendMsg(theStr);
         switch(MODE){
             case myMIWI_Chat:
-                sprintf(theStr, "Message from Chat '%s'\n" , &theData[1]);
-                MyConsole_SendMsg(theStr);
+                if(received_tag+1 == theData[1]){
+                    sprintf(theStr, "Message from Chat '%s'\n" , &theData[4]);
+                    MyConsole_SendMsg(theStr);
+                    received_tag++;
+                }
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 break;
             case myMIWI_Web:
-                sprintf(theStr, "Message for website '%s'\n", &theData[1]);
-                MyConsole_SendMsg(theStr);
-                strcpy(MyWebMessage ,&theData[1]);
+                if(received_tag+1 == theData[1]){
+                    sprintf(theStr, "Message for website '%s'\n", &theData[4]);
+                    MyConsole_SendMsg(theStr);
+                    strcpy(MyWebMessage ,&theData[4]);
+                    received_tag++;
+                }
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 break;
             case myMIWI_Image_Info:
-                pimage_info = (struct Image_Info *) &theData[4];
-                sprintf(theStr, "New Image_Info received\nrows: %d\ncolumns %d\nn:%d\n",pimage_info->rows , pimage_info->columns, pimage_info->n);
-                MyConsole_SendMsg(theStr);
-                MyMDDFS_InitReceive(pimage_info);
+                if(received_tag +1 == theData[1]){
+                    pimage_info = (struct Image_Info *) &theData[4];
+                    sprintf(theStr, "New Image_Info received\nrows: %d\ncolumns %d\nn:%d\n",pimage_info->rows , pimage_info->columns, pimage_info->n);
+                    MyConsole_SendMsg(theStr);
+                    MyMDDFS_InitReceive(pimage_info);
+                }
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 break;
             case myMIWI_Image:
-                pimage = (struct Image *) &theData[4];
-                MyMDDFS_ReceiveImage(pimage);
+                if(received_tag +1 == theData[1]){
+                    pimage = (struct Image *) &theData[4];
+                    MyMDDFS_ReceiveImage(pimage);
+                }
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
+                break;
+            case myMIWI_Ack:
+                sprintf(theStr , "Ack received for tag: %x" , theData[1]);
+                MyConsole_SendMsg(theStr);
+                MyFIFO_Pop();
+                data_sended=0;
                 break;
             default:
                 sprintf(theStr, "Unknown MODE: %x %x %x %x" , theData[0], theData[1], theData[2], theData[3]);
                 break;
         }
-
-//        if (strcmp(theData, "Ack MIWI") != 0)
-//            MyMIWI_TxMsg(myMIWI_EnableBroadcast, "Ack MIWI");
     }
     MyMIWI_Check_FIFO();
 }

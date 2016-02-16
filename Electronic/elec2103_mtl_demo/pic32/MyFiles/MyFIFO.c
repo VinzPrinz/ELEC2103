@@ -50,7 +50,6 @@ int MyFIFO_Push(void *data, int size){
     
     newNode->size = size;
     newNode->data = data;
-    printf("size_FIFO = %d\n",size_FIFO);
     
     if(!size_FIFO){
         newNode->next = NULL;
