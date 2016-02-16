@@ -164,8 +164,10 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
 	{
 		// Seek out each of the four LED strings, and if it exists set the LED states
 		ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"led4");
-		if(ptr)
+		if(ptr){
 			LED4_IO = (*ptr == '1');
+            MyConsole_SendMsg("Received butLed4\n");
+        }
 
 		ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"led3");
 		if(ptr)
@@ -178,7 +180,43 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
 		ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"led1");
 		if(ptr)
 			LED1_IO = (*ptr == '1');
+        
+        
+        
 	}
+    
+    	// If its the forms.htm page
+	if(!memcmppgm2ram(filename, "index.htm", 9))
+	{
+		// Seek out each of the four LED strings, and if it exists set the LED states
+		ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"led4");
+		if(ptr){
+			LED4_IO = (*ptr == '1');
+            if(*ptr=='1')
+                MyConsole_SendMsg("Received butLed4\n");
+        }
+
+		ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"led3");
+		if(ptr)
+			LED3_IO = (*ptr == '1');
+
+		ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"led2");
+		if(ptr)
+			LED2_IO = (*ptr == '1');
+
+		ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"led1");
+		if(ptr)
+			LED1_IO = (*ptr == '1');
+        
+        ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"todeo");
+		if(ptr)
+			MyConsole_SendMsg(ptr);
+        
+        ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"color1");
+		if(ptr)
+			MyConsole_SendMsg(ptr);
+	}
+	
 	
 	// If it's the LED updater file
 	else if(!memcmppgm2ram(filename, "cookies.htm", 11))
