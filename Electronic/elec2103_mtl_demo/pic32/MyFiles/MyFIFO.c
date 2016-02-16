@@ -81,6 +81,7 @@ int MyFIFO_Pop(void){
         oldHead = head;
         head->previous->next=NULL;
         head = head->previous;
+        free(oldHead->data);
         free(oldHead);
         size_FIFO--;
     }  

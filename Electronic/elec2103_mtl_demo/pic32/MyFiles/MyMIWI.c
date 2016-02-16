@@ -36,7 +36,8 @@
 unsigned char tag;
 unsigned char received_tag;
 unsigned char data_sended;
-long  last_sended;
+unsigned int  last_sended;
+
 
 
 
@@ -67,10 +68,14 @@ int MyMIWI_Check_FIFO(void){
     if(!head)
         return -1;
     else{
-        now  = (long)MyRTCC_GetTime_Seconds();
+        unsigned int tWait ,now;
+        tWait=(SYS_FREQ/2000)*myMIWI_Retransmit_Delay;
         pFrame = (struct Frame *) head;
-        float diff = now - last_sended;
-        if(diff>=myMIWI_Retransmit_Delay || !data_sended){
+        now = ReadCoreTimer();
+        char str[64];
+        sprintf(str, "The delay is %d , %d \n" , now-last_sended , tWait);
+        MyConsole_SendMsg(str);
+        if(now - last_sended>=tWait || !data_sended){
             MyConsole_SendMsg("Data will be transmited \n");
             MyMIWI_SendFrame(pFrame);
             last_sended = now;

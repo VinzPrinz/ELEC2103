@@ -22,7 +22,7 @@
 #define myMIWI_Image                4
 #define myMIWI_Ack                  5
 
-#define myMIWI_Retransmit_Delay     2
+#define myMIWI_Retransmit_Delay     200
 
 
 /*******************************************************************************
