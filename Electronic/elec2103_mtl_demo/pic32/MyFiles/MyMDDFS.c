@@ -613,7 +613,7 @@ void MyMDDFS_Send_Image(char *theCmd){
         while (!MyConsole_GetCmd());
         
         //Converts to a number the string the user has just written.
-        n = (unsigned char)strtol(theCmd, &end, 10);
+        n = (int)strtol(theCmd, &end, 10);
 
         //Verifies if what the user has written is valid.
         //If not, asks for another number.

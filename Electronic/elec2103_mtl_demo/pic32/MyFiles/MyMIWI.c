@@ -503,12 +503,12 @@ void MyMIWI_TxMsg_Mode_Size(BOOL enableBroadcast, void *theMsg, char MODE , int 
     pChar = (char *)theMsg;
     
     i=4;
-    while (i<size){
+    while (i<size+4){
         data[i]= *pChar++;
         i++;
     }
     
-    MyMIWI_Encapsulate_Frame(enableBroadcast , (void*)data , size);
+    MyMIWI_Encapsulate_Frame(enableBroadcast , (void*)data , size+4);
 
  
 }
@@ -541,7 +541,7 @@ void MyMIWI_Task(void) {
         MODE = theData[0];
         struct Image_Info *pimage_info;
         struct Image *pimage;
-        sprintf(theStr , "Tag %x \n", theData[1]);
+        sprintf(theStr , "Tag %x MODE: %x \n", theData[1] , MODE);
         MyConsole_SendMsg(theStr);
         switch(MODE){
             case myMIWI_Chat:
@@ -567,13 +567,17 @@ void MyMIWI_Task(void) {
                     sprintf(theStr, "New Image_Info received\nrows: %d\ncolumns %d\nn:%d\n",pimage_info->rows , pimage_info->columns, pimage_info->n);
                     MyConsole_SendMsg(theStr);
                     MyMDDFS_InitReceive(pimage_info);
+                    received_tag++;
                 }
                 MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 break;
             case myMIWI_Image:
                 if(received_tag +1 == theData[1]){
                     pimage = (struct Image *) &theData[4];
+                    sprintf(theStr , "R:%d G:%d B:%d \n", pimage->color_r , pimage->color_g , pimage->color_b);
+                    MyConsole_SendMsg(theStr);
                     MyMDDFS_ReceiveImage(pimage);
+                    received_tag++;
                 }
                 MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 break;

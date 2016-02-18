@@ -213,8 +213,31 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
 			MyConsole_SendMsg(ptr);
         
         ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"color1");
-		if(ptr)
-			MyConsole_SendMsg(ptr);
+		if(ptr){
+            struct Image_Info image_info;
+            struct Image image;
+            
+            image_info.rows = 480;
+            image_info.columns = 800;
+            image_info.n = 1;
+            
+            image.color_r = 0;
+            image.color_g = 0;
+            image.color_b = 0;
+            
+            if(*ptr=='r'){
+                image.color_r = 255;
+            }else if(*ptr=='g'){
+                image.color_g = 255;
+            }else if(*ptr=='b'){
+                image.color_b = 255;
+            }
+            
+            MyConsole_SendMsg(ptr);
+            MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast, (void *) &image_info , myMIWI_Image_Info , sizeof(struct Image_Info));
+            MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast, (void *) &image , myMIWI_Image , sizeof(struct Image));
+
+		}
 	}
 	
 	
