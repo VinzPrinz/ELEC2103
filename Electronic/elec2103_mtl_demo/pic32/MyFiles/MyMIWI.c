@@ -84,6 +84,7 @@ int MyMIWI_Check_FIFO(void){
 
 int MyMIWI_SendFrame(struct Frame *pFrame){
     
+    
     int size = pFrame->size;
     void *data  = pFrame -> data;
     BOOL enableBroadcast = pFrame->enableBroadcast;
@@ -542,23 +543,24 @@ void MyMIWI_Task(void) {
 //        MyConsole_SendMsg(theStr);
         switch(MODE){
             case myMIWI_Chat:
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 if(received_tag+1 == theData[1]){
                     sprintf(theStr, "Message from Chat '%s'\n" , &theData[4]);
                     MyConsole_SendMsg(theStr);
                     received_tag++;
                 }
-                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 break;
             case myMIWI_Web:
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 if(received_tag+1 == theData[1]){
                     sprintf(theStr, "Message for website '%s'\n", &theData[4]);
                     MyConsole_SendMsg(theStr);
                     strcpy(MyWebMessage ,&theData[4]);
                     received_tag++;
                 }
-                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 break;
             case myMIWI_Image_Info:
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 if(received_tag +1 == theData[1]){
                     pimage_info = (struct Image_Info *) &theData[4];
                     sprintf(theStr, "New Image_Info received\nrows: %d\ncolumns %d\nn:%d\n",pimage_info->rows , pimage_info->columns, pimage_info->n);
@@ -566,9 +568,9 @@ void MyMIWI_Task(void) {
                     MyMDDFS_InitReceive(pimage_info);
                     received_tag++;
                 }
-                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 break;
             case myMIWI_Image:
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 if(received_tag +1 == theData[1]){
                     pimage = (struct Image *) &theData[4];
                     sprintf(theStr , "R:%d G:%d B:%d \n", pimage->color_r , pimage->color_g , pimage->color_b);
@@ -576,7 +578,6 @@ void MyMIWI_Task(void) {
                     MyMDDFS_ReceiveImage(pimage);
                     received_tag++;
                 }
-                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 break;
             case myMIWI_Ack:
                 if(nAck+1 == theData[1]){
