@@ -35,6 +35,7 @@
 
 unsigned char tag;
 unsigned char received_tag;
+unsigned char nAck;
 unsigned char data_sended;
 unsigned int  last_sended;
 
@@ -72,11 +73,7 @@ int MyMIWI_Check_FIFO(void){
         tWait=(SYS_FREQ/2000)*myMIWI_Retransmit_Delay;
         pFrame = (struct Frame *) head;
         now = ReadCoreTimer();
-        char str[64];
-        sprintf(str, "The delay is %d , %d \n" , now-last_sended , tWait);
-        MyConsole_SendMsg(str);
         if(now - last_sended>=tWait || !data_sended){
-            MyConsole_SendMsg("Data will be transmited \n");
             MyMIWI_SendFrame(pFrame);
             last_sended = now;
             data_sended=1;
@@ -147,6 +144,7 @@ void MyMIWI_Init(void) {
     last_sended  = MyRTCC_GetTime_Seconds();
     tag = 1;
     received_tag = 0;
+    nAck = 0;
     
     MyFIFO_Init();
     srand(time(NULL)); // initialisation de rand
@@ -354,7 +352,6 @@ void MyMIWI_Ack(BOOL enableBroadcast, char tag)
     // MiApp_WriteData
     /*******************************************************************/
     
-    MyConsole_SendMsg("This is in MyMIWI_Ack \n");
     MiApp_FlushTx();
     
     MiApp_WriteData(myMIWI_Ack);
@@ -542,7 +539,7 @@ void MyMIWI_Task(void) {
         struct Image_Info *pimage_info;
         struct Image *pimage;
         sprintf(theStr , "Tag %x MODE: %x \n", theData[1] , MODE);
-        MyConsole_SendMsg(theStr);
+//        MyConsole_SendMsg(theStr);
         switch(MODE){
             case myMIWI_Chat:
                 if(received_tag+1 == theData[1]){
@@ -582,10 +579,11 @@ void MyMIWI_Task(void) {
                 MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 break;
             case myMIWI_Ack:
-                sprintf(theStr , "Ack received for tag: %x" , theData[1]);
-                MyConsole_SendMsg(theStr);
-                MyFIFO_Pop();
-                data_sended=0;
+                if(nAck+1 == theData[1]){
+                    MyFIFO_Pop();
+                    data_sended=0;
+                    nAck++;
+                }
                 break;
             default:
                 sprintf(theStr, "Unknown MODE: %x %x %x %x" , theData[0], theData[1], theData[2], theData[3]);
