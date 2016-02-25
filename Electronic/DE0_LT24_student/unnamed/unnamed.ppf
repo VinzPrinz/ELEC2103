@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pinplan
+ variation_name="cycloneSPI_0"
+ megafunction_name="CYCLONESPI"
+ specifies="all_ports">
+ <global>
+  <pin name="clk" direction="input" scope="external" />
+  <pin name="reset" direction="input" scope="external" />
+  <pin name="SPI_clk" direction="input" scope="external" />
+  <pin name="SPI_CS" direction="input" scope="external" />
+  <pin name="SPI_SDI" direction="input" scope="external" />
+  <pin name="SPI_SDO" direction="output" scope="external" />
+  <pin name="data_out[7..0]" direction="output" scope="external" />
+  <pin name="data_out_enable" direction="output" scope="external" />
+  <pin name="avs_s0_address[7..0]" direction="input" scope="external" />
+  <pin name="avs_s0_read" direction="input" scope="external" />
+  <pin name="avs_s0_readdata[31..0]" direction="output" scope="external" />
+  <pin name="avs_s0_write" direction="input" scope="external" />
+  <pin name="avs_s0_writedata[31..0]" direction="input" scope="external" />
+  <pin name="avs_s0_waitrequest" direction="output" scope="external" />
+  <pin name="ins_irq0_irq" direction="output" scope="external" />
+ </global>
+</pinplan>
