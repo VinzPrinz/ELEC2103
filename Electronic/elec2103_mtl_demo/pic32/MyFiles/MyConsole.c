@@ -141,7 +141,12 @@ void MyConsole_Task(void)
         MyFlash_Erase();
         MyFlash_Test();
 
-    } else if (strcmp(theCmd, "MyTemp") == 0) {
+    }
+    else if (strcmp(theCmd, "SPI") == 0) {
+        MyConsole_SendMsg("Send SPI\n");
+        MyCyclone_Write( 0x10 , 0x08 );
+    }
+    else if (strcmp(theCmd, "MyTemp") == 0) {
 
         int  theTemperature;
 

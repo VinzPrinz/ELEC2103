@@ -8,32 +8,6 @@ struct Node *head;
 struct Node *tail;
 int size_FIFO;
 
-/*int main(){
-    printf("Hello world \n");
-    char *str1="This is char 1";
-    char *str2="This is char 2";
-    char *str3="This is char 3";
-
-    MyFIFO_Init();
-    MyFIFO_Push((void *)str1,10);
-    MyFIFO_Push((void *)str2,10);
-
-
-    printf("This is the first message %s\n", (char *) MyFIFO_getHead());
-    if(MyFIFO_Pop())
-        return -1;
-    printf("This is the seconde message: %s \n",(char *)MyFIFO_getHead());
-
-    if(MyFIFO_Pop())
-        return -1;
-
-    if(!MyFIFO_getHead())
-        printf("return NULL as expected \n");
-
-    if(MyFIFO_Pop())
-        printf("return -1 ass expected \n");
-}
-*/
 
 int MyFIFO_Init(void){
     head = NULL;
@@ -71,6 +45,7 @@ int MyFIFO_Pop(void){
     if(!size_FIFO){
         return -1;
     }else if(size_FIFO==1){
+        free(head->data);
         free(head);
         head=NULL;
         tail=NULL;

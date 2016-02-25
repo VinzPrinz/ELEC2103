@@ -49,7 +49,10 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
 {
     // Clear the interrupt flags
     INTClearFlag(INT_INT1);
-    MyConsole_SendMsg("Interrupt received from INT1 - KEY0 \n>");
+    MyConsole_SendMsg("Interrupt received from INT1 - KEY0 LOL \n>");
+    char str[64];
+    sprintf(str, "This is readed from spi %d \n" , MyCyclone_Read(0x10));
+    MyConsole_SendMsg(str);
 }
 
 void __ISR(_EXTERNAL_2_VECTOR, My_INT_EXTERNAL_2_IPL) _External2InterruptHandler(void)
@@ -57,6 +60,7 @@ void __ISR(_EXTERNAL_2_VECTOR, My_INT_EXTERNAL_2_IPL) _External2InterruptHandler
     // Clear the interrupt flags
     INTClearFlag(INT_INT2);
     MyConsole_SendMsg("Interrupt received from INT2 - KEY1 \n>");
+    
 }
 
 /******************************************************************************/
