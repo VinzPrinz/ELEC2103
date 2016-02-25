@@ -61,4 +61,5 @@ MyIncludes/MyMDDFS.h  \
  Microchip/Include/MDD\ File\ System/FSDefs.h  \
  Microchip/Include/MDD\ File\ System/SD-SPI.h  \
 MyIncludes/MyCamera.h  \
- MyIncludes/MyMiniProjet.h 
+ MyIncludes/MyMiniProjet.h  \
+MyIncludes/MyFIFO.h 

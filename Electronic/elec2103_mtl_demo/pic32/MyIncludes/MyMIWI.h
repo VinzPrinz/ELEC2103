@@ -76,6 +76,7 @@ struct Frame{
     int size;
     BOOL enableBroadcast;
 };
+
 typedef struct
     {
         union
