@@ -1,0 +1,127 @@
+~inc:header.inc~
+<div id="content">
+
+<div id="status">
+	<div id="loading" style="display:none">Error:<br />Connection to demo board was lost.</div>
+	<div id="display">
+		<span style="float:right;font-size:9px;font-weight:normal;padding-top:8px;text-indent:0px">(DE0-Nano)</span>
+		<p>LEDs:<br /><span class="leds">
+		<a id="led7" onclick="newAJAXCommand('leds.cgi?led=7');">&bull;</a>
+		<a id="led6" onclick="newAJAXCommand('leds.cgi?led=6');">&bull;</a>
+		<a id="led5" onclick="newAJAXCommand('leds.cgi?led=5');">&bull;</a>
+		<a id="led4" onclick="newAJAXCommand('leds.cgi?led=4');">&bull;</a>
+		<a id="led3" onclick="newAJAXCommand('leds.cgi?led=3');">&bull;</a>
+		<a id="led2" onclick="newAJAXCommand('leds.cgi?led=2');">&bull;</a>
+		<a id="led1" onclick="newAJAXCommand('leds.cgi?led=1');">&bull;</a>
+		<a id="led0">&bull;</a>
+		</span></p>
+		<p>Switches:<br />
+		<span id="btn3">?</span> &nbsp;
+		<span id="btn2">?</span> &nbsp;
+		<span id="btn1">?</span> &nbsp;
+		<span id="btn0">?</span></p>
+		<p>Temperature: <span id="pot0" style="font-weight:normal">?</span></p>
+	</div>
+</div>
+
+<h1>Welcome to our ELEC2103 website!</h1>
+
+<table style="padding-left: 10px;">
+<tr><td><b>Stack Version:</b></td><td>&nbsp;</td><td>~version~</td></tr>
+<tr><td><b>Build Date:</b></td><td>&nbsp;</td><td>~builddate~</td></tr>
+</table>
+
+
+
+<p> <IMG SRC='images/Logoepl.jpg'BORDER='0' ALT = 'Edit'> </p>
+<h2>The authors</h2>
+<p>We are a couple of students at EPL in electrical engineering working on an electronics project. The members of the group are : 
+<ul>
+	<li>Olivier <b>Bronchain</b></li>
+	<li>Vincent <b>Schellekens</b></li>
+</ul>
+
+<h2>The project</h2>
+
+<p>We are working on a strategy game on a touch screen. Here is a preliminary image of what we want to accomplish. </p> 
+<p>The map of the game : <IMG SRC='images/board.JPG'BORDER='0' ALT = 'Edit'> </p>
+
+<p> Here is an overview of the communication chain we will implement in order to complete the project : </p> 
+<p><IMG SRC='images/scheme.png'BORDER='0' ALT = 'Edit' WIDTH="550"> </p>
+
+
+<h2>Some tests of WiFi communication</h2>
+<p> Here we try to output a message following the chain : console->board1->zigbee->board2->wifi->web.</p>
+<p> The message : <span id="MyWebMessage" style="font-weigth:normal">?</span></p>
+
+
+<p> Here we will send a string to the DEO </p>
+<form method="get" action="index.htm">
+<div class="examplebox">
+<b>Sended to DEO</b> <input type="text" name="todeo" maxlength="32"> &nbsp;<input type="submit" value="Send">
+</div>
+</form>
+
+<p> Here we will send a selected color to the DEO</p>
+<form method="get" action="index.htm">
+    <div class="examplebox">
+        <b>Color</b> <select name="color1">
+            <option value="red" selected>Red</option>
+            <option value="green">Green</option>
+            <option value="blue">Blue</option>
+        </select>
+        <br /><input type="submit" value="Send" style="margin-top:5px;">
+    </div>
+<form>
+
+</div>
+
+<script type="text/javascript">
+<!--
+// Parses the xmlResponse from status.xml and updates the status box
+function updateStatus(xmlData) {
+	var mainstat = document.getElementById('display').style.display;
+	var loadstat = document.getElementById('loading').style.display;
+
+	// Check if a timeout occurred
+	if(!xmlData)
+	{
+		mainstat = 'none';
+		loadstat = 'inline';
+
+		return;
+	}
+
+	// Make sure we're displaying the status display
+	mainstat = 'inline';
+	loadstat = 'none';
+
+	// Loop over all the LEDs
+	for(i = 0; i < 8; i++)
+		document.getElementById('led' + i).style.color = (getXMLValue(xmlData, 'led' + i) == '1') ? '#090' : '#ddd';
+
+	// Loop over all the buttons
+	for(i = 0; i < 4; i++)
+		document.getElementById('btn' + i).innerHTML = (getXMLValue(xmlData, 'btn' + i) == 'up') ? '&Lambda;' : 'V';
+
+	// Update the POT value
+	document.getElementById('pot0').innerHTML = getXMLValue(xmlData, 'pot0');
+    document.getElementById('MyWebMessage').innerHTML = getXMLValue(xmlData, 'MyWebMessage');
+	//document.getElementById('MyWebMessage').innerHTML = "testlol";
+    // TODO display something else than !DEF if no message received
+    if (getXMLValue(xmlData, 'MyWebMessage') == "!DEF")
+    {
+        document.getElementById('MyWebMessage').innerHTML = "No message  yet";
+    }
+}
+setTimeout("newAJAXCommand('status.xml', updateStatus, true)",500);
+//-->
+</script>
+
+<script type="text/javascript">
+<!--
+document.getElementById('hello').innerHTML = "~hellomsg~";
+//-->
+</script>
+
+~inc:footer.inc~
