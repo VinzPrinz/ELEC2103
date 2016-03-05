@@ -1,0 +1,69 @@
+// LT24_interface_irq.v
+
+// This file was auto-generated as a prototype implementation of a module
+// created in component editor.  It ties off all outputs to ground and
+// ignores all inputs.  It needs to be edited to make it do something
+// useful.
+// 
+// This file will not be automatically regenerated.  You should check it in
+// to your version control system if you want to keep it.
+
+`timescale 1 ps / 1 ps
+module LT24_interface_irq (
+		input  wire [7:0]  avs_s0_address,     //      avs_s0.address
+		input  wire        avs_s0_read,        //            .read
+		output wire [31:0] avs_s0_readdata,    //            .readdata
+		input  wire        avs_s0_write,       //            .write
+		input  wire [31:0] avs_s0_writedata,   //            .writedata
+		output wire        avs_s0_waitrequest, //            .waitrequest
+		input  wire        clock_clk,          //       clock.clk
+		input  wire        reset_reset,        //       reset.reset
+		output wire        ins_irq0_irq,       //    ins_irq0.irq
+		input  wire        finish_flag,        // conduit_end.new_signal
+		input  wire [31:0] counter,            //            .new_signal_1
+		output wire [11:0] pattern             //            .new_signal_2
+	);
+
+	// TODO: Auto-generated HDL template
+
+	
+	shorter( reset_reset , clock_clk , finish_flag, ins_irq0_irq);
+	reg [31:0]	avs_s0_readdata_reg;
+	assign avs_s0_readdata = avs_s0_readdata_reg;
+	
+	// never ask avalon bus to wait
+	assign avs_s0_waitrequest = 1'b0;
+
+	reg [11:0] pattern_reg;
+	assign pattern = 12'b000000000000;
+	
+	
+	always @(*)
+	if(avs_s0_read)
+		case(avs_s0_address[1:0])
+			2'b00: avs_s0_readdata_reg <= {31'b0 , finish_flag};
+			2'b01: avs_s0_readdata_reg <= {20'b0 , counter};
+		endcase
+	else if(avs_s0_write)
+		case(avs_s0_address[1:0])
+			2'b10: pattern_reg <= avs_s0_writedata[11:0];
+		endcase
+endmodule
+
+module shorter(
+				input logic reset , clk , 
+				input logic in,
+				output logic shorter);
+		
+		logic inPre;
+		
+		always_ff @(posedge clk)
+			inPre <= in;
+			
+		always_ff @(posedge clk)
+			if(inPre == 1'b0 && in == 1'b1)
+				shorter = 1'b1;
+			else
+				shorter = 1'b0;
+
+endmodule

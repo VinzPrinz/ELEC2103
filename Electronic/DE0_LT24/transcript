@@ -1,0 +1,193 @@
+vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface_irq.v
+# Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+# Start time: 11:57:24 on Mar 04,2016
+# vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface_irq.v 
+# -- Compiling module LT24_interface_irq
+# -- Compiling module shorter
+# 
+# Top level modules:
+# 	LT24_interface_irq
+# End time: 11:57:24 on Mar 04,2016, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/testbench.sv
+# Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+# Start time: 11:57:24 on Mar 04,2016
+# vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/testbench.sv 
+# -- Compiling module testbench
+# 
+# Top level modules:
+# 	testbench
+# End time: 11:57:24 on Mar 04,2016, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vsim work.testbench
+# vsim work.testbench 
+# Start time: 11:57:36 on Mar 04,2016
+# Loading sv_std.std
+# Loading work.testbench
+# Loading work.LT24_interface_irq
+# Loading work.shorter
+run 10us
+# ** Warning: (vsim-3116) Problem reading symbols from linux-gate.so.1 : can not open ELF file.
+add wave -position insertpoint  \
+sim:/testbench/ins_irq0_irq \
+sim:/testbench/finish_flag \
+sim:/testbench/clk \
+sim:/testbench/LED \
+sim:/testbench/KEY
+run 10us
+restart ; run 10us
+# ** Warning: (vsim-3116) Problem reading symbols from linux-gate.so.1 : can not open ELF file.
+vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/testbench.sv
+# Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+# Start time: 11:58:33 on Mar 04,2016
+# vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/testbench.sv 
+# -- Compiling module testbench
+# 
+# Top level modules:
+# 	testbench
+# End time: 11:58:33 on Mar 04,2016, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+
+vsim work.testbench
+# End time: 11:58:37 on Mar 04,2016, Elapsed time: 0:01:01
+# Errors: 0, Warnings: 2
+# vsim work.testbench 
+# Start time: 11:58:37 on Mar 04,2016
+# Loading sv_std.std
+# Loading work.testbench
+# Loading work.LT24_interface_irq
+# Loading work.shorter
+vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/testbench.sv
+# Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+# Start time: 11:58:45 on Mar 04,2016
+# vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/testbench.sv 
+# -- Compiling module testbench
+# 
+# Top level modules:
+# 	testbench
+# End time: 11:58:45 on Mar 04,2016, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+
+vsim work.testbench
+# End time: 11:58:48 on Mar 04,2016, Elapsed time: 0:00:11
+# Errors: 0, Warnings: 0
+# vsim work.testbench 
+# Start time: 11:58:48 on Mar 04,2016
+# Loading sv_std.std
+# Loading work.testbench
+# Loading work.LT24_interface_irq
+# Loading work.shorter
+add wave -position insertpoint  \
+sim:/testbench/ins_irq0_irq \
+sim:/testbench/finish_flag \
+sim:/testbench/clk \
+sim:/testbench/LED \
+sim:/testbench/KEY
+restart ; run 10us
+# ** Warning: (vsim-3116) Problem reading symbols from linux-gate.so.1 : can not open ELF file.
+vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface_irq.v
+# Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+# Start time: 11:59:49 on Mar 04,2016
+# vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface_irq.v 
+# -- Compiling module LT24_interface_irq
+# -- Compiling module shorter
+# 
+# Top level modules:
+# 	LT24_interface_irq
+# 	shorter
+# End time: 11:59:49 on Mar 04,2016, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/testbench.sv
+# Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+# Start time: 11:59:49 on Mar 04,2016
+# vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/testbench.sv 
+# -- Compiling module testbench
+# 
+# Top level modules:
+# 	testbench
+# End time: 11:59:49 on Mar 04,2016, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface.v
+# Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+# Start time: 11:59:49 on Mar 04,2016
+# vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface.v 
+# -- Compiling module LT24_interface
+# 
+# Top level modules:
+# 	LT24_interface
+# End time: 11:59:49 on Mar 04,2016, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface_irq.v
+# Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+# Start time: 11:59:49 on Mar 04,2016
+# vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface_irq.v 
+# -- Compiling module LT24_interface_irq
+# -- Compiling module shorter
+# 
+# Top level modules:
+# 	LT24_interface_irq
+# 	shorter
+# End time: 11:59:49 on Mar 04,2016, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface.v
+# Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+# Start time: 11:59:49 on Mar 04,2016
+# vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface.v 
+# -- Compiling module LT24_interface
+# 
+# Top level modules:
+# 	LT24_interface
+# End time: 11:59:49 on Mar 04,2016, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface_irq.v
+# Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+# Start time: 11:59:53 on Mar 04,2016
+# vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface_irq.v 
+# -- Compiling module LT24_interface_irq
+# -- Compiling module shorter
+# 
+# Top level modules:
+# 	LT24_interface_irq
+# 	shorter
+# End time: 11:59:53 on Mar 04,2016, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/testbench.sv
+# Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+# Start time: 11:59:53 on Mar 04,2016
+# vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/testbench.sv 
+# -- Compiling module testbench
+# 
+# Top level modules:
+# 	testbench
+# End time: 11:59:53 on Mar 04,2016, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface_irq.v
+# Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+# Start time: 11:59:57 on Mar 04,2016
+# vlog -reportprogress 300 -work work /home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/LT24_interface_irq.v 
+# -- Compiling module LT24_interface_irq
+# -- Compiling module shorter
+# 
+# Top level modules:
+# 	LT24_interface_irq
+# 	shorter
+# End time: 11:59:57 on Mar 04,2016, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vsim work.testbench
+# End time: 12:00:05 on Mar 04,2016, Elapsed time: 0:01:17
+# Errors: 0, Warnings: 1
+# vsim work.testbench 
+# Start time: 12:00:05 on Mar 04,2016
+# Loading sv_std.std
+# Loading work.testbench
+# Loading work.LT24_interface_irq
+add wave -position insertpoint  \
+sim:/testbench/ins_irq0_irq \
+sim:/testbench/finish_flag \
+sim:/testbench/clk \
+sim:/testbench/LED \
+sim:/testbench/KEY
+restart ; run 10us
+# ** Warning: (vsim-3116) Problem reading symbols from linux-gate.so.1 : can not open ELF file.
+# End time: 12:04:17 on Mar 04,2016, Elapsed time: 0:04:12
+# Errors: 0, Warnings: 1
