@@ -61,6 +61,10 @@ module mtl_controller(
 	oLCD_G,           // Output LCD green color data  
 	oLCD_B,            // Output LCD blue color data  
 	
+	// output the pixel being written now
+	oXpixel,
+	oYpixel,
+	
 	inR,
 	inG,
 	inB
@@ -95,10 +99,14 @@ output			oVD;
 output [7:0]	oLCD_R;		
 output [7:0]	oLCD_G;
 output [7:0]	oLCD_B;
+output [10:0]  oXpixel;
+output [9:0]   oYpixel;
 
 input [7:0] inR;
 input [7:0] inG;
 input [7:0] inB;
+
+
 
 //=============================================================================
 // REG/WIRE declarations
@@ -121,6 +129,9 @@ reg			no_data_yet;
 // Structural coding
 //=============================================================================
 
+// Assigning current pixel 
+assign oXpixel = x_cnt-(Horizontal_Blank-2);
+assign oYpixel = y_cnt-(Vertical_Blank-1);
 
 //--- Assigning the right color data as a function -------------------------
 //--- of the current pixel position ----------------------------------------
@@ -193,16 +204,16 @@ always_ff @(posedge iCLK) begin
 			end
 		// ...and if the slideshow has been loaded,
 		// then display the values read from the SDRAM.
-//		end else begin
-//			read_red 	<= iREAD_DATA[23:16];
-//			read_green 	<= iREAD_DATA[15:8];
-//			read_blue 	<= iREAD_DATA[7:0];
-
-		// FOR NOW !!! 
 		end else begin
-			read_red 	<= inR;
-			read_green 	<= inG;
-			read_blue 	<= inB; ///////////////////////////////////////////////////////////////////////
+			read_red 	<= iREAD_DATA[23:16];
+			read_green 	<= iREAD_DATA[15:8];
+			read_blue 	<= iREAD_DATA[7:0];
+
+//		// FOR NOW !!! 
+//		end else begin
+//			read_red 	<= inR;
+//			read_green 	<= inG;
+//			read_blue 	<= inB; ///////////////////////////////////////////////////////////////////////
 		end
 	// If we aren't in the active display area, put at zero
 	// the color signals.

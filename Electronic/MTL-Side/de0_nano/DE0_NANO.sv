@@ -82,7 +82,7 @@ module DE0_NANO(
 
 //Parameters for the SDRAM Controller
 parameter	WR_LENGTH            =	9'h2;
-parameter	RD_LENGTH            =	9'h80;
+parameter	RD_LENGTH            =	9'h80; /// ???? 9'f80
 parameter	RANGE_ADDR_IMG			=  23'd768000;
 
 //- WR_LENGTH is 2 for writing pixel per pixel as soon as one is received via SPI
@@ -159,6 +159,13 @@ output			  [7:0]		MTL_G;
 output			  [7:0]		MTL_B;
 
 
+// ----------------- draw type register ----------------
+// values and meanings :
+// 00 -> draw background
+// 01 -> draw rectangle in middle of the screen
+logic [7:0] reg_draw_type;
+
+
 //=======================================================
 //   PIC32 Interface
 //=======================================================
@@ -195,7 +202,12 @@ assign PIC32_RESET	= GPIO_2[10];
 
 //--- Assign Status, INT, Led70 -------------------------
 
-assign LED[7:0] = Led70[7:0];
+//assign LED[7:0] = Led70[7:0];
+//assign LED[3] = loading;
+//assign LED[5:4] = {2{newFrame}};
+//assign LED[7:6] = {2{reg_draw_type[1]}};
+
+
 
 assign PIC32_INT1 = Config[0] ? KEY[0] : 1'b1;
 assign PIC32_INT2 = Config[1] ? KEY[1] : 1'b1;
@@ -205,7 +217,7 @@ always @ (posedge CLOCK_50)
 
 //---- 8-bit SPI Interface ------------------------------
 
-
+logic sdram_write_load;
  
 // new register to send gestures
 logic [7:0] gestureInfo;
@@ -248,7 +260,10 @@ MySPI MySPI_instance (
 	
 	.reg_gesture(gestureInfo),
 	.reg_xpos(reg_x1[7:0]),
-	.reg_ypos(reg_y1[7:0])
+	.reg_ypos(reg_y1[7:0]),
+	
+	.draw_type(reg_draw_type),
+	.sdram_write_load(sdram_write_load)
 );
 
 
@@ -314,6 +329,12 @@ reset_delay	reset_delay_inst (
 	.oRST(dly_rst)
 );
 
+// Drawing controller 
+logic [23:0] base_wr_addr, max_wr_addr;
+choose_draw_action choose_draw_action_inst(
+					.drawreg(reg_draw_type),
+					.base_wr_addr(base_wr_addr),
+					.max_wr_addr(max_wr_addr));
 
 //--- SDRAM Controller ----------------------------------
 
@@ -336,10 +357,12 @@ sdram_control     sdram_control_inst (
    //	FIFO Write Side 1
 	.WR1_DATA({8'b0, Red, Green, Blue}),
 	.WR1(Trigger),
-	.WR1_ADDR(0),
-	.WR1_MAX_ADDR(ImgNum*RANGE_ADDR_IMG),
+	//.WR1_ADDR(0),
+	//.WR1_MAX_ADDR(ImgNum*RANGE_ADDR_IMG),
+	.WR1_ADDR(base_wr_addr),
+	.WR1_MAX_ADDR(max_wr_addr),
 	.WR1_LENGTH(WR_LENGTH),
-	.WR1_LOAD(!dly_rstn),
+	.WR1_LOAD(!dly_rstn || sdram_write_load),
 	.WR1_CLK(~CLOCK_50),
 	//	FIFO Read Side 1
 	.RD1_DATA(read_data),
@@ -384,7 +407,8 @@ always_ff @(posedge CLOCK_50) begin
 		if (Trigger)
 			counter_pix <= counter_pix + 32'b1;
 		
-		if ((ImgNum > 0) && (counter_pix == (ImgNum*(32'd384000))))
+		//if ((ImgNum > 0) && (counter_pix == (ImgNum*(32'd384000))))  
+		if ((ImgNum > 0) && (counter_pix == (max_wr_addr-base_wr_addr)/2))
 			if (pulse_e)
 				if (current_img == 5'b0)
 					current_img <= ImgNum[4:0] - 5'b1;
@@ -399,6 +423,26 @@ always_ff @(posedge CLOCK_50) begin
 	end
 end
 
+// --------------------------- MAP CONTROLLER ---------------------------------------
+// signals
+logic tileLoad; // load signal to update the read addresses when we come in a new tileLoad
+logic [23:0] map_base_read_addr, map_max_read_addr; // base and max addresses coming out from the map controller
+logic [10:0] oXpixel; // outputs of mtl controller, go in map controller
+logic [9:0]  oYpixel;
+// for test
+logic [7:0] testReg;
+// instantiate the map controller to produce base and max read addresses as a function of the current pixel position
+mapController mapController_inst(.clk(iCLOCK_33), // iCLOCK?
+											.reset(dly_rst || PIC32_RESET),
+											.newFrame(newFrame),
+											.Xpixel(oXpixel),
+											.Ypixel(oYpixel),
+											.tileLoad(tileLoad),
+											.base_read_addr(map_base_read_addr),
+											.max_read_addr(map_max_read_addr),
+											.test(testReg));
+
+assign LED = testReg;
 // This always block is synchronous with the LCD controller
 // and with the read side of the SDRAM controller.
 // Based on the current image, the base and max read
@@ -415,12 +459,19 @@ always_ff @(posedge CLOCK_33) begin
 		if (endFrame) begin
 			base_read_addr <= current_img*RANGE_ADDR_IMG;
 			max_read_addr <= current_img*RANGE_ADDR_IMG + RANGE_ADDR_IMG;
+			
+		// ok let's try things
+		end else if(tileLoad && reg_draw_type[1]) begin // only if certain draw mode
+			base_read_addr <= map_base_read_addr;
+			max_read_addr <= map_max_read_addr;
+			
 		end else begin
 			base_read_addr <= base_read_addr;
 			max_read_addr <= max_read_addr;
 		end
 		
-		load_new <= newFrame;
+		//load_new <= newFrame;
+		load_new <= newFrame || (tileLoad && reg_draw_type[1]);
 	end
 end
 
@@ -452,6 +503,8 @@ mtl_controller mtl_controller_inst (
 	.oLCD_B(MTL_B),
 	.oHD(MTL_HSD),
 	.oVD(MTL_VSD),
+	.oXpixel(oXpixel),
+	.oYpixel(oYpixel),
 	.inR(Red),
 	.inG(Green),
 	.inB(Blue)
@@ -472,10 +525,12 @@ always_ff @ (posedge CLOCK_33) begin
 		wait_dly <= 1'b0;
 		counter_dly <= 6'b0;
 	end else begin
-		if ((ImgNum > 0) && (counter_pix == (ImgNum*(32'd384000))))
+		if ((ImgNum > 0) && (counter_pix == (max_wr_addr-base_wr_addr)/2))
+		//if ((ImgNum > 0) && (counter_pix == (ImgNum*(32'd384000))))
 			wait_dly <= 1'b1;
 		else if (counter_pix > 32'b0)
 			loading <= 1'b1;
+			// should I add wait_dly <= 1'b0; ?
 			
 		if (wait_dly)
 			if (counter_dly <= 6'd50)
@@ -642,7 +697,7 @@ module gestureMapping(
 		endcase
 endmodule
 
-
+// like the other buffer, but other timings and stuff
 module hold_buffer (
 	input  logic	clk,
 	input  logic	rst,
@@ -674,3 +729,35 @@ module hold_buffer (
 	assign pulse = ((count<=32'd1000000) && (count>32'd0)); // TODO : ajuster la periode
 	
 endmodule
+
+// module controlling what we write in the SDRAM !! lol
+// values and meanings :
+// 00 -> draw background (default)
+// 01 -> draw rectangle in middle of the screens
+// 
+module choose_draw_action (
+					input logic [7:0] drawreg,
+					output logic [23:0] base_wr_addr,
+					output logic [23:0] max_wr_addr);
+	always_comb
+		case(drawreg)
+			8'h00: begin 
+				base_wr_addr = 24'b0;
+				max_wr_addr = 24'd768000; // number of pixels
+				end
+			8'h01: begin 
+				base_wr_addr = 24'd500; // try something random 
+				max_wr_addr = 24'd65000; 
+				end
+			8'h02: begin 
+				base_wr_addr = 24'd76800; // go far far 
+				max_wr_addr = 24'd768000; 
+				end
+			default: begin 
+				base_wr_addr = 24'b0;
+				max_wr_addr = 24'd768000; // number of pixels
+				end
+		endcase
+		
+endmodule
+	

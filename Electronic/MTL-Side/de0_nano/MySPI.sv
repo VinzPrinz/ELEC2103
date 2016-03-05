@@ -13,10 +13,14 @@ module MySPI (
 	output logic [7:0] Blue,
 	output logic [7:0] ImgNum,
 	output logic		 Trigger,
-	
-	input logic [7:0]  reg_gesture,
+	// for sending gestures and coordiates on touch screen
+	input logic [7:0]  reg_gesture, 
 	input logic [7:0]  reg_xpos,
-	input logic [7:0]  reg_ypos
+	input logic [7:0]  reg_ypos,
+	// for determining what type of drawing we will do on the screen
+	output logic [7:0] draw_type,
+	output logic 		 sdram_write_load
+	
 );
 
 //--- Registers Address ---------------------------------
@@ -32,6 +36,8 @@ parameter A_ImgNum				= 7'h06;
 parameter A_reg_gesture			= 7'h07;
 parameter A_reg_xpos				= 7'h08;
 parameter A_reg_ypos				= 7'h09;
+
+parameter A_draw_type			= 7'h0a;
 
 //--- FSM States ----------------------------------------
 
@@ -100,6 +106,13 @@ assign SPI_data_shift	 = (SPI_state == S_Data_01);
 assign SPI_data_load		 = (SPI_state == S_Data);
 assign SPI_data_update   = ((SPI_state == S_End) & SPI_address[7]);
 
+logic sdram_write_load0; // for delaying the thing
+always_ff @ (posedge theClock) // small delay
+begin
+	sdram_write_load0 <= SPI_data_update & (SPI_address[6:0] == A_draw_type); // assigned when addresses of SDRAM write change
+	sdram_write_load  <= sdram_write_load0;
+end
+
 //--- On the positive edge of the clock -----------------
 
 always_ff @ (posedge theClock)
@@ -119,6 +132,7 @@ begin
 				A_reg_gesture 		: SPI_data <= reg_gesture;
 				A_reg_xpos			: SPI_data <= reg_xpos;
 				A_reg_ypos			: SPI_data <= reg_ypos;
+				A_draw_type			: SPI_data <= draw_type;
 			endcase
 		
 	if (theReset) begin
@@ -128,6 +142,7 @@ begin
 		Green <= 8'h00;
 		Blue <= 8'h00;
 		ImgNum <= 8'h00;
+		draw_type <= 8'h00;
 	end else if ((SPI_data_update) & (SPI_address[6:0] == A_Blue)) begin
 		Blue <= SPI_data;
 		Trigger <= 1'b1;
@@ -138,6 +153,7 @@ begin
 		else if ((SPI_data_update) & (SPI_address[6:0] == A_Red)) Red <= SPI_data;
 		else if ((SPI_data_update) & (SPI_address[6:0] == A_Green)) Green <= SPI_data;
 		else if ((SPI_data_update) & (SPI_address[6:0] == A_ImgNum)) ImgNum <= SPI_data;
+		else if ((SPI_data_update) & (SPI_address[6:0] == A_draw_type)) draw_type <= SPI_data;
 	end
 	
 end
