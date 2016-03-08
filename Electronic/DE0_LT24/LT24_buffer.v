@@ -219,9 +219,13 @@ end
 //initial
 //     $readmemh("MyImage.hex",RAM);
 
+
+
 wire [10:0]  limLowX, limLowY, limHighX, limHighY, characPosX, characPosY;
 reg 	[10:0] posX, posY, pointerX, pointerY;
 
+
+// Used for the fight game
 reg [1:0]	Counter_Reg;
 wire [1:0] 	Counter_Wire;
 assign Counter_Wire  = Counter_Reg;
@@ -238,6 +242,25 @@ assign 		Counter_Case_Wire = Counter_Case_Reg;
 reg	[11:0]	Case_Reg;
 wire	[11:0]	Case_Wire;
 assign Case_Wire = Case_Reg;
+
+
+
+// Used for the coins game
+
+parameter H1 = 30;
+parameter L1 = 40;
+
+reg [10:0]	X1 , Y1;
+reg [31:0]  cnt;
+wire displayCharact;
+
+reg[15:0] VX, VY;
+
+assign displayCharact = (posX >= X1) && (posX < X1+H1) && (posY >= Y1) && (posY < Y1+L1);
+
+
+
+
 
 //LT24_buffer never write on the background onchip mem
 assign 	background_mem_s2_writedata = 16'h0;
@@ -321,14 +344,12 @@ else if (screenState == 18'd6)
 else if ((screenState>18'd6) && (screenState<18'd76806))
 	begin
 	LT24_RS_loc <= 1'b1;
-	//if the current pixel is in the area where the character must be displayed
-//	if((posX > limLowX) && (posX < limHighX) && (posY > limLowY) && (posY < limHighY))
-//		LT24_D_loc <= pic_mem_s2_readdata;
-//	//otherwise, print the background
-//	else
-//		LT24_D_loc <= 16'haa00;
-//	end
-	if(Case_Wire[11])
+	
+	if(displayCharact)
+		begin
+			LT24_D_loc <= 16'hf0ff;
+		end
+	else if(Case_Wire[11])
 		case(Counter_Wire)
 			2'b00: LT24_D_loc <= pic_mem_s2_readdata;
 			2'b01: LT24_D_loc <= pic_mem_s2_readdata;
@@ -468,5 +489,36 @@ always @ (posedge clk)
 		end
 	end
 	
+	
+// FSM to choose the position of jean-didier
+	always @ (posedge clk)
+		if(rst || Y1 + VY < 0)
+			begin
+			Y1 <= 10;
+			V1 <= 1;
+		else if( Y1+VY >= (320-L1))
+			Y1 <= 320-L1;
+		else if( cnt == 32'h000ffffe)
+			Y1 <= Y1+VY;
+		else
+			Y1 <= Y1;
+			
+	always @ (posedge clk)
+		if(rst || X1 + VX < 0)
+			X1 <= 10;
+		else if( X1+VX >= (240-H1))
+			X1 <= 240-H1;
+		else if( cnt == 32'h000ffffe)
+			X1 <= X1+VX;
+		else	
+			X1 <= X1;
+			
+	always @ (posedge clk)
+		if(rst || cnt == 32'h000fffff)
+			cnt <= 0;
+		else
+			cnt <= cnt+1;
+			
+
 	
 endmodule
