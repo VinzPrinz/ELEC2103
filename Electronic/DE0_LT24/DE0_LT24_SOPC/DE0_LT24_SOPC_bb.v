@@ -28,9 +28,11 @@ module DE0_LT24_SOPC (
 	lt24_conduit_rd,
 	lt24_conduit_wr,
 	lt24_conduit_data,
-	lt24_interface_irq_0_conduit_end_finish_flag,
-	lt24_interface_irq_0_conduit_end_counter,
-	lt24_interface_irq_0_conduit_end_pattern,
+	lt24_conduit_1_finish_flag,
+	lt24_conduit_1_counter,
+	lt24_conduit_1_pattern,
+	lt24_conduit_1_vx,
+	lt24_conduit_1_vy,
 	lt24_lcd_rstn_export,
 	lt24_touch_busy_export,
 	lt24_touch_penirq_n_export,
@@ -85,9 +87,11 @@ module DE0_LT24_SOPC (
 	output		lt24_conduit_rd;
 	output		lt24_conduit_wr;
 	output	[15:0]	lt24_conduit_data;
-	input		lt24_interface_irq_0_conduit_end_finish_flag;
-	input	[31:0]	lt24_interface_irq_0_conduit_end_counter;
-	output	[11:0]	lt24_interface_irq_0_conduit_end_pattern;
+	input		lt24_conduit_1_finish_flag;
+	input	[31:0]	lt24_conduit_1_counter;
+	output	[11:0]	lt24_conduit_1_pattern;
+	output	[31:0]	lt24_conduit_1_vx;
+	output	[31:0]	lt24_conduit_1_vy;
 	output		lt24_lcd_rstn_export;
 	input		lt24_touch_busy_export;
 	input		lt24_touch_penirq_n_export;

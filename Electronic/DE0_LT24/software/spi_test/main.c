@@ -22,7 +22,7 @@ alt_video_display Display;
 TOUCH_HANDLE *pTouch;
 
 void LT24_ISR(void *context){
-	IOWR(LT24_INTERFACE_IRQ_0_BASE + 3,0 , 321);
+	IOWR(LT24_INTERFACE_IRQ_0_BASE + (4*7),0 , 321);
 	counter++;
 	char *LT24 = (char* ) context;
 	char str[64];
@@ -46,7 +46,8 @@ int main()
 		return 1;
 	}
 
-
+	IOWR(LT24_INTERFACE_IRQ_0_BASE+ (4*3),0, -1);
+	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0,-1);
 	printf("Welcome to LT24 Demo \n");
 
 	// Write 0x3C on LED[6:0] through the dedicated custom IP

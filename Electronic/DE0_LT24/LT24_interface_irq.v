@@ -11,8 +11,10 @@ module LT24_interface_irq (
 		output wire        ins_irq0_irq,       //    ins_irq0.irq
 		input  wire        finish_flag,        // conduit_end.new_signal
 		input  wire [31:0] counter,            //            .new_signal_1
-		output wire [11:0] pattern             //            .new_signal_2
-	);
+		output wire [11:0] pattern,             //            .new_signal_2
+        output wire [7:0]  vx,
+        output wire [7:0]  vy
+    );
 
 	// TODO: Auto-generated HDL template
 

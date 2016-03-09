@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE22F17) Path("/home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24_student/") File("DE0_Nano_time_limited.sof") MfrSpec(OpMask(1));
+		Device PartName(EP4CE22F17) Path("/home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24/") File("DE0_Nano_time_limited.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 

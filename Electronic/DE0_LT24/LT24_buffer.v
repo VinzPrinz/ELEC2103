@@ -48,7 +48,9 @@ module LT24_buffer(
 	
 	lt24_finish,
 	lt24_pattern,
-	lt24_counter
+	lt24_counter,
+	VX,
+	VY
 );
 input clk;
 input rst_n;
@@ -100,7 +102,8 @@ output  wire [1:0]  background_mem_s2_byteenable;
 input 	wire				lt24_buffer_flag;
 output 	wire				lt24_finish;
 input		wire	[11:0]	lt24_pattern;
-output	wire	[31:0]	lt24_counter;       
+output	wire	[31:0]	lt24_counter;   
+input 	wire [31:0]	VX , VY;    
 
 reg				lt24_finish_reg;
 reg	[31:0]	lt24_counter_reg;
@@ -254,7 +257,6 @@ reg [10:0]	X1 , Y1;
 reg [31:0]  cnt;
 wire displayCharact;
 
-reg[15:0] VX, VY;
 
 assign displayCharact = (posX >= X1) && (posX < X1+H1) && (posY >= Y1) && (posY < Y1+L1);
 
@@ -493,9 +495,7 @@ always @ (posedge clk)
 // FSM to choose the position of jean-didier
 	always @ (posedge clk)
 		if(rst || Y1 + VY < 0)
-			begin
 			Y1 <= 10;
-			V1 <= 1;
 		else if( Y1+VY >= (320-L1))
 			Y1 <= 320-L1;
 		else if( cnt == 32'h000ffffe)
@@ -506,10 +506,14 @@ always @ (posedge clk)
 	always @ (posedge clk)
 		if(rst || X1 + VX < 0)
 			X1 <= 10;
-		else if( X1+VX >= (240-H1))
+		else if( X1+VX >= (240-H1) && ~VX[31]) // VX positif
 			X1 <= 240-H1;
-		else if( cnt == 32'h000ffffe)
+		else if ((X1-(~VX +32'd1) >= 240-H1) && VX[31]) // VX neg
+			X1 <= 240-H1;
+		else if( cnt == 32'h000ffffe && ~VX[31]) // VX positif
 			X1 <= X1+VX;
+		else if (cnt == 32'h000ffffe && VX[31]) // VX neg
+			X1 <= X1-(~VX + 32'd1);
 		else	
 			X1 <= X1;
 			

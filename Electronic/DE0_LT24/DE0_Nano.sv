@@ -177,6 +177,7 @@ wire 			lt24_buffer_flag;
 wire			LT24_finish;
 wire [31:0]	LT24_counter;
 wire [11:0] LT24_pattern;
+wire [31:0] VX , VY;
 //=======================================================
 //  REG/WIRE declarations
 //=======================================================
@@ -338,9 +339,11 @@ DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		.cyclonespi_spi_interface_config(Config),
 		.cyclonespi_spi_interface_spi_irq(GPIO_2[4]),
 		
-		.lt24_interface_irq_0_conduit_end_finish_flag           (LT24_finish),           //         lt24_interface_0_conduit_end.done
-		.lt24_interface_irq_0_conduit_end_pattern              (LT24_pattern),              //                                     .a
-		.lt24_interface_irq_0_conduit_end_counter         (LT24_counter)          //                                     .result
+		.lt24_conduit_1_finish_flag           (LT24_finish),           //         lt24_interface_0_conduit_end.done
+		.lt24_conduit_1_pattern              (LT24_pattern),              //                                     .a
+		.lt24_conduit_1_counter         (LT24_counter),          //                                     .result
+		.lt24_conduit_1_vx     (VX),                           //                                     .vx
+		.lt24_conduit_1_vy	(VY)
 
 	);
 
@@ -421,7 +424,9 @@ DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		
 		.lt24_finish(LT24_finish),
 		.lt24_pattern(LT24_pattern),
-		.lt24_counter(LT24_counter)
+		.lt24_counter(LT24_counter),
+		.VX(VX),
+		.VY(VY)
 	);
 	
 				 

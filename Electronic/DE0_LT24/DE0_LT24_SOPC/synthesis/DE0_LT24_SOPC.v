@@ -4,62 +4,64 @@
 
 `timescale 1 ps / 1 ps
 module DE0_LT24_SOPC (
-		input  wire        alt_pll_areset_conduit_export,                //               alt_pll_areset_conduit.export
-		output wire        alt_pll_c1_clk,                               //                           alt_pll_c1.clk
-		output wire        alt_pll_c3_clk,                               //                           alt_pll_c3.clk
-		output wire        alt_pll_locked_conduit_export,                //               alt_pll_locked_conduit.export
-		output wire        alt_pll_phasedone_conduit_export,             //            alt_pll_phasedone_conduit.export
-		input  wire [12:0] background_mem_s2_address,                    //                    background_mem_s2.address
-		input  wire        background_mem_s2_chipselect,                 //                                     .chipselect
-		input  wire        background_mem_s2_clken,                      //                                     .clken
-		input  wire        background_mem_s2_write,                      //                                     .write
-		output wire [15:0] background_mem_s2_readdata,                   //                                     .readdata
-		input  wire [15:0] background_mem_s2_writedata,                  //                                     .writedata
-		input  wire [1:0]  background_mem_s2_byteenable,                 //                                     .byteenable
-		input  wire        clk_clk,                                      //                                  clk.clk
-		input  wire        cyclonespi_spi_interface_SPI_clk,             //             cyclonespi_spi_interface.SPI_clk
-		input  wire        cyclonespi_spi_interface_SPI_CS,              //                                     .SPI_CS
-		input  wire        cyclonespi_spi_interface_SPI_SDI,             //                                     .SPI_SDI
-		output wire        cyclonespi_spi_interface_SPI_SDO,             //                                     .SPI_SDO
-		output wire [7:0]  cyclonespi_spi_interface_data_out,            //                                     .data_out
-		output wire        cyclonespi_spi_interface_data_out_enable,     //                                     .data_out_enable
-		output wire [7:0]  cyclonespi_spi_interface_config,              //                                     .config
-		output wire        cyclonespi_spi_interface_spi_irq,             //                                     .spi_irq
-		input  wire        from_key_export,                              //                             from_key.export
-		output wire        lt24_buffer_flag_external_connection_export,  // lt24_buffer_flag_external_connection.export
-		output wire        lt24_conduit_cs,                              //                         lt24_conduit.cs
-		output wire        lt24_conduit_rs,                              //                                     .rs
-		output wire        lt24_conduit_rd,                              //                                     .rd
-		output wire        lt24_conduit_wr,                              //                                     .wr
-		output wire [15:0] lt24_conduit_data,                            //                                     .data
-		input  wire        lt24_interface_irq_0_conduit_end_finish_flag, //     lt24_interface_irq_0_conduit_end.finish_flag
-		input  wire [31:0] lt24_interface_irq_0_conduit_end_counter,     //                                     .counter
-		output wire [11:0] lt24_interface_irq_0_conduit_end_pattern,     //                                     .pattern
-		output wire        lt24_lcd_rstn_export,                         //                        lt24_lcd_rstn.export
-		input  wire        lt24_touch_busy_export,                       //                      lt24_touch_busy.export
-		input  wire        lt24_touch_penirq_n_export,                   //                  lt24_touch_penirq_n.export
-		input  wire        lt24_touch_spi_MISO,                          //                       lt24_touch_spi.MISO
-		output wire        lt24_touch_spi_MOSI,                          //                                     .MOSI
-		output wire        lt24_touch_spi_SCLK,                          //                                     .SCLK
-		output wire        lt24_touch_spi_SS_n,                          //                                     .SS_n
-		input  wire [12:0] pic_mem_s2_address,                           //                           pic_mem_s2.address
-		input  wire        pic_mem_s2_chipselect,                        //                                     .chipselect
-		input  wire        pic_mem_s2_clken,                             //                                     .clken
-		input  wire        pic_mem_s2_write,                             //                                     .write
-		output wire [15:0] pic_mem_s2_readdata,                          //                                     .readdata
-		input  wire [15:0] pic_mem_s2_writedata,                         //                                     .writedata
-		input  wire [1:0]  pic_mem_s2_byteenable,                        //                                     .byteenable
-		input  wire        reset_reset_n,                                //                                reset.reset_n
-		output wire [12:0] sdram_wire_addr,                              //                           sdram_wire.addr
-		output wire [1:0]  sdram_wire_ba,                                //                                     .ba
-		output wire        sdram_wire_cas_n,                             //                                     .cas_n
-		output wire        sdram_wire_cke,                               //                                     .cke
-		output wire        sdram_wire_cs_n,                              //                                     .cs_n
-		inout  wire [15:0] sdram_wire_dq,                                //                                     .dq
-		output wire [1:0]  sdram_wire_dqm,                               //                                     .dqm
-		output wire        sdram_wire_ras_n,                             //                                     .ras_n
-		output wire        sdram_wire_we_n,                              //                                     .we_n
-		output wire [7:0]  to_led_export                                 //                               to_led.export
+		input  wire        alt_pll_areset_conduit_export,               //               alt_pll_areset_conduit.export
+		output wire        alt_pll_c1_clk,                              //                           alt_pll_c1.clk
+		output wire        alt_pll_c3_clk,                              //                           alt_pll_c3.clk
+		output wire        alt_pll_locked_conduit_export,               //               alt_pll_locked_conduit.export
+		output wire        alt_pll_phasedone_conduit_export,            //            alt_pll_phasedone_conduit.export
+		input  wire [12:0] background_mem_s2_address,                   //                    background_mem_s2.address
+		input  wire        background_mem_s2_chipselect,                //                                     .chipselect
+		input  wire        background_mem_s2_clken,                     //                                     .clken
+		input  wire        background_mem_s2_write,                     //                                     .write
+		output wire [15:0] background_mem_s2_readdata,                  //                                     .readdata
+		input  wire [15:0] background_mem_s2_writedata,                 //                                     .writedata
+		input  wire [1:0]  background_mem_s2_byteenable,                //                                     .byteenable
+		input  wire        clk_clk,                                     //                                  clk.clk
+		input  wire        cyclonespi_spi_interface_SPI_clk,            //             cyclonespi_spi_interface.SPI_clk
+		input  wire        cyclonespi_spi_interface_SPI_CS,             //                                     .SPI_CS
+		input  wire        cyclonespi_spi_interface_SPI_SDI,            //                                     .SPI_SDI
+		output wire        cyclonespi_spi_interface_SPI_SDO,            //                                     .SPI_SDO
+		output wire [7:0]  cyclonespi_spi_interface_data_out,           //                                     .data_out
+		output wire        cyclonespi_spi_interface_data_out_enable,    //                                     .data_out_enable
+		output wire [7:0]  cyclonespi_spi_interface_config,             //                                     .config
+		output wire        cyclonespi_spi_interface_spi_irq,            //                                     .spi_irq
+		input  wire        from_key_export,                             //                             from_key.export
+		output wire        lt24_buffer_flag_external_connection_export, // lt24_buffer_flag_external_connection.export
+		output wire        lt24_conduit_cs,                             //                         lt24_conduit.cs
+		output wire        lt24_conduit_rs,                             //                                     .rs
+		output wire        lt24_conduit_rd,                             //                                     .rd
+		output wire        lt24_conduit_wr,                             //                                     .wr
+		output wire [15:0] lt24_conduit_data,                           //                                     .data
+		input  wire        lt24_conduit_1_finish_flag,                  //                       lt24_conduit_1.finish_flag
+		input  wire [31:0] lt24_conduit_1_counter,                      //                                     .counter
+		output wire [11:0] lt24_conduit_1_pattern,                      //                                     .pattern
+		output wire [31:0] lt24_conduit_1_vx,                           //                                     .vx
+		output wire [31:0] lt24_conduit_1_vy,                           //                                     .vy
+		output wire        lt24_lcd_rstn_export,                        //                        lt24_lcd_rstn.export
+		input  wire        lt24_touch_busy_export,                      //                      lt24_touch_busy.export
+		input  wire        lt24_touch_penirq_n_export,                  //                  lt24_touch_penirq_n.export
+		input  wire        lt24_touch_spi_MISO,                         //                       lt24_touch_spi.MISO
+		output wire        lt24_touch_spi_MOSI,                         //                                     .MOSI
+		output wire        lt24_touch_spi_SCLK,                         //                                     .SCLK
+		output wire        lt24_touch_spi_SS_n,                         //                                     .SS_n
+		input  wire [12:0] pic_mem_s2_address,                          //                           pic_mem_s2.address
+		input  wire        pic_mem_s2_chipselect,                       //                                     .chipselect
+		input  wire        pic_mem_s2_clken,                            //                                     .clken
+		input  wire        pic_mem_s2_write,                            //                                     .write
+		output wire [15:0] pic_mem_s2_readdata,                         //                                     .readdata
+		input  wire [15:0] pic_mem_s2_writedata,                        //                                     .writedata
+		input  wire [1:0]  pic_mem_s2_byteenable,                       //                                     .byteenable
+		input  wire        reset_reset_n,                               //                                reset.reset_n
+		output wire [12:0] sdram_wire_addr,                             //                           sdram_wire.addr
+		output wire [1:0]  sdram_wire_ba,                               //                                     .ba
+		output wire        sdram_wire_cas_n,                            //                                     .cas_n
+		output wire        sdram_wire_cke,                              //                                     .cke
+		output wire        sdram_wire_cs_n,                             //                                     .cs_n
+		inout  wire [15:0] sdram_wire_dq,                               //                                     .dq
+		output wire [1:0]  sdram_wire_dqm,                              //                                     .dqm
+		output wire        sdram_wire_ras_n,                            //                                     .ras_n
+		output wire        sdram_wire_we_n,                             //                                     .we_n
+		output wire [7:0]  to_led_export                                //                               to_led.export
 	);
 
 	wire         alt_pll_c0_clk;                                               // ALT_PLL:c0 -> [CPU:clk, JTAG_UART:clk, LT24_CTRL:clk, LT24_LCD_RSTN:clk, LT24_TOUCH_BUSY:clk, LT24_TOUCH_PENIRQ_N:clk, LT24_TOUCH_SPI:clk, SDRAM:clk, irq_mapper:clk, irq_synchronizer:sender_clk, irq_synchronizer_001:sender_clk, irq_synchronizer_002:sender_clk, mm_interconnect_0:ALT_PLL_c0_clk, rst_controller_001:clk]
@@ -353,9 +355,11 @@ module DE0_LT24_SOPC (
 		.clock_clk          (clk_clk),                                                   //       clock.clk
 		.reset_reset        (rst_controller_003_reset_out_reset),                        //       reset.reset
 		.ins_irq0_irq       (irq_synchronizer_001_receiver_irq),                         //    ins_irq0.irq
-		.finish_flag        (lt24_interface_irq_0_conduit_end_finish_flag),              // conduit_end.finish_flag
-		.counter            (lt24_interface_irq_0_conduit_end_counter),                  //            .counter
-		.pattern            (lt24_interface_irq_0_conduit_end_pattern)                   //            .pattern
+		.finish_flag        (lt24_conduit_1_finish_flag),                                // conduit_end.finish_flag
+		.counter            (lt24_conduit_1_counter),                                    //            .counter
+		.pattern            (lt24_conduit_1_pattern),                                    //            .pattern
+		.vx                 (lt24_conduit_1_vx),                                         //            .vx
+		.vy                 (lt24_conduit_1_vy)                                          //            .vy
 	);
 
 	DE0_LT24_SOPC_SDRAM sdram (
