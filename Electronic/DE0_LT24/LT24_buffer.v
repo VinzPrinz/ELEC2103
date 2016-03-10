@@ -261,9 +261,6 @@ wire displayCharact;
 assign displayCharact = (posX >= X1) && (posX < X1+H1) && (posY >= Y1) && (posY < Y1+L1);
 
 
-
-
-
 //LT24_buffer never write on the background onchip mem
 assign 	background_mem_s2_writedata = 16'h0;
 assign	background_mem_s2_write = 1'b0;
@@ -332,7 +329,7 @@ else if (screenState == 18'd4)
 	LT24_RS_loc <= 1'b1;
 	LT24_D_loc <= 16'h0000;             
 	end
-else if (screenState == 32'd5)
+else if (screenState == 18'd5)
 	begin
 	LT24_RS_loc <= 1'b1;
 	LT24_D_loc <= 16'h0000;              

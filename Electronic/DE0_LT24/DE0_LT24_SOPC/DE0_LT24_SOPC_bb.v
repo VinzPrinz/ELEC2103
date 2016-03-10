@@ -57,7 +57,11 @@ module DE0_LT24_SOPC (
 	sdram_wire_dqm,
 	sdram_wire_ras_n,
 	sdram_wire_we_n,
-	to_led_export);	
+	to_led_export,
+	gsensor_spi_conduit_end_SDIO,
+	gsensor_spi_conduit_end_SCLK,
+	gsensor_spi_conduit_end_CS_n,
+	gsensor_int_external_connection_export);	
 
 	input		alt_pll_areset_conduit_export;
 	output		alt_pll_c1_clk;
@@ -117,4 +121,8 @@ module DE0_LT24_SOPC (
 	output		sdram_wire_ras_n;
 	output		sdram_wire_we_n;
 	output	[7:0]	to_led_export;
+	inout		gsensor_spi_conduit_end_SDIO;
+	output		gsensor_spi_conduit_end_SCLK;
+	output		gsensor_spi_conduit_end_CS_n;
+	input		gsensor_int_external_connection_export;
 endmodule

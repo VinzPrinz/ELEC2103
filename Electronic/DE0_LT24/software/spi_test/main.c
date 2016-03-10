@@ -12,6 +12,10 @@
 #include "fonts/fonts.h"
 #include "HAL/inc/priv/alt_iic_isr_register.h"
 #include "altera_avalon_pio_regs.h"
+#include "terasic_includes.h"
+#include "accelerometer_adxl345_spi.h"
+#include "io.h"
+
 
 int game_over( alt_video_display Display,TOUCH_HANDLE *pTouch , char *str);
 int hardware( TOUCH_HANDLE *pTouch);
@@ -48,6 +52,15 @@ int main()
 
 	IOWR(LT24_INTERFACE_IRQ_0_BASE+ (4*3),0, -1);
 	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0,-1);
+
+	bool bSuccess;
+
+    bSuccess = ADXL345_SPI_Init(GSENSOR_SPI_BASE);
+    if(bSuccess)
+    	printf("error init gsensor\n");
+
+
+
 	printf("Welcome to LT24 Demo \n");
 
 	// Write 0x3C on LED[6:0] through the dedicated custom IP
@@ -86,7 +99,6 @@ int hardware( TOUCH_HANDLE *pTouch){
 	unsigned int X, Y;
 	unsigned int posTamper =0;
 	while(LT24_state==0){
-		// printf("In hard \n");
 		 if(Touch_GetXY(pTouch, &X, &Y) && LT24_state==0){
 			 LCD_WR_DATA(Y);
 			 LCD_WR_REG(X);
@@ -94,7 +106,17 @@ int hardware( TOUCH_HANDLE *pTouch){
 		 if(IORD_32DIRECT(LT24_INTERFACE_IRQ_0_BASE,0)){
 			 return 0;
 		 }
+
+		    alt_16 szXYZ[3];
+		    if (ADXL345_SPI_IsDataReady(GSENSOR_SPI_BASE) && ADXL345_SPI_XYZ_Read(GSENSOR_SPI_BASE, szXYZ)){
+		    	if( szXYZ[0] < 512 && szXYZ[0]> -512 && szXYZ[1] < 512 && szXYZ[1]>-512){
+		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/100);
+		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/100);
+		    	}
+		    	printf("Accel %d \n", szXYZ[0]);
+		    }
 	}
+
 	printf("out of hardware \n");
 	return 0;
 }

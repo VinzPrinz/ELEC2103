@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'DE0_LT24_SOPC'
  * SOPC Builder design path: ../../DE0_LT24_SOPC.sopcinfo
  *
- * Generated: Fri Mar 04 11:09:56 CET 2016
+ * Generated: Wed Mar 09 02:05:30 CET 2016
  */
 
 /*
@@ -153,6 +153,7 @@
 #define __LED_CONTROLLER
 #define __LT24_CONTROLLER
 #define __LT24_INTERFACE_IRQ
+#define __TERASIC_SPI_3WIRE
 
 
 /*
@@ -523,6 +524,47 @@
 #define CYCLONESPI_NAME "/dev/cycloneSPI"
 #define CYCLONESPI_SPAN 1024
 #define CYCLONESPI_TYPE "cycloneSPI"
+
+
+/*
+ * gsensor_int configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_gsensor_int altera_avalon_pio
+#define GSENSOR_INT_BASE 0x10840
+#define GSENSOR_INT_BIT_CLEARING_EDGE_REGISTER 0
+#define GSENSOR_INT_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define GSENSOR_INT_CAPTURE 0
+#define GSENSOR_INT_DATA_WIDTH 1
+#define GSENSOR_INT_DO_TEST_BENCH_WIRING 0
+#define GSENSOR_INT_DRIVEN_SIM_VALUE 0
+#define GSENSOR_INT_EDGE_TYPE "NONE"
+#define GSENSOR_INT_FREQ 50000000
+#define GSENSOR_INT_HAS_IN 1
+#define GSENSOR_INT_HAS_OUT 0
+#define GSENSOR_INT_HAS_TRI 0
+#define GSENSOR_INT_IRQ -1
+#define GSENSOR_INT_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define GSENSOR_INT_IRQ_TYPE "NONE"
+#define GSENSOR_INT_NAME "/dev/gsensor_int"
+#define GSENSOR_INT_RESET_VALUE 0
+#define GSENSOR_INT_SPAN 16
+#define GSENSOR_INT_TYPE "altera_avalon_pio"
+
+
+/*
+ * gsensor_spi configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_gsensor_spi TERASIC_SPI_3WIRE
+#define GSENSOR_SPI_BASE 0x10800
+#define GSENSOR_SPI_IRQ -1
+#define GSENSOR_SPI_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define GSENSOR_SPI_NAME "/dev/gsensor_spi"
+#define GSENSOR_SPI_SPAN 64
+#define GSENSOR_SPI_TYPE "TERASIC_SPI_3WIRE"
 
 
 /*

@@ -26,6 +26,10 @@ module DE0_LT24_SOPC (
 		output wire [7:0]  cyclonespi_spi_interface_config,             //                                     .config
 		output wire        cyclonespi_spi_interface_spi_irq,            //                                     .spi_irq
 		input  wire        from_key_export,                             //                             from_key.export
+		input  wire        gsensor_int_external_connection_export,      //      gsensor_int_external_connection.export
+		inout  wire        gsensor_spi_conduit_end_SDIO,                //              gsensor_spi_conduit_end.SDIO
+		output wire        gsensor_spi_conduit_end_SCLK,                //                                     .SCLK
+		output wire        gsensor_spi_conduit_end_CS_n,                //                                     .CS_n
 		output wire        lt24_buffer_flag_external_connection_export, // lt24_buffer_flag_external_connection.export
 		output wire        lt24_conduit_cs,                             //                         lt24_conduit.cs
 		output wire        lt24_conduit_rs,                             //                                     .rs
@@ -168,6 +172,14 @@ module DE0_LT24_SOPC (
 	wire         mm_interconnect_0_background_mem_s1_write;                    // mm_interconnect_0:background_mem_s1_write -> background_mem:write
 	wire  [15:0] mm_interconnect_0_background_mem_s1_writedata;                // mm_interconnect_0:background_mem_s1_writedata -> background_mem:writedata
 	wire         mm_interconnect_0_background_mem_s1_clken;                    // mm_interconnect_0:background_mem_s1_clken -> background_mem:clken
+	wire  [31:0] mm_interconnect_0_gsensor_int_s1_readdata;                    // gsensor_int:readdata -> mm_interconnect_0:gsensor_int_s1_readdata
+	wire   [1:0] mm_interconnect_0_gsensor_int_s1_address;                     // mm_interconnect_0:gsensor_int_s1_address -> gsensor_int:address
+	wire         mm_interconnect_0_gsensor_spi_slave_chipselect;               // mm_interconnect_0:gsensor_spi_slave_chipselect -> gsensor_spi:s_chipselect
+	wire   [7:0] mm_interconnect_0_gsensor_spi_slave_readdata;                 // gsensor_spi:s_readdata -> mm_interconnect_0:gsensor_spi_slave_readdata
+	wire   [3:0] mm_interconnect_0_gsensor_spi_slave_address;                  // mm_interconnect_0:gsensor_spi_slave_address -> gsensor_spi:s_address
+	wire         mm_interconnect_0_gsensor_spi_slave_read;                     // mm_interconnect_0:gsensor_spi_slave_read -> gsensor_spi:s_read
+	wire         mm_interconnect_0_gsensor_spi_slave_write;                    // mm_interconnect_0:gsensor_spi_slave_write -> gsensor_spi:s_write
+	wire   [7:0] mm_interconnect_0_gsensor_spi_slave_writedata;                // mm_interconnect_0:gsensor_spi_slave_writedata -> gsensor_spi:s_writedata
 	wire         mm_interconnect_0_lt24_touch_spi_spi_control_port_chipselect; // mm_interconnect_0:LT24_TOUCH_SPI_spi_control_port_chipselect -> LT24_TOUCH_SPI:spi_select
 	wire  [15:0] mm_interconnect_0_lt24_touch_spi_spi_control_port_readdata;   // LT24_TOUCH_SPI:data_to_cpu -> mm_interconnect_0:LT24_TOUCH_SPI_spi_control_port_readdata
 	wire   [2:0] mm_interconnect_0_lt24_touch_spi_spi_control_port_address;    // mm_interconnect_0:LT24_TOUCH_SPI_spi_control_port_address -> LT24_TOUCH_SPI:mem_addr
@@ -190,7 +202,7 @@ module DE0_LT24_SOPC (
 	wire         rst_controller_001_reset_out_reset;                           // rst_controller_001:reset_out -> [CPU:reset_n, JTAG_UART:rst_n, LT24_CTRL:reset_n, LT24_LCD_RSTN:reset_n, LT24_TOUCH_BUSY:reset_n, LT24_TOUCH_PENIRQ_N:reset_n, LT24_TOUCH_SPI:reset_n, SDRAM:reset_n, irq_mapper:reset, irq_synchronizer:sender_reset, irq_synchronizer_001:sender_reset, irq_synchronizer_002:sender_reset, mm_interconnect_0:CPU_reset_n_reset_bridge_in_reset_reset, rst_translator_001:in_reset]
 	wire         rst_controller_001_reset_out_reset_req;                       // rst_controller_001:reset_req -> [CPU:reset_req, rst_translator_001:reset_req_in]
 	wire         rst_controller_002_reset_out_reset;                           // rst_controller_002:reset_out -> [KEY:reset_n, LED_CTRL:RST, TIMER:reset_n, irq_synchronizer_002:receiver_reset, mm_interconnect_0:LED_CTRL_reset_sink_reset_bridge_in_reset_reset]
-	wire         rst_controller_003_reset_out_reset;                           // rst_controller_003:reset_out -> [LT24_buffer_flag:reset_n, LT24_interface_irq_0:reset_reset, irq_synchronizer:receiver_reset, irq_synchronizer_001:receiver_reset, mm_interconnect_0:LT24_interface_irq_0_reset_reset_bridge_in_reset_reset, mm_interconnect_0:cycloneSPI_reset_sink_reset_bridge_in_reset_reset]
+	wire         rst_controller_003_reset_out_reset;                           // rst_controller_003:reset_out -> [LT24_buffer_flag:reset_n, LT24_interface_irq_0:reset_reset, gsensor_int:reset_n, gsensor_spi:reset_n, irq_synchronizer:receiver_reset, irq_synchronizer_001:receiver_reset, mm_interconnect_0:LT24_interface_irq_0_reset_reset_bridge_in_reset_reset, mm_interconnect_0:cycloneSPI_reset_sink_reset_bridge_in_reset_reset]
 
 	DE0_LT24_SOPC_ALT_PLL alt_pll (
 		.clk       (clk_clk),                                       //       inclk_interface.clk
@@ -439,6 +451,28 @@ module DE0_LT24_SOPC (
 		.ins_irq0_irq       (irq_synchronizer_receiver_irq)                    //      ins_irq0.irq
 	);
 
+	DE0_LT24_SOPC_LT24_TOUCH_BUSY gsensor_int (
+		.clk      (clk_clk),                                   //                 clk.clk
+		.reset_n  (~rst_controller_003_reset_out_reset),       //               reset.reset_n
+		.address  (mm_interconnect_0_gsensor_int_s1_address),  //                  s1.address
+		.readdata (mm_interconnect_0_gsensor_int_s1_readdata), //                    .readdata
+		.in_port  (gsensor_int_external_connection_export)     // external_connection.export
+	);
+
+	TERASIC_SPI_3WIRE gsensor_spi (
+		.clk          (clk_clk),                                        //       clock_reset.clk
+		.reset_n      (~rst_controller_003_reset_out_reset),            // clock_reset_reset.reset_n
+		.s_chipselect (mm_interconnect_0_gsensor_spi_slave_chipselect), //             slave.chipselect
+		.s_address    (mm_interconnect_0_gsensor_spi_slave_address),    //                  .address
+		.s_write      (mm_interconnect_0_gsensor_spi_slave_write),      //                  .write
+		.s_writedata  (mm_interconnect_0_gsensor_spi_slave_writedata),  //                  .writedata
+		.s_read       (mm_interconnect_0_gsensor_spi_slave_read),       //                  .read
+		.s_readdata   (mm_interconnect_0_gsensor_spi_slave_readdata),   //                  .readdata
+		.SPI_SDIO     (gsensor_spi_conduit_end_SDIO),                   //       conduit_end.export
+		.SPI_SCLK     (gsensor_spi_conduit_end_SCLK),                   //                  .export
+		.SPI_CS_n     (gsensor_spi_conduit_end_CS_n)                    //                  .export
+	);
+
 	DE0_LT24_SOPC_pic_mem pic_mem (
 		.clk         (clk_clk),                                 //   clk1.clk
 		.address     (mm_interconnect_0_pic_mem_s1_address),    //     s1.address
@@ -511,6 +545,14 @@ module DE0_LT24_SOPC (
 		.cycloneSPI_avs_s0_readdata                                (mm_interconnect_0_cyclonespi_avs_s0_readdata),                 //                                                    .readdata
 		.cycloneSPI_avs_s0_writedata                               (mm_interconnect_0_cyclonespi_avs_s0_writedata),                //                                                    .writedata
 		.cycloneSPI_avs_s0_waitrequest                             (mm_interconnect_0_cyclonespi_avs_s0_waitrequest),              //                                                    .waitrequest
+		.gsensor_int_s1_address                                    (mm_interconnect_0_gsensor_int_s1_address),                     //                                      gsensor_int_s1.address
+		.gsensor_int_s1_readdata                                   (mm_interconnect_0_gsensor_int_s1_readdata),                    //                                                    .readdata
+		.gsensor_spi_slave_address                                 (mm_interconnect_0_gsensor_spi_slave_address),                  //                                   gsensor_spi_slave.address
+		.gsensor_spi_slave_write                                   (mm_interconnect_0_gsensor_spi_slave_write),                    //                                                    .write
+		.gsensor_spi_slave_read                                    (mm_interconnect_0_gsensor_spi_slave_read),                     //                                                    .read
+		.gsensor_spi_slave_readdata                                (mm_interconnect_0_gsensor_spi_slave_readdata),                 //                                                    .readdata
+		.gsensor_spi_slave_writedata                               (mm_interconnect_0_gsensor_spi_slave_writedata),                //                                                    .writedata
+		.gsensor_spi_slave_chipselect                              (mm_interconnect_0_gsensor_spi_slave_chipselect),               //                                                    .chipselect
 		.JTAG_UART_avalon_jtag_slave_address                       (mm_interconnect_0_jtag_uart_avalon_jtag_slave_address),        //                         JTAG_UART_avalon_jtag_slave.address
 		.JTAG_UART_avalon_jtag_slave_write                         (mm_interconnect_0_jtag_uart_avalon_jtag_slave_write),          //                                                    .write
 		.JTAG_UART_avalon_jtag_slave_read                          (mm_interconnect_0_jtag_uart_avalon_jtag_slave_read),           //                                                    .read

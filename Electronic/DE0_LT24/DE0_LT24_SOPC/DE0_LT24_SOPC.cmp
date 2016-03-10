@@ -22,6 +22,10 @@
 			cyclonespi_spi_interface_config             : out   std_logic_vector(7 downto 0);                     -- config
 			cyclonespi_spi_interface_spi_irq            : out   std_logic;                                        -- spi_irq
 			from_key_export                             : in    std_logic                     := 'X';             -- export
+			gsensor_int_external_connection_export      : in    std_logic                     := 'X';             -- export
+			gsensor_spi_conduit_end_SDIO                : inout std_logic                     := 'X';             -- SDIO
+			gsensor_spi_conduit_end_SCLK                : out   std_logic;                                        -- SCLK
+			gsensor_spi_conduit_end_CS_n                : out   std_logic;                                        -- CS_n
 			lt24_buffer_flag_external_connection_export : out   std_logic;                                        -- export
 			lt24_conduit_cs                             : out   std_logic;                                        -- cs
 			lt24_conduit_rs                             : out   std_logic;                                        -- rs

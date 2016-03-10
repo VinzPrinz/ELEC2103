@@ -12,17 +12,14 @@ module LT24_interface_irq (
 		input  wire        finish_flag,        // conduit_end.new_signal
 		input  wire [31:0] counter,            //            .new_signal_1
 		output wire [11:0] pattern,             //            .new_signal_2
-        output wire [31:0]  vx,
-        output wire [31:0]  vy
+      output wire [31:0]  vx,
+      output wire [31:0]  vy
     );
 
-	// TODO: Auto-generated HDL template
 
 	assign ins_irq0_irq = finish_flag && irq_flag;
-	reg irq_flag , passed;
+	reg irq_flag;
 	 
-//	shorter  shoter_dut( reset_reset , clock_clk , finish_flag, ins_irq0_irq);
-	
 	reg [31:0]	avs_s0_readdata_reg;
 	assign avs_s0_readdata = avs_s0_readdata_reg;
 	
@@ -36,8 +33,14 @@ module LT24_interface_irq (
 	assign vx = vx_reg;
 	assign vy = vy_reg;
 	
-	always @(*)
-	if(avs_s0_read)
+	always @(clock_clk)
+	if(reset_reset)
+		begin
+			pattern_reg <= 12'b0;
+			vy_reg <= 32'b0;
+			vx_reg <= 32'b0;
+		end
+	else if(avs_s0_read)
 		case(avs_s0_address[2:0])
 			3'b000: avs_s0_readdata_reg <= {31'b0 , finish_flag};
 			3'b001: avs_s0_readdata_reg <= {20'b0 , counter};
@@ -48,24 +51,12 @@ module LT24_interface_irq (
 			3'b011: vx_reg <= avs_s0_writedata;
 			3'b100: vy_reg <= avs_s0_writedata;
 		endcase
-		
-/*	always @(clock_clk)
-		if(reset_reset || ~finish_flag)begin
-			irq_flag <= 1'b0;
-			passed <= 1'b0;
-			end
-		else if(avs_s0_write && avs_s0_address[2:0] == 3'b111)
-			begin
-			irq_flag <= 1'b0;
-			passed <= 1'b1;
-			end
-		else if(finish_flag && ~passed)
-			begin
-			irq_flag <= 1'b1;
-			passed <= 1'b0;
-			end
-		else
-			irq_flag <= passed;*/
+/*	else
+		begin
+			pattern_reg <= 12'b0;
+			vy_reg <= 32'b0;
+			vx_reg <= 32'b0;
+		end*/
 			
 	always @ (posedge clock_clk)
 		if(reset_reset || ~finish_flag)
@@ -74,44 +65,5 @@ module LT24_interface_irq (
 			irq_flag <= 1'b0;
 		else
 			irq_flag <= irq_flag;
-		
 			
-			
-endmodule
-
-module shorter(
-				input wire reset , clk , 
-				input wire in,
-				output wire shorter);
-		
-		reg inPre;
-		reg shorter_reg;
-		reg [3:0] Counter;
-		assign shorter = shorter_reg;
-		
-		wire inPre_Wire;
-		assign inPre_Wire = inPre;
-
-		wire [7:0] Counter_Wire;
-		assign Counter_Wire = Counter;
-		
-		always @(clk)
-			inPre <= in;
-			
-		always @(clk)
-			if(reset)
-				begin
-					shorter_reg <= 1'b0;
-					Counter <= 8'b0;
-				end
-			else if(inPre_Wire == 1'b0 && in == 1'b1)
-			begin
-				shorter_reg <= 1'b1;
-				Counter  <= 8'b0;
-			end
-			else if (Counter_Wire==8'hff)
-				shorter_reg <= 1'b0;
-			else
-				Counter <= Counter_Wire +1;
-
 endmodule

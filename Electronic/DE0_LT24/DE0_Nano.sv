@@ -343,7 +343,12 @@ DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		.lt24_conduit_1_pattern              (LT24_pattern),              //                                     .a
 		.lt24_conduit_1_counter         (LT24_counter),          //                                     .result
 		.lt24_conduit_1_vx     (VX),                           //                                     .vx
-		.lt24_conduit_1_vy	(VY)
+		.lt24_conduit_1_vy	(VY),
+		
+		.gsensor_int_external_connection_export (G_SENSOR_INT), // gsensor_init_external_connection.export
+		.gsensor_spi_conduit_end_SDIO            (I2C_SDAT),            //          gsensor_spi_conduit_end.SDIO
+		.gsensor_spi_conduit_end_SCLK            (I2C_SCLK),            //                                 .SCLK
+		.gsensor_spi_conduit_end_CS_n            (G_SENSOR_CS_N), 
 
 	);
 

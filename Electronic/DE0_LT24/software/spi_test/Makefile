@@ -152,6 +152,9 @@ C_SRCS += demo/gui.c
 C_SRCS += demo/gui_vpg.c
 C_SRCS += fonts/tahomabold_20.c
 C_SRCS += fonts/tahomabold_32.c
+C_SRCS += I2C.c
+C_SRCS += terasic_spi.c
+C_SRCS += accelerometer_adxl345_spi.c
 CXX_SRCS :=
 ASM_SRCS :=
 

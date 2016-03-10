@@ -56,6 +56,10 @@
 		.sdram_wire_dqm                              (<connected-to-sdram_wire_dqm>),                              //                                     .dqm
 		.sdram_wire_ras_n                            (<connected-to-sdram_wire_ras_n>),                            //                                     .ras_n
 		.sdram_wire_we_n                             (<connected-to-sdram_wire_we_n>),                             //                                     .we_n
-		.to_led_export                               (<connected-to-to_led_export>)                                //                               to_led.export
+		.to_led_export                               (<connected-to-to_led_export>),                               //                               to_led.export
+		.gsensor_spi_conduit_end_SDIO                (<connected-to-gsensor_spi_conduit_end_SDIO>),                //              gsensor_spi_conduit_end.SDIO
+		.gsensor_spi_conduit_end_SCLK                (<connected-to-gsensor_spi_conduit_end_SCLK>),                //                                     .SCLK
+		.gsensor_spi_conduit_end_CS_n                (<connected-to-gsensor_spi_conduit_end_CS_n>),                //                                     .CS_n
+		.gsensor_int_external_connection_export      (<connected-to-gsensor_int_external_connection_export>)       //      gsensor_int_external_connection.export
 	);
 

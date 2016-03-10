@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Mar 9, 2016 1:12:05 AM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1457482325513</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Mar 9, 2016 3:37:27 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1457534247624</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24/software/spi_test_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../DE0_LT24_SOPC.sopcinfo</SopcDesignFile>
@@ -908,6 +908,18 @@
                 <slaveDescriptor>LT24_interface_irq_0</slaveDescriptor>
                 <addressRange>0x00010400 - 0x000107FF</addressRange>
                 <addressSpan>1024</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>gsensor_spi</slaveDescriptor>
+                <addressRange>0x00010800 - 0x0001083F</addressRange>
+                <addressSpan>64</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>gsensor_int</slaveDescriptor>
+                <addressRange>0x00010840 - 0x0001084F</addressRange>
+                <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>

@@ -57,7 +57,11 @@
 			sdram_wire_dqm                              : out   std_logic_vector(1 downto 0);                     -- dqm
 			sdram_wire_ras_n                            : out   std_logic;                                        -- ras_n
 			sdram_wire_we_n                             : out   std_logic;                                        -- we_n
-			to_led_export                               : out   std_logic_vector(7 downto 0)                      -- export
+			to_led_export                               : out   std_logic_vector(7 downto 0);                     -- export
+			gsensor_spi_conduit_end_SDIO                : inout std_logic                     := 'X';             -- SDIO
+			gsensor_spi_conduit_end_SCLK                : out   std_logic;                                        -- SCLK
+			gsensor_spi_conduit_end_CS_n                : out   std_logic;                                        -- CS_n
+			gsensor_int_external_connection_export      : in    std_logic                     := 'X'              -- export
 		);
 	end component DE0_LT24_SOPC;
 
@@ -120,6 +124,10 @@
 			sdram_wire_dqm                              => CONNECTED_TO_sdram_wire_dqm,                              --                                     .dqm
 			sdram_wire_ras_n                            => CONNECTED_TO_sdram_wire_ras_n,                            --                                     .ras_n
 			sdram_wire_we_n                             => CONNECTED_TO_sdram_wire_we_n,                             --                                     .we_n
-			to_led_export                               => CONNECTED_TO_to_led_export                                --                               to_led.export
+			to_led_export                               => CONNECTED_TO_to_led_export,                               --                               to_led.export
+			gsensor_spi_conduit_end_SDIO                => CONNECTED_TO_gsensor_spi_conduit_end_SDIO,                --              gsensor_spi_conduit_end.SDIO
+			gsensor_spi_conduit_end_SCLK                => CONNECTED_TO_gsensor_spi_conduit_end_SCLK,                --                                     .SCLK
+			gsensor_spi_conduit_end_CS_n                => CONNECTED_TO_gsensor_spi_conduit_end_CS_n,                --                                     .CS_n
+			gsensor_int_external_connection_export      => CONNECTED_TO_gsensor_int_external_connection_export       --      gsensor_int_external_connection.export
 		);
 
