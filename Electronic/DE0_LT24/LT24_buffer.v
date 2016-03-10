@@ -253,12 +253,21 @@ assign Case_Wire = Case_Reg;
 parameter H1 = 30;
 parameter L1 = 40;
 
+reg 	col;
+wire col_wire;
+assign col_wire = col;
 reg [10:0]	X1 , Y1;
 reg [31:0]  cnt;
 wire displayCharact;
 
+parameter X1C = 100;
+parameter Y1C = 100;
+wire displayCoin;
+
 
 assign displayCharact = (posX >= X1) && (posX < X1+H1) && (posY >= Y1) && (posY < Y1+L1);
+assign displayCoin = (posX >= X1C) && (posX < X1C+H1) && (posY >= Y1C) && (posY < Y1C+L1);
+
 
 
 //LT24_buffer never write on the background onchip mem
@@ -343,11 +352,17 @@ else if (screenState == 18'd6)
 else if ((screenState>18'd6) && (screenState<18'd76806))
 	begin
 	LT24_RS_loc <= 1'b1;
-	
-	if(displayCharact)
-		begin
-			LT24_D_loc <= 16'hf0ff;
-		end
+	if(lt24_pattern[0])
+		if(displayCharact)
+			begin
+				LT24_D_loc <= 16'hf0ff;
+			end
+		else if (displayCoin)
+				LT24_D_loc <= 16'h00aa;
+		else if (lt24_finish_reg)
+				LT24_D_loc <= 16'h0000;
+		else
+				LT24_D_loc <= 16'hffff;
 	else if(Case_Wire[11])
 		case(Counter_Wire)
 			2'b00: LT24_D_loc <= pic_mem_s2_readdata;
@@ -389,12 +404,15 @@ always @ (posedge clk)
 		begin
 			Case_Reg <= 12'hfff;
 			lt24_finish_reg <= 1'b0;
-		end
-		
-		if(bufferFlag == 1'b0)
+			col <= 1'b0;
+		end else if(bufferFlag == 1'b0)
 		begin
 			Case_Reg[11:0] <= 12'hfff;	
- 		end
+			col <= 1'b0;
+ 		end else if(displayCharact && displayCoin)
+			col <= 1'b1;
+		else
+			col <= col_wire;
 		
 		
 		end
@@ -448,7 +466,7 @@ always @ (posedge clk)
 		posX <= posX;
 		posY <= posY;
 
-		lt24_finish_reg <= (Case_Reg == 12'b0);
+		lt24_finish_reg <=  (!lt24_pattern[0] && Case_Reg == 12'b0) || (lt24_pattern[0] && col_wire);
 		if(posX == pointerX && posY == pointerY)
 			Case_Reg[11] <= 1'b0;
 		end

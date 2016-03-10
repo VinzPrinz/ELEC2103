@@ -27,7 +27,7 @@ module LT24_interface_irq (
 	assign avs_s0_waitrequest = 1'b0;
 
 	reg [11:0] pattern_reg;
-	assign pattern = 12'b000000000000;
+	assign pattern = pattern_reg;
 	
 	reg [31:0] vx_reg , vy_reg;
 	assign vx = vx_reg;

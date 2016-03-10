@@ -65,6 +65,8 @@ int main()
 
 	// Write 0x3C on LED[6:0] through the dedicated custom IP
 	IOWR(LED_CTRL_BASE, 0x0, 0x3C);
+	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 1);
+
 
 	// TOUCH INITIALIZATION
 	pTouch = Touch_Init(LT24_TOUCH_SPI_BASE,  LT24_TOUCH_PENIRQ_N_BASE, LT24_TOUCH_PENIRQ_N_IRQ);
