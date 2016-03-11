@@ -49,6 +49,8 @@ int main()
 		printf("Something went wrong in the registering; software exits");
 		return 1;
 	}
+	 Clr_BUFFER_FLAG();
+
 
 	IOWR(LT24_INTERFACE_IRQ_0_BASE+ (4*3),0, -1);
 	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0,-1);
@@ -59,13 +61,11 @@ int main()
     if(bSuccess)
     	printf("error init gsensor\n");
 
-
-
 	printf("Welcome to LT24 Demo \n");
 
 	// Write 0x3C on LED[6:0] through the dedicated custom IP
 	IOWR(LED_CTRL_BASE, 0x0, 0x3C);
-	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 1);
+	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0);
 
 
 	// TOUCH INITIALIZATION
@@ -112,8 +112,8 @@ int hardware( TOUCH_HANDLE *pTouch){
 		    alt_16 szXYZ[3];
 		    if (ADXL345_SPI_IsDataReady(GSENSOR_SPI_BASE) && ADXL345_SPI_XYZ_Read(GSENSOR_SPI_BASE, szXYZ)){
 		    	if( szXYZ[0] < 512 && szXYZ[0]> -512 && szXYZ[1] < 512 && szXYZ[1]>-512){
-		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/100);
-		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/100);
+		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/70);
+		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/70);
 		    	}
 		    	printf("Accel %d \n", szXYZ[0]);
 		    }

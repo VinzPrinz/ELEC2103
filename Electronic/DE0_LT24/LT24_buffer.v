@@ -250,18 +250,24 @@ assign Case_Wire = Case_Reg;
 
 // Used for the coins game
 
+
 parameter H1 = 30;
 parameter L1 = 40;
 
 reg 	col;
 wire col_wire;
 assign col_wire = col;
+
+
 reg [10:0]	X1 , Y1;
 reg [31:0]  cnt;
 wire displayCharact;
 
-parameter X1C = 100;
-parameter Y1C = 100;
+parameter VXC = 1;
+parameter VYC = 1;
+reg [10:0]	X1C , Y1C;
+//parameter X1C = 100;
+//parameter Y1C = 100;
 wire displayCoin;
 
 
@@ -352,15 +358,17 @@ else if (screenState == 18'd6)
 else if ((screenState>18'd6) && (screenState<18'd76806))
 	begin
 	LT24_RS_loc <= 1'b1;
+	
+
 	if(lt24_pattern[0])
-		if(displayCharact)
+		if (displayCharact && displayCoin)begin
+				LT24_D_loc <= 16'h0000;
+		end else if(displayCharact)
 			begin
 				LT24_D_loc <= 16'hf0ff;
 			end
 		else if (displayCoin)
 				LT24_D_loc <= 16'h00aa;
-		else if (lt24_finish_reg)
-				LT24_D_loc <= 16'h0000;
 		else
 				LT24_D_loc <= 16'hffff;
 	else if(Case_Wire[11])
@@ -404,17 +412,8 @@ always @ (posedge clk)
 		begin
 			Case_Reg <= 12'hfff;
 			lt24_finish_reg <= 1'b0;
-			col <= 1'b0;
 		end else if(bufferFlag == 1'b0)
-		begin
-			Case_Reg[11:0] <= 12'hfff;	
-			col <= 1'b0;
- 		end else if(displayCharact && displayCoin)
-			col <= 1'b1;
-		else
-			col <= col_wire;
-		
-		
+			Case_Reg[11:0] <= 12'hfff;
 		end
 	//new pixel on the next line 
 	else if(posX >= 11'd239 && (LT24_CS_N_loc==1'b0))
@@ -466,13 +465,11 @@ always @ (posedge clk)
 		posX <= posX;
 		posY <= posY;
 
-		lt24_finish_reg <=  (!lt24_pattern[0] && Case_Reg == 12'b0) || (lt24_pattern[0] && col_wire);
+		lt24_finish_reg <=  (!lt24_pattern[0] && Case_Reg == 12'b0) || (lt24_pattern[0]==1'b1 && col_wire==1'b1);
 		if(posX == pointerX && posY == pointerY)
 			Case_Reg[11] <= 1'b0;
 		end
 	end
-
-
 
 //FSM to get the position of the last touch on the screen (from the CPU)
 always @ (posedge clk)
@@ -533,11 +530,41 @@ always @ (posedge clk)
 			X1 <= X1;
 			
 	always @ (posedge clk)
+		if(rst || X1C + VXC < 0)
+			X1C <= 10;
+		else if( X1C+VXC >= (240-H1)) // VX positif
+			X1C <= 1 + H1;
+		else if( cnt == 32'h000ffffe) // VX positif
+			X1C <= X1C+VXC;
+		else
+			X1C <= X1C;
+			
+	always @ (posedge clk)
+		if(rst || Y1C + VYC < 0)
+			Y1C <= 10;
+		else if( Y1C+VYC >= (320-L1))
+			Y1C <= 1+ L1;
+		else if( cnt == 32'h000ffffe)
+			Y1C <= Y1C+VYC;
+		else
+			Y1C <= Y1C;
+			
+	always @ (posedge clk)
 		if(rst || cnt == 32'h000fffff)
 			cnt <= 0;
 		else
 			cnt <= cnt+1;
 			
+	always @ (posedge clk)
+	if(rst)
+		col <= 1'b0;
+	else if(displayCharact && displayCoin)
+		col <= bufferFlag;
+	else if(bufferFlag == 1'b0)
+		col <= 1'b0;
+	else
+		col <= col;
+	
 
 	
 endmodule

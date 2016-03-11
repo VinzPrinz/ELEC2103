@@ -1,5 +1,5 @@
 Flow report for DE0_Nano
-Fri Mar 11 00:20:05 2016
+Fri Mar 11 03:13:32 2016
 Quartus Prime Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition
 
 
@@ -41,17 +41,17 @@ agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Fri Mar 11 00:19:43 2016       ;
+; Flow Status                        ; Successful - Fri Mar 11 03:13:07 2016       ;
 ; Quartus Prime Version              ; 15.1.0 Build 185 10/21/2015 SJ Lite Edition ;
 ; Revision Name                      ; DE0_Nano                                    ;
 ; Top-level Entity Name              ; DE0_Nano                                    ;
 ; Family                             ; Cyclone IV E                                ;
 ; Device                             ; EP4CE22F17C6                                ;
 ; Timing Models                      ; Final                                       ;
-; Total logic elements               ; 8,148 / 22,320 ( 37 % )                     ;
-;     Total combinational functions  ; 6,551 / 22,320 ( 29 % )                     ;
-;     Dedicated logic registers      ; 5,217 / 22,320 ( 23 % )                     ;
-; Total registers                    ; 5286                                        ;
+; Total logic elements               ; 8,237 / 22,320 ( 37 % )                     ;
+;     Total combinational functions  ; 6,656 / 22,320 ( 30 % )                     ;
+;     Dedicated logic registers      ; 5,234 / 22,320 ( 23 % )                     ;
+; Total registers                    ; 5303                                        ;
 ; Total pins                         ; 146 / 154 ( 95 % )                          ;
 ; Total virtual pins                 ; 0                                           ;
 ; Total memory bits                  ; 270,336 / 608,256 ( 44 % )                  ;
@@ -65,7 +65,7 @@ agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 03/11/2016 00:16:45 ;
+; Start date & time ; 03/11/2016 03:09:19 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; DE0_Nano            ;
 +-------------------+---------------------+
@@ -76,7 +76,7 @@ agreement for further details.
 +--------------------------------------+-----------------------------------------------------------------+---------------+---------------+------------------+
 ; Assignment Name                      ; Value                                                           ; Default Value ; Entity Name   ; Section Id       ;
 +--------------------------------------+-----------------------------------------------------------------+---------------+---------------+------------------+
-; COMPILER_SIGNATURE_ID                ; 93383149948224.145765180429649                                  ; --            ; --            ; --               ;
+; COMPILER_SIGNATURE_ID                ; 93383149948224.145766215925455                                  ; --            ; --            ; --               ;
 ; EDA_DESIGN_INSTANCE_NAME             ; NA                                                              ; --            ; --            ; testbench        ;
 ; EDA_NATIVELINK_SIMULATION_TEST_BENCH ; testbench                                                       ; --            ; --            ; eda_simulation   ;
 ; EDA_OUTPUT_DATA_FORMAT               ; None                                                            ; --            ; --            ; eda_simulation   ;
@@ -140,11 +140,11 @@ agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:01:08     ; 1.0                     ; 1527 MB             ; 00:01:46                           ;
-; Fitter                    ; 00:01:11     ; 1.1                     ; 1546 MB             ; 00:01:32                           ;
-; Assembler                 ; 00:00:02     ; 1.0                     ; 1080 MB             ; 00:00:02                           ;
-; TimeQuest Timing Analyzer ; 00:00:08     ; 1.4                     ; 1207 MB             ; 00:00:09                           ;
-; Total                     ; 00:02:29     ; --                      ; --                  ; 00:03:29                           ;
+; Analysis & Synthesis      ; 00:01:33     ; 1.0                     ; 1529 MB             ; 00:02:10                           ;
+; Fitter                    ; 00:01:28     ; 1.1                     ; 1546 MB             ; 00:01:54                           ;
+; Assembler                 ; 00:00:02     ; 1.0                     ; 1081 MB             ; 00:00:03                           ;
+; TimeQuest Timing Analyzer ; 00:00:08     ; 1.4                     ; 1212 MB             ; 00:00:10                           ;
+; Total                     ; 00:03:11     ; --                      ; --                  ; 00:04:17                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
