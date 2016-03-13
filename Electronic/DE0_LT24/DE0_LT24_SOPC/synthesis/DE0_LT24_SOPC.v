@@ -56,19 +56,19 @@ module DE0_LT24_SOPC (
 		input  wire [15:0] pic_mem_s2_writedata,                        //                                     .writedata
 		input  wire [1:0]  pic_mem_s2_byteenable,                       //                                     .byteenable
 		input  wire        reset_reset_n,                               //                                reset.reset_n
-		output wire [12:0] sdram_wire_addr,                             //                           sdram_wire.addr
-		output wire [1:0]  sdram_wire_ba,                               //                                     .ba
-		output wire        sdram_wire_cas_n,                            //                                     .cas_n
-		output wire        sdram_wire_cke,                              //                                     .cke
-		output wire        sdram_wire_cs_n,                             //                                     .cs_n
-		inout  wire [15:0] sdram_wire_dq,                               //                                     .dq
-		output wire [1:0]  sdram_wire_dqm,                              //                                     .dqm
-		output wire        sdram_wire_ras_n,                            //                                     .ras_n
-		output wire        sdram_wire_we_n,                             //                                     .we_n
+		output wire [12:0] sdram_controler_wire_addr,                   //                 sdram_controler_wire.addr
+		output wire [1:0]  sdram_controler_wire_ba,                     //                                     .ba
+		output wire        sdram_controler_wire_cas_n,                  //                                     .cas_n
+		output wire        sdram_controler_wire_cke,                    //                                     .cke
+		output wire        sdram_controler_wire_cs_n,                   //                                     .cs_n
+		inout  wire [15:0] sdram_controler_wire_dq,                     //                                     .dq
+		output wire [1:0]  sdram_controler_wire_dqm,                    //                                     .dqm
+		output wire        sdram_controler_wire_ras_n,                  //                                     .ras_n
+		output wire        sdram_controler_wire_we_n,                   //                                     .we_n
 		output wire [7:0]  to_led_export                                //                               to_led.export
 	);
 
-	wire         alt_pll_c0_clk;                                               // ALT_PLL:c0 -> [CPU:clk, JTAG_UART:clk, LT24_CTRL:clk, LT24_LCD_RSTN:clk, LT24_TOUCH_BUSY:clk, LT24_TOUCH_PENIRQ_N:clk, LT24_TOUCH_SPI:clk, SDRAM:clk, irq_mapper:clk, irq_synchronizer:sender_clk, irq_synchronizer_001:sender_clk, irq_synchronizer_002:sender_clk, mm_interconnect_0:ALT_PLL_c0_clk, rst_controller_001:clk]
+	wire         alt_pll_c0_clk;                                               // ALT_PLL:c0 -> [CPU:clk, JTAG_UART:clk, LT24_CTRL:clk, LT24_LCD_RSTN:clk, LT24_TOUCH_BUSY:clk, LT24_TOUCH_PENIRQ_N:clk, LT24_TOUCH_SPI:clk, SDRAM_Controler:clk, irq_mapper:clk, irq_synchronizer:sender_clk, irq_synchronizer_001:sender_clk, irq_synchronizer_002:sender_clk, irq_synchronizer_003:sender_clk, irq_synchronizer_004:sender_clk, mm_interconnect_0:ALT_PLL_c0_clk, rst_controller_001:clk]
 	wire         alt_pll_c2_clk;                                               // ALT_PLL:c2 -> [KEY:clk, LED_CTRL:CLK, TIMER:clk, irq_synchronizer_002:receiver_clk, mm_interconnect_0:ALT_PLL_c2_clk, rst_controller_002:clk]
 	wire  [31:0] cpu_data_master_readdata;                                     // mm_interconnect_0:CPU_data_master_readdata -> CPU:d_readdata
 	wire         cpu_data_master_waitrequest;                                  // mm_interconnect_0:CPU_data_master_waitrequest -> CPU:d_waitrequest
@@ -125,15 +125,6 @@ module DE0_LT24_SOPC (
 	wire         mm_interconnect_0_alt_pll_pll_slave_read;                     // mm_interconnect_0:ALT_PLL_pll_slave_read -> ALT_PLL:read
 	wire         mm_interconnect_0_alt_pll_pll_slave_write;                    // mm_interconnect_0:ALT_PLL_pll_slave_write -> ALT_PLL:write
 	wire  [31:0] mm_interconnect_0_alt_pll_pll_slave_writedata;                // mm_interconnect_0:ALT_PLL_pll_slave_writedata -> ALT_PLL:writedata
-	wire         mm_interconnect_0_sdram_s1_chipselect;                        // mm_interconnect_0:SDRAM_s1_chipselect -> SDRAM:az_cs
-	wire  [15:0] mm_interconnect_0_sdram_s1_readdata;                          // SDRAM:za_data -> mm_interconnect_0:SDRAM_s1_readdata
-	wire         mm_interconnect_0_sdram_s1_waitrequest;                       // SDRAM:za_waitrequest -> mm_interconnect_0:SDRAM_s1_waitrequest
-	wire  [23:0] mm_interconnect_0_sdram_s1_address;                           // mm_interconnect_0:SDRAM_s1_address -> SDRAM:az_addr
-	wire         mm_interconnect_0_sdram_s1_read;                              // mm_interconnect_0:SDRAM_s1_read -> SDRAM:az_rd_n
-	wire   [1:0] mm_interconnect_0_sdram_s1_byteenable;                        // mm_interconnect_0:SDRAM_s1_byteenable -> SDRAM:az_be_n
-	wire         mm_interconnect_0_sdram_s1_readdatavalid;                     // SDRAM:za_valid -> mm_interconnect_0:SDRAM_s1_readdatavalid
-	wire         mm_interconnect_0_sdram_s1_write;                             // mm_interconnect_0:SDRAM_s1_write -> SDRAM:az_wr_n
-	wire  [15:0] mm_interconnect_0_sdram_s1_writedata;                         // mm_interconnect_0:SDRAM_s1_writedata -> SDRAM:az_data
 	wire  [31:0] mm_interconnect_0_key_s1_readdata;                            // KEY:readdata -> mm_interconnect_0:KEY_s1_readdata
 	wire   [1:0] mm_interconnect_0_key_s1_address;                             // mm_interconnect_0:KEY_s1_address -> KEY:address
 	wire         mm_interconnect_0_timer_s1_chipselect;                        // mm_interconnect_0:TIMER_s1_chipselect -> TIMER:chipselect
@@ -174,6 +165,25 @@ module DE0_LT24_SOPC (
 	wire         mm_interconnect_0_background_mem_s1_clken;                    // mm_interconnect_0:background_mem_s1_clken -> background_mem:clken
 	wire  [31:0] mm_interconnect_0_gsensor_int_s1_readdata;                    // gsensor_int:readdata -> mm_interconnect_0:gsensor_int_s1_readdata
 	wire   [1:0] mm_interconnect_0_gsensor_int_s1_address;                     // mm_interconnect_0:gsensor_int_s1_address -> gsensor_int:address
+	wire         mm_interconnect_0_sys_clk_timer_s1_chipselect;                // mm_interconnect_0:sys_clk_timer_s1_chipselect -> sys_clk_timer:chipselect
+	wire  [15:0] mm_interconnect_0_sys_clk_timer_s1_readdata;                  // sys_clk_timer:readdata -> mm_interconnect_0:sys_clk_timer_s1_readdata
+	wire   [2:0] mm_interconnect_0_sys_clk_timer_s1_address;                   // mm_interconnect_0:sys_clk_timer_s1_address -> sys_clk_timer:address
+	wire         mm_interconnect_0_sys_clk_timer_s1_write;                     // mm_interconnect_0:sys_clk_timer_s1_write -> sys_clk_timer:write_n
+	wire  [15:0] mm_interconnect_0_sys_clk_timer_s1_writedata;                 // mm_interconnect_0:sys_clk_timer_s1_writedata -> sys_clk_timer:writedata
+	wire         mm_interconnect_0_sdram_controler_s1_chipselect;              // mm_interconnect_0:SDRAM_Controler_s1_chipselect -> SDRAM_Controler:az_cs
+	wire  [15:0] mm_interconnect_0_sdram_controler_s1_readdata;                // SDRAM_Controler:za_data -> mm_interconnect_0:SDRAM_Controler_s1_readdata
+	wire         mm_interconnect_0_sdram_controler_s1_waitrequest;             // SDRAM_Controler:za_waitrequest -> mm_interconnect_0:SDRAM_Controler_s1_waitrequest
+	wire  [23:0] mm_interconnect_0_sdram_controler_s1_address;                 // mm_interconnect_0:SDRAM_Controler_s1_address -> SDRAM_Controler:az_addr
+	wire         mm_interconnect_0_sdram_controler_s1_read;                    // mm_interconnect_0:SDRAM_Controler_s1_read -> SDRAM_Controler:az_rd_n
+	wire   [1:0] mm_interconnect_0_sdram_controler_s1_byteenable;              // mm_interconnect_0:SDRAM_Controler_s1_byteenable -> SDRAM_Controler:az_be_n
+	wire         mm_interconnect_0_sdram_controler_s1_readdatavalid;           // SDRAM_Controler:za_valid -> mm_interconnect_0:SDRAM_Controler_s1_readdatavalid
+	wire         mm_interconnect_0_sdram_controler_s1_write;                   // mm_interconnect_0:SDRAM_Controler_s1_write -> SDRAM_Controler:az_wr_n
+	wire  [15:0] mm_interconnect_0_sdram_controler_s1_writedata;               // mm_interconnect_0:SDRAM_Controler_s1_writedata -> SDRAM_Controler:az_data
+	wire         mm_interconnect_0_timer_timestamp_s1_chipselect;              // mm_interconnect_0:timer_timestamp_s1_chipselect -> timer_timestamp:chipselect
+	wire  [15:0] mm_interconnect_0_timer_timestamp_s1_readdata;                // timer_timestamp:readdata -> mm_interconnect_0:timer_timestamp_s1_readdata
+	wire   [2:0] mm_interconnect_0_timer_timestamp_s1_address;                 // mm_interconnect_0:timer_timestamp_s1_address -> timer_timestamp:address
+	wire         mm_interconnect_0_timer_timestamp_s1_write;                   // mm_interconnect_0:timer_timestamp_s1_write -> timer_timestamp:write_n
+	wire  [15:0] mm_interconnect_0_timer_timestamp_s1_writedata;               // mm_interconnect_0:timer_timestamp_s1_writedata -> timer_timestamp:writedata
 	wire         mm_interconnect_0_gsensor_spi_slave_chipselect;               // mm_interconnect_0:gsensor_spi_slave_chipselect -> gsensor_spi:s_chipselect
 	wire   [7:0] mm_interconnect_0_gsensor_spi_slave_readdata;                 // gsensor_spi:s_readdata -> mm_interconnect_0:gsensor_spi_slave_readdata
 	wire   [3:0] mm_interconnect_0_gsensor_spi_slave_address;                  // mm_interconnect_0:gsensor_spi_slave_address -> gsensor_spi:s_address
@@ -196,13 +206,17 @@ module DE0_LT24_SOPC (
 	wire   [0:0] irq_synchronizer_001_receiver_irq;                            // LT24_interface_irq_0:ins_irq0_irq -> irq_synchronizer_001:receiver_irq
 	wire         irq_mapper_receiver3_irq;                                     // irq_synchronizer_002:sender_irq -> irq_mapper:receiver3_irq
 	wire   [0:0] irq_synchronizer_002_receiver_irq;                            // TIMER:irq -> irq_synchronizer_002:receiver_irq
+	wire         irq_mapper_receiver6_irq;                                     // irq_synchronizer_003:sender_irq -> irq_mapper:receiver6_irq
+	wire   [0:0] irq_synchronizer_003_receiver_irq;                            // sys_clk_timer:irq -> irq_synchronizer_003:receiver_irq
+	wire         irq_mapper_receiver7_irq;                                     // irq_synchronizer_004:sender_irq -> irq_mapper:receiver7_irq
+	wire   [0:0] irq_synchronizer_004_receiver_irq;                            // timer_timestamp:irq -> irq_synchronizer_004:receiver_irq
 	wire         rst_controller_reset_out_reset;                               // rst_controller:reset_out -> [ALT_PLL:reset, background_mem:reset, background_mem:reset2, mm_interconnect_0:ALT_PLL_inclk_interface_reset_reset_bridge_in_reset_reset, pic_mem:reset, pic_mem:reset2]
 	wire         rst_controller_reset_out_reset_req;                           // rst_controller:reset_req -> [background_mem:reset_req, background_mem:reset_req2, pic_mem:reset_req, pic_mem:reset_req2, rst_translator:reset_req_in]
 	wire         cpu_jtag_debug_module_reset_reset;                            // CPU:jtag_debug_module_resetrequest -> [rst_controller:reset_in1, rst_controller_001:reset_in1, rst_controller_002:reset_in1]
-	wire         rst_controller_001_reset_out_reset;                           // rst_controller_001:reset_out -> [CPU:reset_n, JTAG_UART:rst_n, LT24_CTRL:reset_n, LT24_LCD_RSTN:reset_n, LT24_TOUCH_BUSY:reset_n, LT24_TOUCH_PENIRQ_N:reset_n, LT24_TOUCH_SPI:reset_n, SDRAM:reset_n, irq_mapper:reset, irq_synchronizer:sender_reset, irq_synchronizer_001:sender_reset, irq_synchronizer_002:sender_reset, mm_interconnect_0:CPU_reset_n_reset_bridge_in_reset_reset, rst_translator_001:in_reset]
+	wire         rst_controller_001_reset_out_reset;                           // rst_controller_001:reset_out -> [CPU:reset_n, JTAG_UART:rst_n, LT24_CTRL:reset_n, LT24_LCD_RSTN:reset_n, LT24_TOUCH_BUSY:reset_n, LT24_TOUCH_PENIRQ_N:reset_n, LT24_TOUCH_SPI:reset_n, SDRAM_Controler:reset_n, irq_mapper:reset, irq_synchronizer:sender_reset, irq_synchronizer_001:sender_reset, irq_synchronizer_002:sender_reset, irq_synchronizer_003:sender_reset, irq_synchronizer_004:sender_reset, mm_interconnect_0:CPU_reset_n_reset_bridge_in_reset_reset, rst_translator_001:in_reset]
 	wire         rst_controller_001_reset_out_reset_req;                       // rst_controller_001:reset_req -> [CPU:reset_req, rst_translator_001:reset_req_in]
 	wire         rst_controller_002_reset_out_reset;                           // rst_controller_002:reset_out -> [KEY:reset_n, LED_CTRL:RST, TIMER:reset_n, irq_synchronizer_002:receiver_reset, mm_interconnect_0:LED_CTRL_reset_sink_reset_bridge_in_reset_reset]
-	wire         rst_controller_003_reset_out_reset;                           // rst_controller_003:reset_out -> [LT24_buffer_flag:reset_n, LT24_interface_irq_0:reset_reset, gsensor_int:reset_n, gsensor_spi:reset_n, irq_synchronizer:receiver_reset, irq_synchronizer_001:receiver_reset, mm_interconnect_0:LT24_interface_irq_0_reset_reset_bridge_in_reset_reset, mm_interconnect_0:cycloneSPI_reset_sink_reset_bridge_in_reset_reset]
+	wire         rst_controller_003_reset_out_reset;                           // rst_controller_003:reset_out -> [LT24_buffer_flag:reset_n, LT24_interface_irq_0:reset_reset, gsensor_int:reset_n, gsensor_spi:reset_n, irq_synchronizer:receiver_reset, irq_synchronizer_001:receiver_reset, irq_synchronizer_003:receiver_reset, irq_synchronizer_004:receiver_reset, mm_interconnect_0:LT24_interface_irq_0_reset_reset_bridge_in_reset_reset, mm_interconnect_0:cycloneSPI_reset_sink_reset_bridge_in_reset_reset, sys_clk_timer:reset_n, timer_timestamp:reset_n]
 
 	DE0_LT24_SOPC_ALT_PLL alt_pll (
 		.clk       (clk_clk),                                       //       inclk_interface.clk
@@ -374,27 +388,27 @@ module DE0_LT24_SOPC (
 		.vy                 (lt24_conduit_1_vy)                                          //            .vy
 	);
 
-	DE0_LT24_SOPC_SDRAM sdram (
-		.clk            (alt_pll_c0_clk),                           //   clk.clk
-		.reset_n        (~rst_controller_001_reset_out_reset),      // reset.reset_n
-		.az_addr        (mm_interconnect_0_sdram_s1_address),       //    s1.address
-		.az_be_n        (~mm_interconnect_0_sdram_s1_byteenable),   //      .byteenable_n
-		.az_cs          (mm_interconnect_0_sdram_s1_chipselect),    //      .chipselect
-		.az_data        (mm_interconnect_0_sdram_s1_writedata),     //      .writedata
-		.az_rd_n        (~mm_interconnect_0_sdram_s1_read),         //      .read_n
-		.az_wr_n        (~mm_interconnect_0_sdram_s1_write),        //      .write_n
-		.za_data        (mm_interconnect_0_sdram_s1_readdata),      //      .readdata
-		.za_valid       (mm_interconnect_0_sdram_s1_readdatavalid), //      .readdatavalid
-		.za_waitrequest (mm_interconnect_0_sdram_s1_waitrequest),   //      .waitrequest
-		.zs_addr        (sdram_wire_addr),                          //  wire.export
-		.zs_ba          (sdram_wire_ba),                            //      .export
-		.zs_cas_n       (sdram_wire_cas_n),                         //      .export
-		.zs_cke         (sdram_wire_cke),                           //      .export
-		.zs_cs_n        (sdram_wire_cs_n),                          //      .export
-		.zs_dq          (sdram_wire_dq),                            //      .export
-		.zs_dqm         (sdram_wire_dqm),                           //      .export
-		.zs_ras_n       (sdram_wire_ras_n),                         //      .export
-		.zs_we_n        (sdram_wire_we_n)                           //      .export
+	DE0_LT24_SOPC_SDRAM_Controler sdram_controler (
+		.clk            (alt_pll_c0_clk),                                     //   clk.clk
+		.reset_n        (~rst_controller_001_reset_out_reset),                // reset.reset_n
+		.az_addr        (mm_interconnect_0_sdram_controler_s1_address),       //    s1.address
+		.az_be_n        (~mm_interconnect_0_sdram_controler_s1_byteenable),   //      .byteenable_n
+		.az_cs          (mm_interconnect_0_sdram_controler_s1_chipselect),    //      .chipselect
+		.az_data        (mm_interconnect_0_sdram_controler_s1_writedata),     //      .writedata
+		.az_rd_n        (~mm_interconnect_0_sdram_controler_s1_read),         //      .read_n
+		.az_wr_n        (~mm_interconnect_0_sdram_controler_s1_write),        //      .write_n
+		.za_data        (mm_interconnect_0_sdram_controler_s1_readdata),      //      .readdata
+		.za_valid       (mm_interconnect_0_sdram_controler_s1_readdatavalid), //      .readdatavalid
+		.za_waitrequest (mm_interconnect_0_sdram_controler_s1_waitrequest),   //      .waitrequest
+		.zs_addr        (sdram_controler_wire_addr),                          //  wire.export
+		.zs_ba          (sdram_controler_wire_ba),                            //      .export
+		.zs_cas_n       (sdram_controler_wire_cas_n),                         //      .export
+		.zs_cke         (sdram_controler_wire_cke),                           //      .export
+		.zs_cs_n        (sdram_controler_wire_cs_n),                          //      .export
+		.zs_dq          (sdram_controler_wire_dq),                            //      .export
+		.zs_dqm         (sdram_controler_wire_dqm),                           //      .export
+		.zs_ras_n       (sdram_controler_wire_ras_n),                         //      .export
+		.zs_we_n        (sdram_controler_wire_we_n)                           //      .export
 	);
 
 	DE0_LT24_SOPC_TIMER timer (
@@ -494,6 +508,28 @@ module DE0_LT24_SOPC (
 		.clk2        (clk_clk),                                 //   clk2.clk
 		.reset2      (rst_controller_reset_out_reset),          // reset2.reset
 		.reset_req2  (rst_controller_reset_out_reset_req)       //       .reset_req
+	);
+
+	DE0_LT24_SOPC_sys_clk_timer sys_clk_timer (
+		.clk        (clk_clk),                                       //   clk.clk
+		.reset_n    (~rst_controller_003_reset_out_reset),           // reset.reset_n
+		.address    (mm_interconnect_0_sys_clk_timer_s1_address),    //    s1.address
+		.writedata  (mm_interconnect_0_sys_clk_timer_s1_writedata),  //      .writedata
+		.readdata   (mm_interconnect_0_sys_clk_timer_s1_readdata),   //      .readdata
+		.chipselect (mm_interconnect_0_sys_clk_timer_s1_chipselect), //      .chipselect
+		.write_n    (~mm_interconnect_0_sys_clk_timer_s1_write),     //      .write_n
+		.irq        (irq_synchronizer_003_receiver_irq)              //   irq.irq
+	);
+
+	DE0_LT24_SOPC_sys_clk_timer timer_timestamp (
+		.clk        (clk_clk),                                         //   clk.clk
+		.reset_n    (~rst_controller_003_reset_out_reset),             // reset.reset_n
+		.address    (mm_interconnect_0_timer_timestamp_s1_address),    //    s1.address
+		.writedata  (mm_interconnect_0_timer_timestamp_s1_writedata),  //      .writedata
+		.readdata   (mm_interconnect_0_timer_timestamp_s1_readdata),   //      .readdata
+		.chipselect (mm_interconnect_0_timer_timestamp_s1_chipselect), //      .chipselect
+		.write_n    (~mm_interconnect_0_timer_timestamp_s1_write),     //      .write_n
+		.irq        (irq_synchronizer_004_receiver_irq)                //   irq.irq
 	);
 
 	DE0_LT24_SOPC_mm_interconnect_0 mm_interconnect_0 (
@@ -607,20 +643,30 @@ module DE0_LT24_SOPC (
 		.pic_mem_s1_byteenable                                     (mm_interconnect_0_pic_mem_s1_byteenable),                      //                                                    .byteenable
 		.pic_mem_s1_chipselect                                     (mm_interconnect_0_pic_mem_s1_chipselect),                      //                                                    .chipselect
 		.pic_mem_s1_clken                                          (mm_interconnect_0_pic_mem_s1_clken),                           //                                                    .clken
-		.SDRAM_s1_address                                          (mm_interconnect_0_sdram_s1_address),                           //                                            SDRAM_s1.address
-		.SDRAM_s1_write                                            (mm_interconnect_0_sdram_s1_write),                             //                                                    .write
-		.SDRAM_s1_read                                             (mm_interconnect_0_sdram_s1_read),                              //                                                    .read
-		.SDRAM_s1_readdata                                         (mm_interconnect_0_sdram_s1_readdata),                          //                                                    .readdata
-		.SDRAM_s1_writedata                                        (mm_interconnect_0_sdram_s1_writedata),                         //                                                    .writedata
-		.SDRAM_s1_byteenable                                       (mm_interconnect_0_sdram_s1_byteenable),                        //                                                    .byteenable
-		.SDRAM_s1_readdatavalid                                    (mm_interconnect_0_sdram_s1_readdatavalid),                     //                                                    .readdatavalid
-		.SDRAM_s1_waitrequest                                      (mm_interconnect_0_sdram_s1_waitrequest),                       //                                                    .waitrequest
-		.SDRAM_s1_chipselect                                       (mm_interconnect_0_sdram_s1_chipselect),                        //                                                    .chipselect
+		.SDRAM_Controler_s1_address                                (mm_interconnect_0_sdram_controler_s1_address),                 //                                  SDRAM_Controler_s1.address
+		.SDRAM_Controler_s1_write                                  (mm_interconnect_0_sdram_controler_s1_write),                   //                                                    .write
+		.SDRAM_Controler_s1_read                                   (mm_interconnect_0_sdram_controler_s1_read),                    //                                                    .read
+		.SDRAM_Controler_s1_readdata                               (mm_interconnect_0_sdram_controler_s1_readdata),                //                                                    .readdata
+		.SDRAM_Controler_s1_writedata                              (mm_interconnect_0_sdram_controler_s1_writedata),               //                                                    .writedata
+		.SDRAM_Controler_s1_byteenable                             (mm_interconnect_0_sdram_controler_s1_byteenable),              //                                                    .byteenable
+		.SDRAM_Controler_s1_readdatavalid                          (mm_interconnect_0_sdram_controler_s1_readdatavalid),           //                                                    .readdatavalid
+		.SDRAM_Controler_s1_waitrequest                            (mm_interconnect_0_sdram_controler_s1_waitrequest),             //                                                    .waitrequest
+		.SDRAM_Controler_s1_chipselect                             (mm_interconnect_0_sdram_controler_s1_chipselect),              //                                                    .chipselect
+		.sys_clk_timer_s1_address                                  (mm_interconnect_0_sys_clk_timer_s1_address),                   //                                    sys_clk_timer_s1.address
+		.sys_clk_timer_s1_write                                    (mm_interconnect_0_sys_clk_timer_s1_write),                     //                                                    .write
+		.sys_clk_timer_s1_readdata                                 (mm_interconnect_0_sys_clk_timer_s1_readdata),                  //                                                    .readdata
+		.sys_clk_timer_s1_writedata                                (mm_interconnect_0_sys_clk_timer_s1_writedata),                 //                                                    .writedata
+		.sys_clk_timer_s1_chipselect                               (mm_interconnect_0_sys_clk_timer_s1_chipselect),                //                                                    .chipselect
 		.TIMER_s1_address                                          (mm_interconnect_0_timer_s1_address),                           //                                            TIMER_s1.address
 		.TIMER_s1_write                                            (mm_interconnect_0_timer_s1_write),                             //                                                    .write
 		.TIMER_s1_readdata                                         (mm_interconnect_0_timer_s1_readdata),                          //                                                    .readdata
 		.TIMER_s1_writedata                                        (mm_interconnect_0_timer_s1_writedata),                         //                                                    .writedata
-		.TIMER_s1_chipselect                                       (mm_interconnect_0_timer_s1_chipselect)                         //                                                    .chipselect
+		.TIMER_s1_chipselect                                       (mm_interconnect_0_timer_s1_chipselect),                        //                                                    .chipselect
+		.timer_timestamp_s1_address                                (mm_interconnect_0_timer_timestamp_s1_address),                 //                                  timer_timestamp_s1.address
+		.timer_timestamp_s1_write                                  (mm_interconnect_0_timer_timestamp_s1_write),                   //                                                    .write
+		.timer_timestamp_s1_readdata                               (mm_interconnect_0_timer_timestamp_s1_readdata),                //                                                    .readdata
+		.timer_timestamp_s1_writedata                              (mm_interconnect_0_timer_timestamp_s1_writedata),               //                                                    .writedata
+		.timer_timestamp_s1_chipselect                             (mm_interconnect_0_timer_timestamp_s1_chipselect)               //                                                    .chipselect
 	);
 
 	DE0_LT24_SOPC_irq_mapper irq_mapper (
@@ -632,6 +678,8 @@ module DE0_LT24_SOPC (
 		.receiver3_irq (irq_mapper_receiver3_irq),           // receiver3.irq
 		.receiver4_irq (irq_mapper_receiver4_irq),           // receiver4.irq
 		.receiver5_irq (irq_mapper_receiver5_irq),           // receiver5.irq
+		.receiver6_irq (irq_mapper_receiver6_irq),           // receiver6.irq
+		.receiver7_irq (irq_mapper_receiver7_irq),           // receiver7.irq
 		.sender_irq    (cpu_d_irq_irq)                       //    sender.irq
 	);
 
@@ -666,6 +714,28 @@ module DE0_LT24_SOPC (
 		.sender_reset   (rst_controller_001_reset_out_reset), //   sender_clk_reset.reset
 		.receiver_irq   (irq_synchronizer_002_receiver_irq),  //           receiver.irq
 		.sender_irq     (irq_mapper_receiver3_irq)            //             sender.irq
+	);
+
+	altera_irq_clock_crosser #(
+		.IRQ_WIDTH (1)
+	) irq_synchronizer_003 (
+		.receiver_clk   (clk_clk),                            //       receiver_clk.clk
+		.sender_clk     (alt_pll_c0_clk),                     //         sender_clk.clk
+		.receiver_reset (rst_controller_003_reset_out_reset), // receiver_clk_reset.reset
+		.sender_reset   (rst_controller_001_reset_out_reset), //   sender_clk_reset.reset
+		.receiver_irq   (irq_synchronizer_003_receiver_irq),  //           receiver.irq
+		.sender_irq     (irq_mapper_receiver6_irq)            //             sender.irq
+	);
+
+	altera_irq_clock_crosser #(
+		.IRQ_WIDTH (1)
+	) irq_synchronizer_004 (
+		.receiver_clk   (clk_clk),                            //       receiver_clk.clk
+		.sender_clk     (alt_pll_c0_clk),                     //         sender_clk.clk
+		.receiver_reset (rst_controller_003_reset_out_reset), // receiver_clk_reset.reset
+		.sender_reset   (rst_controller_001_reset_out_reset), //   sender_clk_reset.reset
+		.receiver_irq   (irq_synchronizer_004_receiver_irq),  //           receiver.irq
+		.sender_irq     (irq_mapper_receiver7_irq)            //             sender.irq
 	);
 
 	altera_reset_controller #(

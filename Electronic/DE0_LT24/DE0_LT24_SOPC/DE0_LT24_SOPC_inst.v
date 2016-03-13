@@ -21,6 +21,10 @@
 		.cyclonespi_spi_interface_config             (<connected-to-cyclonespi_spi_interface_config>),             //                                     .config
 		.cyclonespi_spi_interface_spi_irq            (<connected-to-cyclonespi_spi_interface_spi_irq>),            //                                     .spi_irq
 		.from_key_export                             (<connected-to-from_key_export>),                             //                             from_key.export
+		.gsensor_int_external_connection_export      (<connected-to-gsensor_int_external_connection_export>),      //      gsensor_int_external_connection.export
+		.gsensor_spi_conduit_end_SDIO                (<connected-to-gsensor_spi_conduit_end_SDIO>),                //              gsensor_spi_conduit_end.SDIO
+		.gsensor_spi_conduit_end_SCLK                (<connected-to-gsensor_spi_conduit_end_SCLK>),                //                                     .SCLK
+		.gsensor_spi_conduit_end_CS_n                (<connected-to-gsensor_spi_conduit_end_CS_n>),                //                                     .CS_n
 		.lt24_buffer_flag_external_connection_export (<connected-to-lt24_buffer_flag_external_connection_export>), // lt24_buffer_flag_external_connection.export
 		.lt24_conduit_cs                             (<connected-to-lt24_conduit_cs>),                             //                         lt24_conduit.cs
 		.lt24_conduit_rs                             (<connected-to-lt24_conduit_rs>),                             //                                     .rs
@@ -47,19 +51,15 @@
 		.pic_mem_s2_writedata                        (<connected-to-pic_mem_s2_writedata>),                        //                                     .writedata
 		.pic_mem_s2_byteenable                       (<connected-to-pic_mem_s2_byteenable>),                       //                                     .byteenable
 		.reset_reset_n                               (<connected-to-reset_reset_n>),                               //                                reset.reset_n
-		.sdram_wire_addr                             (<connected-to-sdram_wire_addr>),                             //                           sdram_wire.addr
-		.sdram_wire_ba                               (<connected-to-sdram_wire_ba>),                               //                                     .ba
-		.sdram_wire_cas_n                            (<connected-to-sdram_wire_cas_n>),                            //                                     .cas_n
-		.sdram_wire_cke                              (<connected-to-sdram_wire_cke>),                              //                                     .cke
-		.sdram_wire_cs_n                             (<connected-to-sdram_wire_cs_n>),                             //                                     .cs_n
-		.sdram_wire_dq                               (<connected-to-sdram_wire_dq>),                               //                                     .dq
-		.sdram_wire_dqm                              (<connected-to-sdram_wire_dqm>),                              //                                     .dqm
-		.sdram_wire_ras_n                            (<connected-to-sdram_wire_ras_n>),                            //                                     .ras_n
-		.sdram_wire_we_n                             (<connected-to-sdram_wire_we_n>),                             //                                     .we_n
-		.to_led_export                               (<connected-to-to_led_export>),                               //                               to_led.export
-		.gsensor_spi_conduit_end_SDIO                (<connected-to-gsensor_spi_conduit_end_SDIO>),                //              gsensor_spi_conduit_end.SDIO
-		.gsensor_spi_conduit_end_SCLK                (<connected-to-gsensor_spi_conduit_end_SCLK>),                //                                     .SCLK
-		.gsensor_spi_conduit_end_CS_n                (<connected-to-gsensor_spi_conduit_end_CS_n>),                //                                     .CS_n
-		.gsensor_int_external_connection_export      (<connected-to-gsensor_int_external_connection_export>)       //      gsensor_int_external_connection.export
+		.sdram_controler_wire_addr                   (<connected-to-sdram_controler_wire_addr>),                   //                 sdram_controler_wire.addr
+		.sdram_controler_wire_ba                     (<connected-to-sdram_controler_wire_ba>),                     //                                     .ba
+		.sdram_controler_wire_cas_n                  (<connected-to-sdram_controler_wire_cas_n>),                  //                                     .cas_n
+		.sdram_controler_wire_cke                    (<connected-to-sdram_controler_wire_cke>),                    //                                     .cke
+		.sdram_controler_wire_cs_n                   (<connected-to-sdram_controler_wire_cs_n>),                   //                                     .cs_n
+		.sdram_controler_wire_dq                     (<connected-to-sdram_controler_wire_dq>),                     //                                     .dq
+		.sdram_controler_wire_dqm                    (<connected-to-sdram_controler_wire_dqm>),                    //                                     .dqm
+		.sdram_controler_wire_ras_n                  (<connected-to-sdram_controler_wire_ras_n>),                  //                                     .ras_n
+		.sdram_controler_wire_we_n                   (<connected-to-sdram_controler_wire_we_n>),                   //                                     .we_n
+		.to_led_export                               (<connected-to-to_led_export>)                                //                               to_led.export
 	);
 

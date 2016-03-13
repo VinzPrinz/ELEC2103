@@ -22,6 +22,10 @@ module DE0_LT24_SOPC (
 	cyclonespi_spi_interface_config,
 	cyclonespi_spi_interface_spi_irq,
 	from_key_export,
+	gsensor_int_external_connection_export,
+	gsensor_spi_conduit_end_SDIO,
+	gsensor_spi_conduit_end_SCLK,
+	gsensor_spi_conduit_end_CS_n,
 	lt24_buffer_flag_external_connection_export,
 	lt24_conduit_cs,
 	lt24_conduit_rs,
@@ -48,20 +52,16 @@ module DE0_LT24_SOPC (
 	pic_mem_s2_writedata,
 	pic_mem_s2_byteenable,
 	reset_reset_n,
-	sdram_wire_addr,
-	sdram_wire_ba,
-	sdram_wire_cas_n,
-	sdram_wire_cke,
-	sdram_wire_cs_n,
-	sdram_wire_dq,
-	sdram_wire_dqm,
-	sdram_wire_ras_n,
-	sdram_wire_we_n,
-	to_led_export,
-	gsensor_spi_conduit_end_SDIO,
-	gsensor_spi_conduit_end_SCLK,
-	gsensor_spi_conduit_end_CS_n,
-	gsensor_int_external_connection_export);	
+	sdram_controler_wire_addr,
+	sdram_controler_wire_ba,
+	sdram_controler_wire_cas_n,
+	sdram_controler_wire_cke,
+	sdram_controler_wire_cs_n,
+	sdram_controler_wire_dq,
+	sdram_controler_wire_dqm,
+	sdram_controler_wire_ras_n,
+	sdram_controler_wire_we_n,
+	to_led_export);	
 
 	input		alt_pll_areset_conduit_export;
 	output		alt_pll_c1_clk;
@@ -85,6 +85,10 @@ module DE0_LT24_SOPC (
 	output	[7:0]	cyclonespi_spi_interface_config;
 	output		cyclonespi_spi_interface_spi_irq;
 	input		from_key_export;
+	input		gsensor_int_external_connection_export;
+	inout		gsensor_spi_conduit_end_SDIO;
+	output		gsensor_spi_conduit_end_SCLK;
+	output		gsensor_spi_conduit_end_CS_n;
 	output		lt24_buffer_flag_external_connection_export;
 	output		lt24_conduit_cs;
 	output		lt24_conduit_rs;
@@ -111,18 +115,14 @@ module DE0_LT24_SOPC (
 	input	[15:0]	pic_mem_s2_writedata;
 	input	[1:0]	pic_mem_s2_byteenable;
 	input		reset_reset_n;
-	output	[12:0]	sdram_wire_addr;
-	output	[1:0]	sdram_wire_ba;
-	output		sdram_wire_cas_n;
-	output		sdram_wire_cke;
-	output		sdram_wire_cs_n;
-	inout	[15:0]	sdram_wire_dq;
-	output	[1:0]	sdram_wire_dqm;
-	output		sdram_wire_ras_n;
-	output		sdram_wire_we_n;
+	output	[12:0]	sdram_controler_wire_addr;
+	output	[1:0]	sdram_controler_wire_ba;
+	output		sdram_controler_wire_cas_n;
+	output		sdram_controler_wire_cke;
+	output		sdram_controler_wire_cs_n;
+	inout	[15:0]	sdram_controler_wire_dq;
+	output	[1:0]	sdram_controler_wire_dqm;
+	output		sdram_controler_wire_ras_n;
+	output		sdram_controler_wire_we_n;
 	output	[7:0]	to_led_export;
-	inout		gsensor_spi_conduit_end_SDIO;
-	output		gsensor_spi_conduit_end_SCLK;
-	output		gsensor_spi_conduit_end_CS_n;
-	input		gsensor_int_external_connection_export;
 endmodule

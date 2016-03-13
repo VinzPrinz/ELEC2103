@@ -3,3 +3,8 @@ PLLJITTER	30
 PLLSPEmax	84
 PLLSPEmin	-53
 
+PLL_Name	sdram_pll:lol|altpll:altpll_component|sdram_pll_altpll:auto_generated|pll1
+PLLJITTER	35
+PLLSPEmax	84
+PLLSPEmin	-53
+

@@ -20,9 +20,9 @@
 // Altera IRQ Mapper
 //
 // Parameters
-//   NUM_RCVRS        : 6
+//   NUM_RCVRS        : 8
 //   SENDER_IRW_WIDTH : 32
-//   IRQ_MAP          : 0:4,1:1,2:2,3:3,4:5,5:6
+//   IRQ_MAP          : 0:4,1:1,2:2,3:3,4:5,5:6,6:0,7:7
 //
 // -------------------------------------------------------
 
@@ -45,6 +45,8 @@ module DE0_LT24_SOPC_irq_mapper
     input                receiver3_irq,
     input                receiver4_irq,
     input                receiver5_irq,
+    input                receiver6_irq,
+    input                receiver7_irq,
 
     // -------------------
     // Command Source (Output)
@@ -62,6 +64,8 @@ module DE0_LT24_SOPC_irq_mapper
         sender_irq[3] = receiver3_irq;
         sender_irq[5] = receiver4_irq;
         sender_irq[6] = receiver5_irq;
+        sender_irq[0] = receiver6_irq;
+        sender_irq[7] = receiver7_irq;
     end
 
 endmodule

@@ -1,3 +1,4 @@
+`timescale 1 ps / 1 ps
 module LT24_buffer(
 	clk,
 	rst_n,
@@ -133,7 +134,6 @@ reg bufferFlag;
 wire bufferFlag_wire;
 assign bufferFlag_wire = bufferFlag;
 
-
 always @ (posedge clk)
 begin
 // Clr_BUFFER_FLAG() has been called in software : the CPU must control the screen
@@ -251,8 +251,8 @@ assign Case_Wire = Case_Reg;
 // Used for the coins game
 
 
-parameter H1 = 30;
-parameter L1 = 40;
+parameter H1 = 20;
+parameter L1 = 20;
 
 reg 	col;
 wire col_wire;
@@ -310,7 +310,7 @@ assign 	characPosX = posX - (pointerX - 11'd19);
 assign 	characPosY = posY - (pointerY - 11'd14);
 
 //The address of the current pixel in the 64x64 picture of the character (picmem)
-assign 	pic_mem_s2_address =  ({2'b0,posX} % 11'd80) + (11'd80*({2'b0,posY} % 11'd80));
+assign 	pic_mem_s2_address =  ({2'b0,posX} % 16'd80) + (16'd80*({2'b0,posY} % 16'd80));
 //if the current pixel is within the character area : the character is displayed
 assign 	pic_mem_s2_chipselect = (screenState >= 18'd6) && (screenState < 18'd76806);
 assign 	pic_mem_s2_clken = pic_mem_s2_chipselect;
@@ -355,23 +355,29 @@ else if (screenState == 18'd6)
 	LT24_D_loc <= 16'h002c;                                            
 	end
 //write the image pixel by pixel (line by line from left to right)
-else if ((screenState>18'd6) && (screenState<18'd76806))
+else if ((screenState>18'd6) && (screenState<18'd76806))//&& lt24_pattern[0]==1'b1)
 	begin
 	LT24_RS_loc <= 1'b1;
-	
 
-	if(lt24_pattern[0])
-		if (displayCharact && displayCoin)begin
+/*		case({displayCharact , displayCoin})
+			2'b11: LT24_D_loc <= 16'h0000;
+			2'b10: LT24_D_loc <= 16'hf0ff;
+			2'b01: LT24_D_loc <= 16'h00aa;
+			default: LT24_D_loc <= 16'h00ff;
+		endcase*/
+		/*if (displayCharact && displayCoin)
 				LT24_D_loc <= 16'h0000;
-		end else if(displayCharact)
-			begin
+		else if(displayCharact)
 				LT24_D_loc <= 16'hf0ff;
-			end
 		else if (displayCoin)
 				LT24_D_loc <= 16'h00aa;
 		else
-				LT24_D_loc <= 16'hffff;
-	else if(Case_Wire[11])
+				LT24_D_loc <= 16'h00ff;*/
+		LT24_D_loc <= Game1_Color_wire;
+			
+////	else
+//		LT24_D_loc <= 16'haa00;
+	/*else if(Case_Wire[11])
 		case(Counter_Wire)
 			2'b00: LT24_D_loc <= pic_mem_s2_readdata;
 			2'b01: LT24_D_loc <= pic_mem_s2_readdata;
@@ -379,9 +385,8 @@ else if ((screenState>18'd6) && (screenState<18'd76806))
 			2'b10: LT24_D_loc <= 16'h00aa;
 		endcase
 	else
-		LT24_D_loc <= 16'haa00;
-		
-	end
+		LT24_D_loc <= 16'haa00;*/
+	end 	
 //if the last pixel of the screen has already been written
 else if (screenState>=18'd76806)
 	begin
@@ -426,17 +431,16 @@ always @ (posedge clk)
 				Counter_Reg[1] <= Counter_Wire[0] + 1'b1;
 				Counter_X_Reg <= 8'd0;
 				Counter_Y_Reg <= 8'd0;
-				Counter_Case_Reg <= Counter_Case_Wire +1;
+				Counter_Case_Reg <= Counter_Case_Wire +4'd1;
 				Case_Reg[11:1] <= Case_Wire[10:0];
 				Case_Reg[0]	<= Case_Wire[11];
-				Counter_Case_Reg <= Counter_Case_Wire + 1;
 			end
 		else if (Counter_X_Wire == 79)
 			begin
 				Counter_Reg[1] <= Counter_Wire[0]+1'b1;
 				Counter_X_Reg <= 8'd0;
 				Counter_Y_Reg <= Counter_Y_Wire + 8'd1;
-				Counter_Case_Reg <= Counter_Case_Wire - 2;
+				Counter_Case_Reg <= Counter_Case_Wire - 12'd2;
 				Case_Reg[11:10] <= Case_Wire[1:0];
 				Case_Reg[9:0]	<= Case_Wire[11:2];
 			end
@@ -453,7 +457,7 @@ always @ (posedge clk)
 				Counter_X_Reg <= 8'd0;
 				Case_Reg[11:1] <= Case_Wire[10:0];
 				Case_Reg[0]	<= Case_Wire[11];
-				Counter_Case_Reg <= Counter_Case_Wire + 1;
+				Counter_Case_Reg <= Counter_Case_Wire + 2'd1;
 			end
 		else
 			Counter_X_Reg <= Counter_X_Wire + 8'd1;
@@ -564,7 +568,36 @@ always @ (posedge clk)
 		col <= 1'b0;
 	else
 		col <= col;
-	
+		
+reg [15:0] Game1_Color;
+wire [15:0] Game1_Color_wire;
+assign Game1_Color_wire = Game1_Color;
+
+always
+		if(lt24_pattern[0])
+			/*if (displayCharact && displayCoin)
+				Game1_Color <= 16'h0000;
+			else if(displayCharact)
+				Game1_Color <= 16'hf0ff;
+			else if (displayCoin)
+				Game1_Color <= 16'h00aa;
+			else
+				Game1_Color <= 16'h00ff;*/
+			case({displayCharact , displayCoin})
+				2'b11: Game1_Color <= 16'h0000;
+				2'b10: Game1_Color <= 16'hf0ff;
+				2'b01: Game1_Color <= 16'h00aa;
+				default: Game1_Color <= 16'hffff;
+			endcase 
+		else if(Case_Wire[11])
+			case(Counter_Wire)
+				2'b00: Game1_Color <= pic_mem_s2_readdata;
+				2'b01: Game1_Color <= pic_mem_s2_readdata;
+				2'b11: Game1_Color <= 16'h00aa;
+				2'b10: Game1_Color <= 16'h00aa;
+			endcase
+		else
+			Game1_Color <= 16'haa00;
 
 	
 endmodule

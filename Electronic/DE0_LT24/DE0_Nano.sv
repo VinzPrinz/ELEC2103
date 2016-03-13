@@ -243,19 +243,6 @@ assign PIC32_INT2 = Config[1] ? KEY[1] : 1'b1;
 always @ (posedge CLOCK_50)
 	Status = {SW, 2'b00, KEY};
 
-//--- SPI Interface -------------------------------------
-
-/*MySPI MySPI_instance (
-	.theClock(CLOCK_50), .theReset(PIC32_RESET),
-	.MySPI_clk(PIC32_SCK1A), .MySPI_cs(PIC32_CS_FPGA), .MySPI_sdi(PIC32_SDO1A), .MySPI_sdo(PIC32_SDI1A),
-	.Config(Config),
-	.Status(Status),
-	.Led70(Led70),
-	.IO_A_Data_In(IO_A_Data_In), 			.IO_B_Data_In(IO_B_Data_In), 			.IO_C_Data_In(IO_C_Data_In), 			.IO_D_Data_In(IO_D_Data_In),
-	.IO_A_Data_Out(IO_A_Data_Out), 		.IO_B_Data_Out(IO_B_Data_Out), 		.IO_C_Data_Out(IO_C_Data_Out), 		.IO_D_Data_Out(IO_D_Data_Out),
-	.IO_A_Enable_Out(IO_A_Enable_Out), 	.IO_B_Enable_Out(IO_B_Enable_Out), 	.IO_C_Enable_Out(IO_C_Enable_Out), 	.IO_D_Enable_Out(IO_D_Enable_Out)
-);*/
-
 
 //=======================================================
 //  Structural coding
@@ -264,22 +251,18 @@ always @ (posedge CLOCK_50)
 assign RST_N       = KEY[1];
 assign LT24_LCD_ON = 1'b1; //default on
 
+wire pll_clk;
+
+sdram_pll lol (
+	.inclk0(CLOCK_50),
+	.c0(pll_clk));
+
+assign DRAM_CLK = pll_clk;
 
 
 DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		.clk_clk(CLOCK_50),          							//        clk.clk
 		.reset_reset_n(RST_N),    								//      reset.reset_n
-		
-		// SDRAM
-		.sdram_wire_addr(DRAM_ADDR),  						// sdram_wire.addr
-		.sdram_wire_ba(DRAM_BA),    							//           .ba
-		.sdram_wire_cas_n(DRAM_CAS_N), 						//           .cas_n
-		.sdram_wire_cke(DRAM_CKE),  							//           .cke
-		.sdram_wire_cs_n(DRAM_CS_N),  						//           .cs_n
-		.sdram_wire_dq(DRAM_DQ),    							//           .dq
-		.sdram_wire_dqm(DRAM_DQM),   							//           .dqm
-		.sdram_wire_ras_n(DRAM_RAS_N),						//           .ras_n
-		.sdram_wire_we_n(DRAM_WE_N),  						//           .we_n
 		
 		// KEY
 		.from_key_export(KEY[0]),  							//   from_key.export
@@ -309,7 +292,7 @@ DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		.alt_pll_areset_conduit_export(),    				//    alt_pll_areset_conduit.export
 		.alt_pll_locked_conduit_export(),    				//    alt_pll_locked_conduit.export
 		.alt_pll_phasedone_conduit_export(),  				// alt_pll_phasedone_conduit.export
-		.alt_pll_c1_clk(DRAM_CLK),                      //                alt_pll_c1.clk  
+		.alt_pll_c1_clk(),                      //                alt_pll_c1.clk  
 		
 		.pic_mem_s2_address(pic_mem_s2_address),               //                pic_mem_s2.address
 		.pic_mem_s2_chipselect(pic_mem_s2_chipselect),            //                          .chipselect
@@ -349,35 +332,17 @@ DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		.gsensor_spi_conduit_end_SDIO            (I2C_SDAT),            //          gsensor_spi_conduit_end.SDIO
 		.gsensor_spi_conduit_end_SCLK            (I2C_SCLK),            //                                 .SCLK
 		.gsensor_spi_conduit_end_CS_n            (G_SENSOR_CS_N), 
-
-	);
-
 		
-		//MySPI (
-//	.theClock(CLOCK_50), 
-//	.theReset(PIC32_RESET),
-//	.MySPI_clk(PIC32_SCK1A),
-//	.MySPI_cs(PIC32_CS_FPGA), 
-//	.MySPI_sdi(PIC32_SDO1A),
-//	.MySPI_sdo(PIC32_SDI1A),
-//	.Config(Config),
-//	.Status(Status),
-//	.Led70(Led70),
-//	.IO_A_Data_In(8'b01010101),
-//	.IO_B_Data_In(8'b01010101),
-//	.IO_C_Data_In(8'b01010101),
-//	.IO_D_Data_In(8'b01010101),
-//	.IO_A_Data_Out(LED), 
-//	.IO_B_Data_Out(), 
-//	.IO_C_Data_Out(), 
-//	.IO_D_Data_Out(),
-//	.IO_A_Enable_Out(IO_A_Enable_Out),
-//	.IO_B_Enable_Out(),
-//	.IO_C_Enable_Out(),
-//	.IO_D_Enable_Out()
-//);
-
-	
+		.sdram_controler_wire_addr                   (DRAM_ADDR),//                 sdram_controler_wire.addr
+		.sdram_controler_wire_ba                     (DRAM_BA),                     //                                     .ba
+		.sdram_controler_wire_cas_n                  (DRAM_CAS_N),                  //                                     .cas_n
+		.sdram_controler_wire_cke                    (DRAM_CKE),                    //                                     .cke
+		.sdram_controler_wire_cs_n                   (DRAM_CS_N),                   //                                     .cs_n
+		.sdram_controler_wire_dq                     (DRAM_DQ),                     //                                     .dq
+		.sdram_controler_wire_dqm                    (DRAM_DQM),                    //                                     .dqm
+		.sdram_controler_wire_ras_n                  (DRAM_RAS_N),                  //                                     .ras_n
+		.sdram_controler_wire_we_n                   (DRAM_WE_N)
+	);
 	
 	
 	LT24_buffer lt24_buf(
@@ -409,13 +374,13 @@ DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		.LT24_RESET_N_screen(LT24_RESET_N),
 		.LT24_RS_screen(LT24_RS),
 		
-		.pic_mem_s2_address(pic_mem_s2_address),               //                pic_mem_s2.address
-		.pic_mem_s2_chipselect(pic_mem_s2_chipselect),            //                          .chipselect
-		.pic_mem_s2_clken(pic_mem_s2_clken),                 //                          .clken
+		.pic_mem_s2_address(pic_mem_s2_address),             //                pic_mem_s2.address
+		.pic_mem_s2_chipselect(pic_mem_s2_chipselect),       //                .chipselect
+		.pic_mem_s2_clken(pic_mem_s2_clken),                 //                .clken
 		.pic_mem_s2_write(pic_mem_s2_write),                 //                          .write
-		.pic_mem_s2_readdata(pic_mem_s2_readdata),              //                          .readdata
-		.pic_mem_s2_writedata(pic_mem_s2_writedata),             //                          .writedata
-		.pic_mem_s2_byteenable(pic_mem_s2_byteenable),            //                          .byteenable
+		.pic_mem_s2_readdata(pic_mem_s2_readdata),           //                          .readdata
+		.pic_mem_s2_writedata(pic_mem_s2_writedata),         //                          .writedata
+		.pic_mem_s2_byteenable(pic_mem_s2_byteenable),       //                          .byteenable
 		
 		.lt24_buffer_flag(lt24_buffer_flag),
 		

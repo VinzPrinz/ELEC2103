@@ -30,7 +30,7 @@ module LT24_interface_irq (
 	assign pattern = pattern_reg;
 	
 	reg [31:0] vx_reg , vy_reg;
-	assign vx = vx_reg;
+	assign vx =  vx_reg;
 	assign vy = vy_reg;
 	
 	always @(clock_clk)
@@ -43,7 +43,7 @@ module LT24_interface_irq (
 	else if(avs_s0_read)
 		case(avs_s0_address[2:0])
 			3'b000: avs_s0_readdata_reg <= {31'b0 , finish_flag};
-			3'b001: avs_s0_readdata_reg <= {20'b0 , counter};
+			3'b001: avs_s0_readdata_reg <= counter;
 		endcase
 	else if(avs_s0_write)
 		case(avs_s0_address[2:0])
@@ -51,12 +51,6 @@ module LT24_interface_irq (
 			3'b011: vx_reg <= avs_s0_writedata;
 			3'b100: vy_reg <= avs_s0_writedata;
 		endcase
-/*	else
-		begin
-			pattern_reg <= 12'b0;
-			vy_reg <= 32'b0;
-			vx_reg <= 32'b0;
-		end*/
 			
 	always @ (posedge clock_clk)
 		if(reset_reset || ~finish_flag)

@@ -65,7 +65,7 @@ int main()
 
 	// Write 0x3C on LED[6:0] through the dedicated custom IP
 	IOWR(LED_CTRL_BASE, 0x0, 0x3C);
-	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0);
+	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 1);
 
 
 	// TOUCH INITIALIZATION
@@ -112,8 +112,8 @@ int hardware( TOUCH_HANDLE *pTouch){
 		    alt_16 szXYZ[3];
 		    if (ADXL345_SPI_IsDataReady(GSENSOR_SPI_BASE) && ADXL345_SPI_XYZ_Read(GSENSOR_SPI_BASE, szXYZ)){
 		    	if( szXYZ[0] < 512 && szXYZ[0]> -512 && szXYZ[1] < 512 && szXYZ[1]>-512){
-		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/70);
-		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/70);
+		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/50);
+		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/50);
 		    	}
 		    	printf("Accel %d \n", szXYZ[0]);
 		    }

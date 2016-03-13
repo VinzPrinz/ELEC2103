@@ -10084,8 +10084,8 @@ int main()
  2005fe8:	00810034 	movhi	r2,1024
  2005fec:	108c0004 	addi	r2,r2,12288
  2005ff0:	10c00035 	stwio	r3,0(r2)
-	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0);
- 2005ff4:	0007883a 	mov	r3,zero
+	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 1);
+ 2005ff4:	00c00044 	movi	r3,1
  2005ff8:	00800074 	movhi	r2,1
  2005ffc:	10810204 	addi	r2,r2,1032
  2006000:	10c00035 	stwio	r3,0(r2)
@@ -10277,27 +10277,27 @@ int hardware( TOUCH_HANDLE *pTouch){
  2006228:	10a00004 	addi	r2,r2,-32768
  200622c:	10bf8050 	cmplti	r2,r2,-511
  2006230:	1000181e 	bne	r2,zero,2006294 <hardware+0x178>
-		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/70);
+		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/50);
  2006234:	e0bffd0b 	ldhu	r2,-12(fp)
  2006238:	10bfffcc 	andi	r2,r2,65535
  200623c:	10a0001c 	xori	r2,r2,32768
  2006240:	10a00004 	addi	r2,r2,-32768
  2006244:	0085c83a 	sub	r2,zero,r2
  2006248:	1009883a 	mov	r4,r2
- 200624c:	01401184 	movi	r5,70
+ 200624c:	01400c84 	movi	r5,50
  2006250:	20076180 	call	2007618 <__divsi3>
  2006254:	1007883a 	mov	r3,r2
  2006258:	00800074 	movhi	r2,1
  200625c:	10810404 	addi	r2,r2,1040
  2006260:	10c00035 	stwio	r3,0(r2)
-		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/70);
+		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/50);
  2006264:	e0bffd8b 	ldhu	r2,-10(fp)
  2006268:	10bfffcc 	andi	r2,r2,65535
  200626c:	10a0001c 	xori	r2,r2,32768
  2006270:	10a00004 	addi	r2,r2,-32768
  2006274:	0085c83a 	sub	r2,zero,r2
  2006278:	1009883a 	mov	r4,r2
- 200627c:	01401184 	movi	r5,70
+ 200627c:	01400c84 	movi	r5,50
  2006280:	20076180 	call	2007618 <__divsi3>
  2006284:	1007883a 	mov	r3,r2
  2006288:	00800074 	movhi	r2,1

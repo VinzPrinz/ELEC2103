@@ -52,15 +52,15 @@
 			pic_mem_s2_writedata                        : in    std_logic_vector(15 downto 0) := (others => 'X'); -- writedata
 			pic_mem_s2_byteenable                       : in    std_logic_vector(1 downto 0)  := (others => 'X'); -- byteenable
 			reset_reset_n                               : in    std_logic                     := 'X';             -- reset_n
-			sdram_wire_addr                             : out   std_logic_vector(12 downto 0);                    -- addr
-			sdram_wire_ba                               : out   std_logic_vector(1 downto 0);                     -- ba
-			sdram_wire_cas_n                            : out   std_logic;                                        -- cas_n
-			sdram_wire_cke                              : out   std_logic;                                        -- cke
-			sdram_wire_cs_n                             : out   std_logic;                                        -- cs_n
-			sdram_wire_dq                               : inout std_logic_vector(15 downto 0) := (others => 'X'); -- dq
-			sdram_wire_dqm                              : out   std_logic_vector(1 downto 0);                     -- dqm
-			sdram_wire_ras_n                            : out   std_logic;                                        -- ras_n
-			sdram_wire_we_n                             : out   std_logic;                                        -- we_n
+			sdram_controler_wire_addr                   : out   std_logic_vector(12 downto 0);                    -- addr
+			sdram_controler_wire_ba                     : out   std_logic_vector(1 downto 0);                     -- ba
+			sdram_controler_wire_cas_n                  : out   std_logic;                                        -- cas_n
+			sdram_controler_wire_cke                    : out   std_logic;                                        -- cke
+			sdram_controler_wire_cs_n                   : out   std_logic;                                        -- cs_n
+			sdram_controler_wire_dq                     : inout std_logic_vector(15 downto 0) := (others => 'X'); -- dq
+			sdram_controler_wire_dqm                    : out   std_logic_vector(1 downto 0);                     -- dqm
+			sdram_controler_wire_ras_n                  : out   std_logic;                                        -- ras_n
+			sdram_controler_wire_we_n                   : out   std_logic;                                        -- we_n
 			to_led_export                               : out   std_logic_vector(7 downto 0)                      -- export
 		);
 	end component DE0_LT24_SOPC;

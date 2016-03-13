@@ -462,17 +462,6 @@ set_global_assignment -name ENABLE_NCE_PIN OFF
 set_global_assignment -name ENABLE_BOOT_SEL_PIN OFF
 set_global_assignment -name CYCLONEIII_CONFIGURATION_DEVICE EPCS64
 set_global_assignment -name CONFIGURATION_VCCIO_LEVEL 3.3V
-set_global_assignment -name VERILOG_FILE ip/LED_Controller/LED_Controller.v
-set_global_assignment -name VERILOG_FILE ip/LT24_Controller/LT24_Controller.v
-set_global_assignment -name VERILOG_FILE DE0_LT24_SOPC/synthesis/DE0_LT24_SOPC.v
-set_global_assignment -name QIP_FILE DE0_LT24_SOPC/synthesis/DE0_LT24_SOPC.qip
-set_global_assignment -name SDC_FILE DE0_Nano.SDC
-set_global_assignment -name VERILOG_FILE LT24_buffer.v
-set_global_assignment -name HEX_FILE myBackground.hex
-set_global_assignment -name HEX_FILE myCharac.hex
-set_global_assignment -name SYSTEMVERILOG_FILE MySPI.sv
-set_global_assignment -name SYSTEMVERILOG_FILE DE0_Nano.sv
-set_global_assignment -name HEX_FILE myNewCharac.hex
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_SIMULATION_TOOL "<None>"
@@ -487,7 +476,6 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME testbench -section_id tes
 set_global_assignment -name EDA_TEST_BENCH_FILE testbench.sv -section_id testbench
 set_global_assignment -name ENABLE_SIGNALTAP ON
 set_global_assignment -name USE_SIGNALTAP_FILE stp1.stp
-set_global_assignment -name SIGNALTAP_FILE stp1.stp
 set_global_assignment -name SLD_NODE_CREATOR_ID 110 -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_ENTITY_NAME sld_signaltap -section_id auto_signaltap_0
 set_instance_assignment -name CONNECT_TO_SLD_NODE_ENTITY_PORT acq_trigger_in[0] -to "DE0_LT24_SOPC:DE0_LT24_SOPC_inst|LT24_interface_irq:lt24_interface_irq_0|finish_flag" -section_id auto_signaltap_0
@@ -549,5 +537,18 @@ set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[7] -t
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[11] -to auto_signaltap_0|gnd -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[12] -to auto_signaltap_0|vcc -section_id auto_signaltap_0
 set_instance_assignment -name POST_FIT_CONNECT_TO_SLD_NODE_ENTITY_PORT crc[15] -to auto_signaltap_0|gnd -section_id auto_signaltap_0
+set_global_assignment -name QIP_FILE sdram_pll.qip
+set_global_assignment -name VERILOG_FILE ip/LED_Controller/LED_Controller.v
+set_global_assignment -name VERILOG_FILE ip/LT24_Controller/LT24_Controller.v
+set_global_assignment -name VERILOG_FILE DE0_LT24_SOPC/synthesis/DE0_LT24_SOPC.v -library DE0_LT24_SOPC
+set_global_assignment -name QIP_FILE DE0_LT24_SOPC/synthesis/DE0_LT24_SOPC.qip
+set_global_assignment -name SDC_FILE DE0_Nano.SDC
+set_global_assignment -name VERILOG_FILE LT24_buffer.v
+set_global_assignment -name HEX_FILE myBackground.hex
+set_global_assignment -name HEX_FILE myCharac.hex
+set_global_assignment -name SYSTEMVERILOG_FILE MySPI.sv
+set_global_assignment -name SYSTEMVERILOG_FILE DE0_Nano.sv
+set_global_assignment -name HEX_FILE myNewCharac.hex
+set_global_assignment -name SIGNALTAP_FILE stp1.stp
 set_global_assignment -name SLD_FILE db/stp1_auto_stripped.stp
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
