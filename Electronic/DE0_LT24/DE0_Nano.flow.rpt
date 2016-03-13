@@ -1,5 +1,5 @@
 Flow report for DE0_Nano
-Sun Mar 13 10:55:51 2016
+Sun Mar 13 17:26:08 2016
 Quartus Prime Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition
 
 
@@ -41,7 +41,7 @@ agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Sun Mar 13 10:55:22 2016       ;
+; Flow Status                        ; Successful - Sun Mar 13 17:25:41 2016       ;
 ; Quartus Prime Version              ; 15.1.0 Build 185 10/21/2015 SJ Lite Edition ;
 ; Revision Name                      ; DE0_Nano                                    ;
 ; Top-level Entity Name              ; DE0_Nano                                    ;
@@ -65,7 +65,7 @@ agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 03/13/2016 10:51:17 ;
+; Start date & time ; 03/13/2016 17:22:21 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; DE0_Nano            ;
 +-------------------+---------------------+
@@ -76,7 +76,7 @@ agreement for further details.
 +--------------------------------------+-----------------------------------------------------------------+---------------+---------------+------------------+
 ; Assignment Name                      ; Value                                                           ; Default Value ; Entity Name   ; Section Id       ;
 +--------------------------------------+-----------------------------------------------------------------+---------------+---------------+------------------+
-; COMPILER_SIGNATURE_ID                ; 93383149948224.145786267732488                                  ; --            ; --            ; --               ;
+; COMPILER_SIGNATURE_ID                ; 93383149948224.145788614119073                                  ; --            ; --            ; --               ;
 ; EDA_DESIGN_INSTANCE_NAME             ; NA                                                              ; --            ; --            ; testbench        ;
 ; EDA_NATIVELINK_SIMULATION_TEST_BENCH ; testbench                                                       ; --            ; --            ; eda_simulation   ;
 ; EDA_OUTPUT_DATA_FORMAT               ; None                                                            ; --            ; --            ; eda_simulation   ;
@@ -142,11 +142,11 @@ agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:01:35     ; 1.0                     ; 1559 MB             ; 00:02:21                           ;
-; Fitter                    ; 00:01:42     ; 1.1                     ; 1556 MB             ; 00:02:09                           ;
-; Assembler                 ; 00:00:03     ; 1.0                     ; 1083 MB             ; 00:00:03                           ;
-; TimeQuest Timing Analyzer ; 00:00:11     ; 1.1                     ; 1217 MB             ; 00:00:13                           ;
-; Total                     ; 00:03:31     ; --                      ; --                  ; 00:04:46                           ;
+; Analysis & Synthesis      ; 00:01:10     ; 1.0                     ; 1555 MB             ; 00:01:49                           ;
+; Fitter                    ; 00:01:28     ; 1.0                     ; 1556 MB             ; 00:01:53                           ;
+; Assembler                 ; 00:00:02     ; 1.0                     ; 1084 MB             ; 00:00:03                           ;
+; TimeQuest Timing Analyzer ; 00:00:09     ; 1.2                     ; 1213 MB             ; 00:00:11                           ;
+; Total                     ; 00:02:49     ; --                      ; --                  ; 00:03:56                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
