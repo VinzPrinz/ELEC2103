@@ -1,0 +1,14 @@
+module mapAddresses(
+				input logic [10:0] x_cnt,
+				input logic [9:0]	y_cnt,
+				output logic [18:0] mapAddress);
+				
+always_comb
+begin
+	if ((x_cnt-(Horizontal_Blank-2))<400) // first half of the screen
+		mapAddress = ((x_cnt-(Horizontal_Blank-2)) + (y_cnt-Vertical_Blank)*800);
+	else 
+		mapAddress = ((x_cnt-(Horizontal_Blank-2)-400) + (y_cnt-Vertical_Blank)*800);
+end
+				
+endmodule
