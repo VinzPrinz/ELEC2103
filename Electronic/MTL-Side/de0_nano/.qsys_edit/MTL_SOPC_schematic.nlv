@@ -1,29 +1,20 @@
 # # File gsaved with Nlview version 6.3.8  2013-12-19 bk=1.2992 VDI=34 GEI=35
 # 
 preplace inst MTL_SOPC -pg 1 -lvl 1 -y 40 -regy -20
-preplace inst MTL_SOPC.JTAG_UART -pg 1 -lvl 2 -y 410
-preplace inst MTL_SOPC.KEY -pg 1 -lvl 2 -y 310
-preplace inst MTL_SOPC.CPU -pg 1 -lvl 1 -y 210
-preplace inst MTL_SOPC.SDRAM -pg 1 -lvl 2 -y 630
-preplace inst MTL_SOPC.TESTLED -pg 1 -lvl 2 -y 730
-preplace inst MTL_SOPC.CLK_50 -pg 1 -lvl 1 -y 770
-preplace inst MTL_SOPC.ALT_PLL -pg 1 -lvl 2 -y 30
-preplace inst MTL_SOPC.TIMER -pg 1 -lvl 2 -y 210
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.sdram_wire,(SLAVE)SDRAM.wire) 1 0 2 NJ 700 NJ
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)ALT_PLL.phasedone_conduit,(SLAVE)MTL_SOPC.alt_pll_phasedone_conduit) 1 0 2 NJ 120 NJ
-preplace netloc FAN_OUT<net_container>MTL_SOPC</net_container>(MASTER)CPU.d_irq,(SLAVE)TIMER.irq,(SLAVE)JTAG_UART.irq) 1 1 1 580
-preplace netloc FAN_OUT<net_container>MTL_SOPC</net_container>(MASTER)CLK_50.clk,(SLAVE)TESTLED.clk,(SLAVE)ALT_PLL.inclk_interface) 1 1 1 480
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(MASTER)MTL_SOPC.alt_pll_c1,(MASTER)ALT_PLL.c1) 1 2 1 NJ
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.alt_pll_locked_conduit,(SLAVE)ALT_PLL.locked_conduit) 1 0 2 NJ 100 NJ
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)CLK_50.clk_in_reset,(SLAVE)MTL_SOPC.reset) 1 0 1 NJ
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.testled_external_connection,(SLAVE)TESTLED.external_connection) 1 0 2 NJ 760 NJ
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.alt_pll_areset_conduit,(SLAVE)ALT_PLL.areset_conduit) 1 0 2 NJ 40 NJ
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.from_key,(SLAVE)KEY.external_connection) 1 0 2 NJ 380 NJ
+preplace inst MTL_SOPC.JTAG_UART -pg 1 -lvl 2 -y 230
+preplace inst MTL_SOPC.mem -pg 1 -lvl 2 -y 470
+preplace inst MTL_SOPC.KEY -pg 1 -lvl 2 -y 130
+preplace inst MTL_SOPC.CPU -pg 1 -lvl 1 -y 30
+preplace inst MTL_SOPC.TESTLED -pg 1 -lvl 2 -y 550
+preplace inst MTL_SOPC.CLK_50 -pg 1 -lvl 1 -y 590
+preplace inst MTL_SOPC.TIMER -pg 1 -lvl 2 -y 30
+preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)KEY.external_connection,(SLAVE)MTL_SOPC.from_key) 1 0 2 NJ 220 NJ
+preplace netloc FAN_OUT<net_container>MTL_SOPC</net_container>(MASTER)CPU.d_irq,(SLAVE)TIMER.irq,(SLAVE)JTAG_UART.irq) 1 1 1 560
+preplace netloc INTERCONNECT<net_container>MTL_SOPC</net_container>(MASTER)CLK_50.clk_reset,(SLAVE)KEY.reset,(MASTER)CPU.jtag_debug_module_reset,(SLAVE)JTAG_UART.reset,(SLAVE)TIMER.reset,(SLAVE)mem.reset1,(SLAVE)CPU.reset_n,(SLAVE)TESTLED.reset) 1 0 2 250 180 580
+preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.testled_external_connection,(SLAVE)TESTLED.external_connection) 1 0 2 NJ 580 NJ
+preplace netloc FAN_OUT<net_container>MTL_SOPC</net_container>(SLAVE)JTAG_UART.clk,(SLAVE)TESTLED.clk,(SLAVE)TIMER.clk,(SLAVE)CPU.clk,(MASTER)CLK_50.clk,(SLAVE)KEY.clk,(SLAVE)mem.clk1) 1 0 2 230 160 520
 preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.clk,(SLAVE)CLK_50.clk_in) 1 0 1 NJ
-preplace netloc INTERCONNECT<net_container>MTL_SOPC</net_container>(SLAVE)SDRAM.s1,(MASTER)CPU.data_master,(SLAVE)ALT_PLL.pll_slave,(MASTER)CPU.instruction_master,(SLAVE)JTAG_UART.avalon_jtag_slave,(SLAVE)TESTLED.s1,(SLAVE)KEY.s1,(SLAVE)TIMER.s1,(SLAVE)CPU.jtag_debug_module) 1 0 2 210 360 500
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(MASTER)ALT_PLL.c3,(MASTER)MTL_SOPC.alt_pll_c3) 1 2 1 NJ
-preplace netloc INTERCONNECT<net_container>MTL_SOPC</net_container>(MASTER)CLK_50.clk_reset,(SLAVE)CPU.reset_n,(SLAVE)SDRAM.reset,(SLAVE)TIMER.reset,(SLAVE)TESTLED.reset,(MASTER)CPU.jtag_debug_module_reset,(SLAVE)ALT_PLL.inclk_interface_reset,(SLAVE)KEY.reset,(SLAVE)JTAG_UART.reset) 1 0 2 230 340 540
-preplace netloc FAN_OUT<net_container>MTL_SOPC</net_container>(MASTER)ALT_PLL.c0,(SLAVE)SDRAM.clk,(SLAVE)JTAG_UART.clk,(SLAVE)CPU.clk) 1 0 3 210 180 520 200 840
-preplace netloc FAN_OUT<net_container>MTL_SOPC</net_container>(SLAVE)KEY.clk,(MASTER)ALT_PLL.c2,(SLAVE)TIMER.clk) 1 1 2 600 180 820
-levelinfo -pg 1 0 180 960
-levelinfo -hier MTL_SOPC 190 260 630 860
+preplace netloc INTERCONNECT<net_container>MTL_SOPC</net_container>(SLAVE)KEY.s1,(SLAVE)CPU.jtag_debug_module,(SLAVE)TIMER.s1,(SLAVE)JTAG_UART.avalon_jtag_slave,(SLAVE)mem.s1,(MASTER)CPU.data_master,(MASTER)CPU.instruction_master,(SLAVE)TESTLED.s1) 1 0 2 210 200 500
+preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.reset,(SLAVE)CLK_50.clk_in_reset) 1 0 1 NJ
+levelinfo -pg 1 0 180 810
+levelinfo -hier MTL_SOPC 190 280 650 800

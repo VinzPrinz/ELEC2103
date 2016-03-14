@@ -22,13 +22,13 @@
 <td width="20%" bgcolor="#77BBFF">BSP Version:</td><td>default</td>
 </tr>
 <tr mode="wrap">
-<td width="20%" bgcolor="#77BBFF">BSP Generated On:</td><td>Mar 11, 2016 1:08:26 AM</td>
+<td width="20%" bgcolor="#77BBFF">BSP Generated On:</td><td>15-mars-2016 0:38:06</td>
 </tr>
 <tr mode="wrap">
-<td width="20%" bgcolor="#77BBFF">BSP Generated Timestamp:</td><td>1457654906478</td>
+<td width="20%" bgcolor="#77BBFF">BSP Generated Timestamp:</td><td>1457998686743</td>
 </tr>
 <tr mode="wrap">
-<td width="20%" bgcolor="#77BBFF">BSP Generated Location:</td><td>D:\ELEC\2103-Project\Electronique\IMPORTANT\de0_nano\software\mtl_bsp</td>
+<td width="20%" bgcolor="#77BBFF">BSP Generated Location:</td><td>D:\ELEC\2103-Project\Electronique\IMPORTANT\de0_nano\software\MTL_bsp</td>
 </tr>
 </table>
 <br>
@@ -38,19 +38,22 @@
 <th align="left" width="20%">Slave Descriptor</th><th align="left" width="40%">Address Range</th><th align="left" width="20%">Size</th><th align="left" width="20%">Attributes</th>
 </tr>
 <tr mode="wrap" STYLE="display: 'block'; font-family: 'courier'; color: '#000000'; font-weight: '500'; font-size: '14'; margin-top: '10pt'; text-align: 'left'">
-<td>JTAG_UART</td><td>0x040034A8 - 0x040034AF</td><td>8</td><td class="listing">printable</td>
+<td>JTAG_UART</td><td>0x00011040 - 0x00011047</td><td>8</td><td class="listing">printable</td>
 </tr>
 <tr mode="wrap" STYLE="display: 'block'; font-family: 'courier'; color: '#000000'; font-weight: '500'; font-size: '14'; margin-top: '10pt'; text-align: 'left'">
-<td>KEY</td><td>0x04003480 - 0x0400348F</td><td>16</td><td class="listing">&nbsp;</td>
+<td>KEY</td><td>0x00011030 - 0x0001103F</td><td>16</td><td class="listing">&nbsp;</td>
 </tr>
 <tr mode="wrap" STYLE="display: 'block'; font-family: 'courier'; color: '#000000'; font-weight: '500'; font-size: '14'; margin-top: '10pt'; text-align: 'left'">
-<td>TIMER</td><td>0x04003420 - 0x0400343F</td><td>32</td><td class="listing">timer</td>
+<td>TESTLED</td><td>0x00011020 - 0x0001102F</td><td>16</td><td class="listing">&nbsp;</td>
 </tr>
 <tr mode="wrap" STYLE="display: 'block'; font-family: 'courier'; color: '#000000'; font-weight: '500'; font-size: '14'; margin-top: '10pt'; text-align: 'left'">
-<td>SDRAM</td><td>0x02000000 - 0x02FFFFFF</td><td>16777216</td><td class="listing">memory</td>
+<td>TIMER</td><td>0x00011000 - 0x0001101F</td><td>32</td><td class="listing">timer</td>
 </tr>
 <tr mode="wrap" STYLE="display: 'block'; font-family: 'courier'; color: '#000000'; font-weight: '500'; font-size: '14'; margin-top: '10pt'; text-align: 'left'">
-<td>TESTLED</td><td>0x00000000 - 0x0000000F</td><td>16</td><td class="listing">&nbsp;</td>
+<td>mem</td><td>0x00008000 - 0x0000CE1F</td><td>20000</td><td class="listing">memory</td>
+</tr>
+<tr mode="wrap" STYLE="display: 'block'; font-family: 'courier'; color: '#000000'; font-weight: '500'; font-size: '14'; margin-top: '10pt'; text-align: 'left'">
+<td>TOUCHDATA</td><td>0x00000000 - 0x0000000F</td><td>16</td><td class="listing">&nbsp;</td>
 </tr>
 </table>
 <br>
@@ -69,22 +72,22 @@
 <th align="left" width="50%">Section</th><th align="left" width="50%">Region</th>
 </tr>
 <tr mode="wrap" STYLE="display: 'block'; font-family: 'courier'; color: '#000000'; font-weight: '500'; font-size: '14'; margin-top: '10pt'; text-align: 'left'">
-<td>.text</td><td>SDRAM</td>
+<td>.text</td><td>mem</td>
 </tr>
 <tr mode="wrap" STYLE="display: 'block'; font-family: 'courier'; color: '#000000'; font-weight: '500'; font-size: '14'; margin-top: '10pt'; text-align: 'left'">
-<td>.rodata</td><td>SDRAM</td>
+<td>.rodata</td><td>mem</td>
 </tr>
 <tr mode="wrap" STYLE="display: 'block'; font-family: 'courier'; color: '#000000'; font-weight: '500'; font-size: '14'; margin-top: '10pt'; text-align: 'left'">
-<td>.rwdata</td><td>SDRAM</td>
+<td>.rwdata</td><td>mem</td>
 </tr>
 <tr mode="wrap" STYLE="display: 'block'; font-family: 'courier'; color: '#000000'; font-weight: '500'; font-size: '14'; margin-top: '10pt'; text-align: 'left'">
-<td>.bss</td><td>SDRAM</td>
+<td>.bss</td><td>mem</td>
 </tr>
 <tr mode="wrap" STYLE="display: 'block'; font-family: 'courier'; color: '#000000'; font-weight: '500'; font-size: '14'; margin-top: '10pt'; text-align: 'left'">
-<td>.heap</td><td>SDRAM</td>
+<td>.heap</td><td>mem</td>
 </tr>
 <tr mode="wrap" STYLE="display: 'block'; font-family: 'courier'; color: '#000000'; font-weight: '500'; font-size: '14'; margin-top: '10pt'; text-align: 'left'">
-<td>.stack</td><td>SDRAM</td>
+<td>.stack</td><td>mem</td>
 </tr>
 </table>
 <h3>Settings</h3>
@@ -180,7 +183,7 @@
 <td width="20%">Default Value:</td><td>1</td>
 </tr>
 <tr>
-<td width="20%">Value:</td><td>1</td>
+<td width="20%">Value:</td><td>0</td>
 </tr>
 <tr>
 <td width="20%">Type:</td><td>Boolean</td>
@@ -369,7 +372,7 @@
 <td width="20%">Default Value:</td><td>0</td>
 </tr>
 <tr>
-<td width="20%">Value:</td><td>0</td>
+<td width="20%">Value:</td><td>1</td>
 </tr>
 <tr>
 <td width="20%">Type:</td><td>Boolean</td>
@@ -450,7 +453,7 @@
 <td width="20%">Default Value:</td><td>0</td>
 </tr>
 <tr>
-<td width="20%">Value:</td><td>0</td>
+<td width="20%">Value:</td><td>1</td>
 </tr>
 <tr>
 <td width="20%">Type:</td><td>Boolean</td>
@@ -693,7 +696,7 @@
 <td width="20%">Default Value:</td><td>none</td>
 </tr>
 <tr>
-<td width="20%">Value:</td><td>SDRAM</td>
+<td width="20%">Value:</td><td>mem</td>
 </tr>
 <tr>
 <td width="20%">Type:</td><td>UnquotedString</td>
@@ -747,7 +750,7 @@
 <td width="20%">Default Value:</td><td>none</td>
 </tr>
 <tr>
-<td width="20%">Value:</td><td>SDRAM</td>
+<td width="20%">Value:</td><td>mem</td>
 </tr>
 <tr>
 <td width="20%">Type:</td><td>UnquotedString</td>

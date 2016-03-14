@@ -221,13 +221,16 @@ logic sdram_write_load;
  
 // new register to send gestures
 logic [7:0] gestureInfo;
+logic isTouchedBuff;
 //assign gestureInfo[7] = touch_ready; // MSB = new data
 hold_buffer	hold_buffer_tchrdy (
 	.clk (CLOCK_50),
 	.rst (dly_rst),
 	.trigger (touch_ready),
-	.pulse (gestureInfo[7])
+	.pulse (isTouchedBuff)
 );
+
+assign gestureInfo[7] = isTouchedBuff;
 gestureMapping theGestureMapping(.inGesture(reg_gesture),.outGesture(gestureInfo[6:4])); // map gesture to 3 bits only 
 assign gestureInfo[3:2] = reg_x1[9:8];
 assign gestureInfo[1] = reg_y1[8];
@@ -286,7 +289,16 @@ MySPI MySPI_instance (
 //		.testled_external_connection_export (LED[3:0])  // testled_external_connection.export
 //	);
 //
-//
+
+	MTL_SOPC u0 (
+		.clk_clk                            (CLOCK_50),
+		.from_key_export                    (KEY[1]),
+		.reset_reset_n                      (KEY[0]),
+		.testled_external_connection_export (LED[3:0]),
+		.touchdata_ext_export               ({reg_x1,reg_y1,touch_ready})
+	);
+
+
 
 
 

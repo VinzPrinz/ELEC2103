@@ -139,10 +139,10 @@ ACDS_VERSION := 15.0
 # Define path to the application ELF. 
 # It may be used by the makefile fragments so is defined before including them. 
 # 
-ELF := mtl.elf
+ELF := MTL.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS :=
+C_SRCS := main.c
 CXX_SRCS :=
 ASM_SRCS :=
 
@@ -177,7 +177,7 @@ CRT0 :=
 SYS_LIB :=
 
 # Define path to the root of the BSP.
-BSP_ROOT_DIR := ../mtl_bsp/
+BSP_ROOT_DIR := ../MTL_bsp/
 
 # List of application specific include directories, library directories and library names
 APP_INCLUDE_DIRS :=

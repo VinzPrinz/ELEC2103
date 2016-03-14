@@ -161,7 +161,7 @@ ACDS_VERSION := 15.0
 SIM_OPTIMIZE ?= 0
 
 # The CPU reset address as needed by elf2flash
-RESET_ADDRESS ?= 0x02000000
+RESET_ADDRESS ?= 0x00008000
 
 # The specific Nios II ELF file format to use.
 NIOS2_ELF_FORMAT ?= elf32-littlenios2
@@ -170,24 +170,27 @@ NIOS2_ELF_FORMAT ?= elf32-littlenios2
 # Pre-Initialized Memory Descriptions
 #-------------------------------------
 
-# Memory: SDRAM
-MEM_0 := SDRAM
-$(MEM_0)_NAME := SDRAM
+# Memory: mem
+MEM_0 := MTL_SOPC_mem
+$(MEM_0)_NAME := mem
+$(MEM_0)_MEM_INIT_FILE_PARAM_NAME := INIT_FILE
+HEX_FILES += $(MEM_INIT_DIR)/$(MEM_0).hex
+MEM_INIT_INSTALL_FILES += $(MEM_INIT_INSTALL_DIR)/$(MEM_0).hex
 DAT_FILES += $(HDL_SIM_DIR)/$(MEM_0).dat
 HDL_SIM_INSTALL_FILES += $(HDL_SIM_INSTALL_DIR)/$(MEM_0).dat
 SYM_FILES += $(HDL_SIM_DIR)/$(MEM_0).sym
 HDL_SIM_INSTALL_FILES += $(HDL_SIM_INSTALL_DIR)/$(MEM_0).sym
-$(MEM_0)_START := 0x02000000
-$(MEM_0)_END := 0x02ffffff
-$(MEM_0)_SPAN := 0x01000000
-$(MEM_0)_HIERARCHICAL_PATH := SDRAM
-$(MEM_0)_WIDTH := 16
-$(MEM_0)_HEX_DATA_WIDTH := 16
+$(MEM_0)_START := 0x00008000
+$(MEM_0)_END := 0x0000ce1f
+$(MEM_0)_SPAN := 0x00004e20
+$(MEM_0)_HIERARCHICAL_PATH := mem
+$(MEM_0)_WIDTH := 32
+$(MEM_0)_HEX_DATA_WIDTH := 32
 $(MEM_0)_ENDIANNESS := --little-endian-mem
 $(MEM_0)_CREATE_LANES := 0
 
-.PHONY: SDRAM
-SDRAM: check_elf_exists $(HDL_SIM_DIR)/$(MEM_0).dat $(HDL_SIM_DIR)/$(MEM_0).sym
+.PHONY: mem
+mem: check_elf_exists $(MEM_INIT_DIR)/$(MEM_0).hex $(HDL_SIM_DIR)/$(MEM_0).dat $(HDL_SIM_DIR)/$(MEM_0).sym
 
 
 #END OF BSP SPECIFIC

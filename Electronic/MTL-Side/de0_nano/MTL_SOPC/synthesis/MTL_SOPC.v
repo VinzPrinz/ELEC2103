@@ -7,22 +7,14 @@ module MTL_SOPC (
 		input  wire        clk_clk,                            //                         clk.clk
 		input  wire        from_key_export,                    //                    from_key.export
 		input  wire        reset_reset_n,                      //                       reset.reset_n
-		output wire [12:0] sdram_wire_addr,                    //                  sdram_wire.addr
-		output wire [1:0]  sdram_wire_ba,                      //                            .ba
-		output wire        sdram_wire_cas_n,                   //                            .cas_n
-		output wire        sdram_wire_cke,                     //                            .cke
-		output wire        sdram_wire_cs_n,                    //                            .cs_n
-		inout  wire [15:0] sdram_wire_dq,                      //                            .dq
-		output wire [1:0]  sdram_wire_dqm,                     //                            .dqm
-		output wire        sdram_wire_ras_n,                   //                            .ras_n
-		output wire        sdram_wire_we_n,                    //                            .we_n
-		output wire [3:0]  testled_external_connection_export  // testled_external_connection.export
+		output wire [3:0]  testled_external_connection_export, // testled_external_connection.export
+		input  wire [19:0] touchdata_ext_export                //               touchdata_ext.export
 	);
 
 	wire  [31:0] cpu_data_master_readdata;                                  // mm_interconnect_0:CPU_data_master_readdata -> CPU:d_readdata
 	wire         cpu_data_master_waitrequest;                               // mm_interconnect_0:CPU_data_master_waitrequest -> CPU:d_waitrequest
 	wire         cpu_data_master_debugaccess;                               // CPU:jtag_debug_module_debugaccess_to_roms -> mm_interconnect_0:CPU_data_master_debugaccess
-	wire  [26:0] cpu_data_master_address;                                   // CPU:d_address -> mm_interconnect_0:CPU_data_master_address
+	wire  [16:0] cpu_data_master_address;                                   // CPU:d_address -> mm_interconnect_0:CPU_data_master_address
 	wire   [3:0] cpu_data_master_byteenable;                                // CPU:d_byteenable -> mm_interconnect_0:CPU_data_master_byteenable
 	wire         cpu_data_master_read;                                      // CPU:d_read -> mm_interconnect_0:CPU_data_master_read
 	wire         cpu_data_master_readdatavalid;                             // mm_interconnect_0:CPU_data_master_readdatavalid -> CPU:d_readdatavalid
@@ -30,7 +22,7 @@ module MTL_SOPC (
 	wire  [31:0] cpu_data_master_writedata;                                 // CPU:d_writedata -> mm_interconnect_0:CPU_data_master_writedata
 	wire  [31:0] cpu_instruction_master_readdata;                           // mm_interconnect_0:CPU_instruction_master_readdata -> CPU:i_readdata
 	wire         cpu_instruction_master_waitrequest;                        // mm_interconnect_0:CPU_instruction_master_waitrequest -> CPU:i_waitrequest
-	wire  [26:0] cpu_instruction_master_address;                            // CPU:i_address -> mm_interconnect_0:CPU_instruction_master_address
+	wire  [16:0] cpu_instruction_master_address;                            // CPU:i_address -> mm_interconnect_0:CPU_instruction_master_address
 	wire         cpu_instruction_master_read;                               // CPU:i_read -> mm_interconnect_0:CPU_instruction_master_read
 	wire         cpu_instruction_master_readdatavalid;                      // mm_interconnect_0:CPU_instruction_master_readdatavalid -> CPU:i_readdatavalid
 	wire         mm_interconnect_0_jtag_uart_avalon_jtag_slave_chipselect;  // mm_interconnect_0:JTAG_UART_avalon_jtag_slave_chipselect -> JTAG_UART:av_chipselect
@@ -60,22 +52,23 @@ module MTL_SOPC (
 	wire   [1:0] mm_interconnect_0_testled_s1_address;                      // mm_interconnect_0:TESTLED_s1_address -> TESTLED:address
 	wire         mm_interconnect_0_testled_s1_write;                        // mm_interconnect_0:TESTLED_s1_write -> TESTLED:write_n
 	wire  [31:0] mm_interconnect_0_testled_s1_writedata;                    // mm_interconnect_0:TESTLED_s1_writedata -> TESTLED:writedata
-	wire         mm_interconnect_0_sdram_s1_chipselect;                     // mm_interconnect_0:SDRAM_s1_chipselect -> SDRAM:az_cs
-	wire  [15:0] mm_interconnect_0_sdram_s1_readdata;                       // SDRAM:za_data -> mm_interconnect_0:SDRAM_s1_readdata
-	wire         mm_interconnect_0_sdram_s1_waitrequest;                    // SDRAM:za_waitrequest -> mm_interconnect_0:SDRAM_s1_waitrequest
-	wire  [22:0] mm_interconnect_0_sdram_s1_address;                        // mm_interconnect_0:SDRAM_s1_address -> SDRAM:az_addr
-	wire         mm_interconnect_0_sdram_s1_read;                           // mm_interconnect_0:SDRAM_s1_read -> SDRAM:az_rd_n
-	wire   [1:0] mm_interconnect_0_sdram_s1_byteenable;                     // mm_interconnect_0:SDRAM_s1_byteenable -> SDRAM:az_be_n
-	wire         mm_interconnect_0_sdram_s1_readdatavalid;                  // SDRAM:za_valid -> mm_interconnect_0:SDRAM_s1_readdatavalid
-	wire         mm_interconnect_0_sdram_s1_write;                          // mm_interconnect_0:SDRAM_s1_write -> SDRAM:az_wr_n
-	wire  [15:0] mm_interconnect_0_sdram_s1_writedata;                      // mm_interconnect_0:SDRAM_s1_writedata -> SDRAM:az_data
+	wire         mm_interconnect_0_mem_s1_chipselect;                       // mm_interconnect_0:mem_s1_chipselect -> mem:chipselect
+	wire  [31:0] mm_interconnect_0_mem_s1_readdata;                         // mem:readdata -> mm_interconnect_0:mem_s1_readdata
+	wire  [12:0] mm_interconnect_0_mem_s1_address;                          // mm_interconnect_0:mem_s1_address -> mem:address
+	wire   [3:0] mm_interconnect_0_mem_s1_byteenable;                       // mm_interconnect_0:mem_s1_byteenable -> mem:byteenable
+	wire         mm_interconnect_0_mem_s1_write;                            // mm_interconnect_0:mem_s1_write -> mem:write
+	wire  [31:0] mm_interconnect_0_mem_s1_writedata;                        // mm_interconnect_0:mem_s1_writedata -> mem:writedata
+	wire         mm_interconnect_0_mem_s1_clken;                            // mm_interconnect_0:mem_s1_clken -> mem:clken
+	wire  [31:0] mm_interconnect_0_touchdata_s1_readdata;                   // TOUCHDATA:readdata -> mm_interconnect_0:TOUCHDATA_s1_readdata
+	wire   [1:0] mm_interconnect_0_touchdata_s1_address;                    // mm_interconnect_0:TOUCHDATA_s1_address -> TOUCHDATA:address
 	wire         irq_mapper_receiver0_irq;                                  // JTAG_UART:av_irq -> irq_mapper:receiver0_irq
 	wire         irq_mapper_receiver1_irq;                                  // TIMER:irq -> irq_mapper:receiver1_irq
 	wire  [31:0] cpu_d_irq_irq;                                             // irq_mapper:sender_irq -> CPU:d_irq
-	wire         rst_controller_reset_out_reset;                            // rst_controller:reset_out -> [CPU:reset_n, JTAG_UART:rst_n, KEY:reset_n, SDRAM:reset_n, TIMER:reset_n, irq_mapper:reset, mm_interconnect_0:CPU_reset_n_reset_bridge_in_reset_reset, rst_translator:in_reset]
+	wire         rst_controller_reset_out_reset;                            // rst_controller:reset_out -> [CPU:reset_n, JTAG_UART:rst_n, KEY:reset_n, TIMER:reset_n, irq_mapper:reset, mm_interconnect_0:CPU_reset_n_reset_bridge_in_reset_reset, rst_translator:in_reset]
 	wire         rst_controller_reset_out_reset_req;                        // rst_controller:reset_req -> [CPU:reset_req, rst_translator:reset_req_in]
 	wire         cpu_jtag_debug_module_reset_reset;                         // CPU:jtag_debug_module_resetrequest -> rst_controller:reset_in1
-	wire         rst_controller_001_reset_out_reset;                        // rst_controller_001:reset_out -> [TESTLED:reset_n, mm_interconnect_0:TESTLED_reset_reset_bridge_in_reset_reset]
+	wire         rst_controller_001_reset_out_reset;                        // rst_controller_001:reset_out -> [TESTLED:reset_n, TOUCHDATA:reset_n, mem:reset, mm_interconnect_0:TESTLED_reset_reset_bridge_in_reset_reset, rst_translator_001:in_reset]
+	wire         rst_controller_001_reset_out_reset_req;                    // rst_controller_001:reset_req -> [mem:reset_req, rst_translator_001:reset_req_in]
 
 	MTL_SOPC_CPU cpu (
 		.clk                                   (clk_clk),                                             //                       clk.clk
@@ -129,29 +122,6 @@ module MTL_SOPC (
 		.in_port  (from_key_export)                    // external_connection.export
 	);
 
-	MTL_SOPC_SDRAM sdram (
-		.clk            (clk_clk),                                  //   clk.clk
-		.reset_n        (~rst_controller_reset_out_reset),          // reset.reset_n
-		.az_addr        (mm_interconnect_0_sdram_s1_address),       //    s1.address
-		.az_be_n        (~mm_interconnect_0_sdram_s1_byteenable),   //      .byteenable_n
-		.az_cs          (mm_interconnect_0_sdram_s1_chipselect),    //      .chipselect
-		.az_data        (mm_interconnect_0_sdram_s1_writedata),     //      .writedata
-		.az_rd_n        (~mm_interconnect_0_sdram_s1_read),         //      .read_n
-		.az_wr_n        (~mm_interconnect_0_sdram_s1_write),        //      .write_n
-		.za_data        (mm_interconnect_0_sdram_s1_readdata),      //      .readdata
-		.za_valid       (mm_interconnect_0_sdram_s1_readdatavalid), //      .readdatavalid
-		.za_waitrequest (mm_interconnect_0_sdram_s1_waitrequest),   //      .waitrequest
-		.zs_addr        (sdram_wire_addr),                          //  wire.export
-		.zs_ba          (sdram_wire_ba),                            //      .export
-		.zs_cas_n       (sdram_wire_cas_n),                         //      .export
-		.zs_cke         (sdram_wire_cke),                           //      .export
-		.zs_cs_n        (sdram_wire_cs_n),                          //      .export
-		.zs_dq          (sdram_wire_dq),                            //      .export
-		.zs_dqm         (sdram_wire_dqm),                           //      .export
-		.zs_ras_n       (sdram_wire_ras_n),                         //      .export
-		.zs_we_n        (sdram_wire_we_n)                           //      .export
-	);
-
 	MTL_SOPC_TESTLED testled (
 		.clk        (clk_clk),                                 //                 clk.clk
 		.reset_n    (~rst_controller_001_reset_out_reset),     //               reset.reset_n
@@ -172,6 +142,27 @@ module MTL_SOPC (
 		.chipselect (mm_interconnect_0_timer_s1_chipselect), //      .chipselect
 		.write_n    (~mm_interconnect_0_timer_s1_write),     //      .write_n
 		.irq        (irq_mapper_receiver1_irq)               //   irq.irq
+	);
+
+	MTL_SOPC_TOUCHDATA touchdata (
+		.clk      (clk_clk),                                 //                 clk.clk
+		.reset_n  (~rst_controller_001_reset_out_reset),     //               reset.reset_n
+		.address  (mm_interconnect_0_touchdata_s1_address),  //                  s1.address
+		.readdata (mm_interconnect_0_touchdata_s1_readdata), //                    .readdata
+		.in_port  (touchdata_ext_export)                     // external_connection.export
+	);
+
+	MTL_SOPC_mem mem (
+		.clk        (clk_clk),                                //   clk1.clk
+		.address    (mm_interconnect_0_mem_s1_address),       //     s1.address
+		.clken      (mm_interconnect_0_mem_s1_clken),         //       .clken
+		.chipselect (mm_interconnect_0_mem_s1_chipselect),    //       .chipselect
+		.write      (mm_interconnect_0_mem_s1_write),         //       .write
+		.readdata   (mm_interconnect_0_mem_s1_readdata),      //       .readdata
+		.writedata  (mm_interconnect_0_mem_s1_writedata),     //       .writedata
+		.byteenable (mm_interconnect_0_mem_s1_byteenable),    //       .byteenable
+		.reset      (rst_controller_001_reset_out_reset),     // reset1.reset
+		.reset_req  (rst_controller_001_reset_out_reset_req)  //       .reset_req
 	);
 
 	MTL_SOPC_mm_interconnect_0 mm_interconnect_0 (
@@ -209,15 +200,13 @@ module MTL_SOPC (
 		.JTAG_UART_avalon_jtag_slave_chipselect    (mm_interconnect_0_jtag_uart_avalon_jtag_slave_chipselect),  //                                    .chipselect
 		.KEY_s1_address                            (mm_interconnect_0_key_s1_address),                          //                              KEY_s1.address
 		.KEY_s1_readdata                           (mm_interconnect_0_key_s1_readdata),                         //                                    .readdata
-		.SDRAM_s1_address                          (mm_interconnect_0_sdram_s1_address),                        //                            SDRAM_s1.address
-		.SDRAM_s1_write                            (mm_interconnect_0_sdram_s1_write),                          //                                    .write
-		.SDRAM_s1_read                             (mm_interconnect_0_sdram_s1_read),                           //                                    .read
-		.SDRAM_s1_readdata                         (mm_interconnect_0_sdram_s1_readdata),                       //                                    .readdata
-		.SDRAM_s1_writedata                        (mm_interconnect_0_sdram_s1_writedata),                      //                                    .writedata
-		.SDRAM_s1_byteenable                       (mm_interconnect_0_sdram_s1_byteenable),                     //                                    .byteenable
-		.SDRAM_s1_readdatavalid                    (mm_interconnect_0_sdram_s1_readdatavalid),                  //                                    .readdatavalid
-		.SDRAM_s1_waitrequest                      (mm_interconnect_0_sdram_s1_waitrequest),                    //                                    .waitrequest
-		.SDRAM_s1_chipselect                       (mm_interconnect_0_sdram_s1_chipselect),                     //                                    .chipselect
+		.mem_s1_address                            (mm_interconnect_0_mem_s1_address),                          //                              mem_s1.address
+		.mem_s1_write                              (mm_interconnect_0_mem_s1_write),                            //                                    .write
+		.mem_s1_readdata                           (mm_interconnect_0_mem_s1_readdata),                         //                                    .readdata
+		.mem_s1_writedata                          (mm_interconnect_0_mem_s1_writedata),                        //                                    .writedata
+		.mem_s1_byteenable                         (mm_interconnect_0_mem_s1_byteenable),                       //                                    .byteenable
+		.mem_s1_chipselect                         (mm_interconnect_0_mem_s1_chipselect),                       //                                    .chipselect
+		.mem_s1_clken                              (mm_interconnect_0_mem_s1_clken),                            //                                    .clken
 		.TESTLED_s1_address                        (mm_interconnect_0_testled_s1_address),                      //                          TESTLED_s1.address
 		.TESTLED_s1_write                          (mm_interconnect_0_testled_s1_write),                        //                                    .write
 		.TESTLED_s1_readdata                       (mm_interconnect_0_testled_s1_readdata),                     //                                    .readdata
@@ -227,7 +216,9 @@ module MTL_SOPC (
 		.TIMER_s1_write                            (mm_interconnect_0_timer_s1_write),                          //                                    .write
 		.TIMER_s1_readdata                         (mm_interconnect_0_timer_s1_readdata),                       //                                    .readdata
 		.TIMER_s1_writedata                        (mm_interconnect_0_timer_s1_writedata),                      //                                    .writedata
-		.TIMER_s1_chipselect                       (mm_interconnect_0_timer_s1_chipselect)                      //                                    .chipselect
+		.TIMER_s1_chipselect                       (mm_interconnect_0_timer_s1_chipselect),                     //                                    .chipselect
+		.TOUCHDATA_s1_address                      (mm_interconnect_0_touchdata_s1_address),                    //                        TOUCHDATA_s1.address
+		.TOUCHDATA_s1_readdata                     (mm_interconnect_0_touchdata_s1_readdata)                    //                                    .readdata
 	);
 
 	MTL_SOPC_irq_mapper irq_mapper (
@@ -305,7 +296,7 @@ module MTL_SOPC (
 		.NUM_RESET_INPUTS          (1),
 		.OUTPUT_RESET_SYNC_EDGES   ("deassert"),
 		.SYNC_DEPTH                (2),
-		.RESET_REQUEST_PRESENT     (0),
+		.RESET_REQUEST_PRESENT     (1),
 		.RESET_REQ_WAIT_TIME       (1),
 		.MIN_RST_ASSERTION_TIME    (3),
 		.RESET_REQ_EARLY_DSRT_TIME (1),
@@ -327,41 +318,41 @@ module MTL_SOPC (
 		.USE_RESET_REQUEST_IN15    (0),
 		.ADAPT_RESET_REQUEST       (0)
 	) rst_controller_001 (
-		.reset_in0      (~reset_reset_n),                     // reset_in0.reset
-		.clk            (clk_clk),                            //       clk.clk
-		.reset_out      (rst_controller_001_reset_out_reset), // reset_out.reset
-		.reset_req      (),                                   // (terminated)
-		.reset_req_in0  (1'b0),                               // (terminated)
-		.reset_in1      (1'b0),                               // (terminated)
-		.reset_req_in1  (1'b0),                               // (terminated)
-		.reset_in2      (1'b0),                               // (terminated)
-		.reset_req_in2  (1'b0),                               // (terminated)
-		.reset_in3      (1'b0),                               // (terminated)
-		.reset_req_in3  (1'b0),                               // (terminated)
-		.reset_in4      (1'b0),                               // (terminated)
-		.reset_req_in4  (1'b0),                               // (terminated)
-		.reset_in5      (1'b0),                               // (terminated)
-		.reset_req_in5  (1'b0),                               // (terminated)
-		.reset_in6      (1'b0),                               // (terminated)
-		.reset_req_in6  (1'b0),                               // (terminated)
-		.reset_in7      (1'b0),                               // (terminated)
-		.reset_req_in7  (1'b0),                               // (terminated)
-		.reset_in8      (1'b0),                               // (terminated)
-		.reset_req_in8  (1'b0),                               // (terminated)
-		.reset_in9      (1'b0),                               // (terminated)
-		.reset_req_in9  (1'b0),                               // (terminated)
-		.reset_in10     (1'b0),                               // (terminated)
-		.reset_req_in10 (1'b0),                               // (terminated)
-		.reset_in11     (1'b0),                               // (terminated)
-		.reset_req_in11 (1'b0),                               // (terminated)
-		.reset_in12     (1'b0),                               // (terminated)
-		.reset_req_in12 (1'b0),                               // (terminated)
-		.reset_in13     (1'b0),                               // (terminated)
-		.reset_req_in13 (1'b0),                               // (terminated)
-		.reset_in14     (1'b0),                               // (terminated)
-		.reset_req_in14 (1'b0),                               // (terminated)
-		.reset_in15     (1'b0),                               // (terminated)
-		.reset_req_in15 (1'b0)                                // (terminated)
+		.reset_in0      (~reset_reset_n),                         // reset_in0.reset
+		.clk            (clk_clk),                                //       clk.clk
+		.reset_out      (rst_controller_001_reset_out_reset),     // reset_out.reset
+		.reset_req      (rst_controller_001_reset_out_reset_req), //          .reset_req
+		.reset_req_in0  (1'b0),                                   // (terminated)
+		.reset_in1      (1'b0),                                   // (terminated)
+		.reset_req_in1  (1'b0),                                   // (terminated)
+		.reset_in2      (1'b0),                                   // (terminated)
+		.reset_req_in2  (1'b0),                                   // (terminated)
+		.reset_in3      (1'b0),                                   // (terminated)
+		.reset_req_in3  (1'b0),                                   // (terminated)
+		.reset_in4      (1'b0),                                   // (terminated)
+		.reset_req_in4  (1'b0),                                   // (terminated)
+		.reset_in5      (1'b0),                                   // (terminated)
+		.reset_req_in5  (1'b0),                                   // (terminated)
+		.reset_in6      (1'b0),                                   // (terminated)
+		.reset_req_in6  (1'b0),                                   // (terminated)
+		.reset_in7      (1'b0),                                   // (terminated)
+		.reset_req_in7  (1'b0),                                   // (terminated)
+		.reset_in8      (1'b0),                                   // (terminated)
+		.reset_req_in8  (1'b0),                                   // (terminated)
+		.reset_in9      (1'b0),                                   // (terminated)
+		.reset_req_in9  (1'b0),                                   // (terminated)
+		.reset_in10     (1'b0),                                   // (terminated)
+		.reset_req_in10 (1'b0),                                   // (terminated)
+		.reset_in11     (1'b0),                                   // (terminated)
+		.reset_req_in11 (1'b0),                                   // (terminated)
+		.reset_in12     (1'b0),                                   // (terminated)
+		.reset_req_in12 (1'b0),                                   // (terminated)
+		.reset_in13     (1'b0),                                   // (terminated)
+		.reset_req_in13 (1'b0),                                   // (terminated)
+		.reset_in14     (1'b0),                                   // (terminated)
+		.reset_req_in14 (1'b0),                                   // (terminated)
+		.reset_in15     (1'b0),                                   // (terminated)
+		.reset_req_in15 (1'b0)                                    // (terminated)
 	);
 
 endmodule
