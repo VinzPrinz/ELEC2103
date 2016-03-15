@@ -77,6 +77,7 @@ BOOL MyConsole_GetCmd(void)
     }
     return FALSE;
 }
+//void MyMIWI_TxMsg_Mode_Size(BOOL enableBroadcast, void *theMsg, char MODE , int size)
 
 void MyConsole_Task(void)
 {
@@ -85,11 +86,12 @@ void MyConsole_Task(void)
     if (!MyConsole_GetCmd()) return;
 
     if (strcmp(theCmd, "MyTest") == 0) {
-
         MyConsole_SendMsg("MyTest ok\n>");
-
     } else if (strcmp(theCmd, "SendImage")==0){
         MyMDDFS_Send_Image(theCmd);
+    }else if (strcmp(theCmd, "StartFight")==0){
+        int i = 0;
+        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_fight,1); 
     } else if (strcmp(theCmd, "EnableChat") == 0) {
         EnableChat = 1;
         MyConsole_SendMsg("Chat Enabled\n>");

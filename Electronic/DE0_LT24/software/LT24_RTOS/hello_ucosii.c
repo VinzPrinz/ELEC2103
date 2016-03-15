@@ -255,10 +255,14 @@ TOUCH_HANDLE *pTouch;
 
 void LT24_ISR(void *context){
 	IOWR(LT24_INTERFACE_IRQ_0_BASE + (4*7),0 , 321);
+	int cnt = IORD(LT24_INTERFACE_IRQ_0_BASE + (4*1),0);
+	char str[64];
+	sprintf(str , "This is counter %x  , %x \n" ,cnt ,  cnt/(256*256*256));
+	IOWR(CYCLONESPI_BASE+(4*0x02) , 0 , cnt /(256*256*256));
+	printf(str);
 	counter++;
 	Clr_BUFFER_FLAG();
 	OSSemPost(Game_Over);
-	OSMboxPost(irq_msg , (void*)&counter);
 	printf("lol");
 }
 
@@ -296,7 +300,7 @@ int init(){
 	LCD_Init();
 
 	// OS_EVENT init
-	Game1 = OSSemCreate(1);
+	Game1 = OSSemCreate(0);
 	Game2 = OSSemCreate(0);
 	Game_Over = OSSemCreate(0);
 
@@ -306,6 +310,9 @@ int init(){
 	Flag1 = OSMboxCreate((void*)0);
 	Flag2 = OSMboxCreate((void*)0);
 	irq_msg = OSMboxCreate((void*)0);
+
+
+	IOWR(LT24_INTERFACE_IRQ_0_BASE + (4*7),0 , 321);
 
 	return 0;
 }
@@ -371,7 +378,6 @@ void task_game_over(void* pdata)
 	 while(1){
 		 OSSemPend(Game_Over, 0,&err);
 		 Clr_BUFFER_FLAG();
-		 printf("in gameover1 \n");
 
 		 X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
 		 Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
@@ -388,7 +394,7 @@ void task_game_over(void* pdata)
 
 		 X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
 		 Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
-
+		 OSMboxPost(irq_msg , (void*)&counter);
 
 		 Set_BUFFER_FLAG();
 		 OSTimeDly(DELAY);
@@ -403,6 +409,17 @@ void task_send_data(void* pdata)
 	char game_on = 1;
 	int cnt = 0;
 
+	 Clr_BUFFER_FLAG();
+
+	 Display.interlace = 0;
+	 Display.bytes_per_pixel = 2;
+	 Display.color_depth = 16;
+	 Display.height = SCREEN_HEIGHT;
+	 Display.width = SCREEN_WIDTH;
+
+	 vid_draw_box (0, 0,SCREEN_WIDTH, SCREEN_HEIGHT, 0x00f80000, 1, &Display);
+	 vid_print_string_alpha(0, 0, 0xff00ff, 0xffffff, tahomabold_20, &Display, "hello");
+
 	while(1){
 		if(Touch_GetXY(pTouch, &X, &Y) && LT24_state==0){
 			OSMboxPost(touchY , (void*)&Y);
@@ -411,6 +428,7 @@ void task_send_data(void* pdata)
 	    if (ADXL345_SPI_IsDataReady(GSENSOR_SPI_BASE) && ADXL345_SPI_XYZ_Read(GSENSOR_SPI_BASE, szXYZ)){
 	    	OSMboxPost(Accel , (void*) szXYZ);
 	    }
+
 		OSTimeDly(DELAY);
 		running_game = (char *)OSMboxAccept(irq_msg);
 
@@ -427,6 +445,11 @@ void task_send_data(void* pdata)
 			}
 		}
 
+		if (cnt == 0 && IORD(CYCLONESPI_BASE+(4*0x12) , 0) == 1){
+			OSSemPost(Game1);
+			cnt ++;
+		}
+
 	}
 }
 
@@ -434,7 +457,6 @@ void task_send_data(void* pdata)
  * Readdata from mailbox and send it to hardware*/
 void task_game1(void* pdata)
 {
-	Set_BUFFER_FLAG();
     alt_16 *szXYZ;
     int err;
     char *msg;
@@ -442,12 +464,11 @@ void task_game1(void* pdata)
 
     while(1){
     	flag = 1;
-    	printf("before Game1 pend\n");
     	OSSemPend(Game1 , 0 , &err);
     	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 1);
-    	printf("after Game1 pend\n");
+    	Set_BUFFER_FLAG();
+    	printf("Started Game1\n");
     	while(flag){
-    		printf("running 1\n");
     		szXYZ = (alt_16 *) OSMboxPend(Accel , 0 , &err);
     		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/50);
     		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/50);
@@ -464,7 +485,6 @@ void task_game1(void* pdata)
  * Readdata from mailbox and send it to hardware*/
 void task_game2(void* pdata)
 {
-	Set_BUFFER_FLAG();
     alt_16 *szXYZ;
 	unsigned int *X, *Y;
     int err;
@@ -475,9 +495,10 @@ void task_game2(void* pdata)
     	unsigned int *X, *Y;
     	OSSemPend(Game2 , 0 , &err);
     	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0);
+    	Set_BUFFER_FLAG();
+    	printf("Started Game2\n");
     	flag = 1;
 		while(flag){
-			printf("running 2\n");
 			X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
 			Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
 			LCD_WR_DATA(*Y);

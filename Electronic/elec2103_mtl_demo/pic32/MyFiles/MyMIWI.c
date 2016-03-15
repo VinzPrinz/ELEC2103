@@ -579,6 +579,22 @@ void MyMIWI_Task(void) {
                     received_tag++;
                 }
                 break;
+            case myMIWI_Start_fight:
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
+                if(received_tag +1 == theData[1]){
+                    MyCyclone_Write(0x12,1);
+                    MyConsole_SendMsg("fight starting \n");
+                    received_tag++;
+                }
+                break;
+            case myMIWI_End_fight:
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
+                if(received_tag +1 == theData[1]){
+                    sprintf(theStr , "end of fight %d \n" , theData[4]);
+                    MyConsole_SendMsg(theStr);
+                    received_tag++;
+                }
+                break;
             case myMIWI_Ack:
                 if(nAck+1 == theData[1]){
                     MyFIFO_Pop();

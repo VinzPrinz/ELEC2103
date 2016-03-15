@@ -51,7 +51,16 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
     INTClearFlag(INT_INT1);
     MyConsole_SendMsg("Interrupt received from INT1 - KEY0 LOL \n>");
     char str[64];
-    sprintf(str, "This is readed from spi %d \n" , MyCyclone_Read(0x10));
+    int addr = MyCyclone_Read(0x01);
+    int data = MyCyclone_Read(addr);
+    sprintf(str, "This is readed from spi addr:%d -> %d \n" , addr , data);
+    
+    switch(addr){
+        case 0x02: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_fight,1);
+                    break;
+    }
+
+        
     MyConsole_SendMsg(str);
 }
 

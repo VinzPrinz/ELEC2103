@@ -53,6 +53,7 @@ module LT24_buffer(
 	VX,
 	VY
 );
+
 input clk;
 input rst_n;
 wire rst;
@@ -103,7 +104,7 @@ output  wire [1:0]  background_mem_s2_byteenable;
 input 	wire				lt24_buffer_flag;
 output 	wire				lt24_finish;
 input		wire	[11:0]	lt24_pattern;
-output	wire	[31:0]	lt24_counter;   
+output	wire	[31:0]	lt24_counter;
 input 	wire [31:0]	VX , VY;    
 
 reg				lt24_finish_reg;
@@ -126,9 +127,10 @@ assign LT24_ADC_DOUT_bus = LT24_ADC_DOUT_screen;
 assign LT24_ADC_PENIRQ_N_bus = LT24_ADC_PENIRQ_N_screen;
 
 // assign interface LT24
+wire [31:0] lt24_counter_wire;
 assign lt24_finish = (lt24_finish_reg);
-assign lt24_counter = 32'd0; //lt24_counter_reg;
-
+assign lt24_counter = (lt24_counter_reg);
+assign lt24_counter_wire = lt24_counter_reg;
 //flag that says if the bus is controlled by LT24_buffer or by the CPU
 reg bufferFlag;
 wire bufferFlag_wire;
@@ -357,35 +359,8 @@ else if (screenState == 18'd6)
 //write the image pixel by pixel (line by line from left to right)
 else if ((screenState>18'd6) && (screenState<18'd76806))//&& lt24_pattern[0]==1'b1)
 	begin
-	LT24_RS_loc <= 1'b1;
-
-/*		case({displayCharact , displayCoin})
-			2'b11: LT24_D_loc <= 16'h0000;
-			2'b10: LT24_D_loc <= 16'hf0ff;
-			2'b01: LT24_D_loc <= 16'h00aa;
-			default: LT24_D_loc <= 16'h00ff;
-		endcase*/
-		/*if (displayCharact && displayCoin)
-				LT24_D_loc <= 16'h0000;
-		else if(displayCharact)
-				LT24_D_loc <= 16'hf0ff;
-		else if (displayCoin)
-				LT24_D_loc <= 16'h00aa;
-		else
-				LT24_D_loc <= 16'h00ff;*/
+		LT24_RS_loc <= 1'b1;
 		LT24_D_loc <= Game1_Color_wire;
-			
-////	else
-//		LT24_D_loc <= 16'haa00;
-	/*else if(Case_Wire[11])
-		case(Counter_Wire)
-			2'b00: LT24_D_loc <= pic_mem_s2_readdata;
-			2'b01: LT24_D_loc <= pic_mem_s2_readdata;
-			2'b11: LT24_D_loc <= 16'h00aa;
-			2'b10: LT24_D_loc <= 16'h00aa;
-		endcase
-	else
-		LT24_D_loc <= 16'haa00;*/
 	end 	
 //if the last pixel of the screen has already been written
 else if (screenState>=18'd76806)
@@ -575,14 +550,6 @@ assign Game1_Color_wire = Game1_Color;
 
 always
 		if(lt24_pattern[0])
-			/*if (displayCharact && displayCoin)
-				Game1_Color <= 16'h0000;
-			else if(displayCharact)
-				Game1_Color <= 16'hf0ff;
-			else if (displayCoin)
-				Game1_Color <= 16'h00aa;
-			else
-				Game1_Color <= 16'h00ff;*/
 			case({displayCharact , displayCoin})
 				2'b11: Game1_Color <= 16'h0000;
 				2'b10: Game1_Color <= 16'hf0ff;
@@ -599,5 +566,28 @@ always
 		else
 			Game1_Color <= 16'haa00;
 
+// lt24_counter
+
+/*always @(posedge clk)
+	case({rst , lt24_finish})
+		2'b1x:lt24_counter_reg <= 32'b0;
+		2'b01:lt24_counter_reg <= lt24_counter;
+		2'b00:lt24_counter_reg <= lt24_counter + 32'd1;
+	endcase*/
+	parameter ZERO = 32'd0;
+	parameter ONE = 32'd1;
+	
+/*	always @ (posedge clk)
+		if(rst)
+			lt24_counter_reg <= 0 ;
+		//else if( bufferFlag_wire == 1'b0)
+		//	lt24_counter_reg <= 0;
+		else if(lt24_finish)
+			lt24_counter_reg <= lt24_counter_wire;
+		else
+//			lt24_counter_reg <= lt24_counter_wire + 1;
+			
+		//	lt24_counter_reg <= lt24_counter_reg;*/
+	
 	
 endmodule
