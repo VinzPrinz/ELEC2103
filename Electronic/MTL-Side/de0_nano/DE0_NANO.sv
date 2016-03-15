@@ -273,29 +273,23 @@ MySPI MySPI_instance (
 //   SOPC INSTANTION !! - see Qsys file
 // ========================================================
 
-//	MTL_SOPC u0 (
-//		.clk_clk                            (CLOCK_50),                            //                         clk.clk
-//		.from_key_export                    (KEY[1]),                    //                    from_key.export
-//		.reset_reset_n                      (KEY[0]),                      //                       reset.reset_n
-//		.sdram_wire_addr                    (DRAM_ADDR),                    //                  sdram_wire.addr
-//		.sdram_wire_ba                      (DRAM_BA),                      //                            .ba
-//		.sdram_wire_cas_n                   (DRAM_CAS_N),                   //                            .cas_n
-//		.sdram_wire_cke                     (DRAM_CKE),                     //                            .cke
-//		.sdram_wire_cs_n                    (DRAM_CS_N),                    //                            .cs_n
-//		.sdram_wire_dq                      (DRAM_DQ),                      //                            .dq
-//		.sdram_wire_dqm                     (DRAM_DQM),                     //                            .dqm
-//		.sdram_wire_ras_n                   (DRAM_RAS_N),                   //                            .ras_n
-//		.sdram_wire_we_n                    (DRAM_WE_N),                    //                            .we_n
-//		.testled_external_connection_export (LED[3:0])  // testled_external_connection.export
-//	);
-//
+logic [127:0] map;
 
 	MTL_SOPC u0 (
 		.clk_clk                            (CLOCK_50),
 		.from_key_export                    (KEY[1]),
 		.reset_reset_n                      (KEY[0]),
 		.testled_external_connection_export (LED[3:0]),
-		.touchdata_ext_export               ({reg_x1,reg_y1,touch_ready})
+		.touchdata_ext_export               ({reg_x1,reg_y1,isTouchedBuff}),
+		
+		.maptransfer_map_line0              (map[15:0]),
+		.maptransfer_map_line1              (map[31:16]),
+		.maptransfer_map_line2              (map[47:32]),
+		.maptransfer_map_line3              (map[63:48]),
+		.maptransfer_map_line4              (map[79:64]),
+		.maptransfer_map_line5              (map[95:80]),
+		.maptransfer_map_line6              (map[111:96]),
+		.maptransfer_map_line7              (map[127:112]) 
 	);
 
 
@@ -480,7 +474,8 @@ mapController mapController_inst(.clk(iCLOCK_33), // iCLOCK?
 											.max_read_addr(map_max_read_addr),
 											.test(testReg));
 
-assign LED[7:4] = {reg_draw_type[1],testReg[6:4]};
+assign LED[6:4] = {reg_draw_type[1],testReg[5:4]};
+assign LED[7] = map[0];
 // This always block is synchronous with the LCD controller
 // and with the read side of the SDRAM controller.
 // Based on the current image, the base and max read
@@ -546,7 +541,8 @@ mtl_controller mtl_controller_inst (
 	.inR(Red),
 	.inG(Green),
 	.inB(Blue),
-	.inMapControl(reg_draw_type[1])
+	.inMapControl(reg_draw_type[1]),
+	.map(map)
 );
 
 assign MTL_DCLK = iCLOCK_33;

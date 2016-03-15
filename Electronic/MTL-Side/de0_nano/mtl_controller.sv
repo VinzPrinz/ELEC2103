@@ -69,7 +69,8 @@ module mtl_controller(
 	inG,
 	inB,
 	
-	inMapControl // control signal that enables the mtl controller to let the ROM write the screen
+	inMapControl, // control signal that enables the mtl controller to let the ROM write the screen
+	map // 128 bit signal containing the map information
 );
 						
 //============================================================================
@@ -109,7 +110,7 @@ input [7:0] inG;
 input [7:0] inB;
 
 input inMapControl;
-
+input [127:0] map;
 
 
 //=============================================================================
@@ -208,7 +209,7 @@ assign	display_area_prev =	((x_cnt>(Horizontal_Blank-3)&&
 // This signal updates the ROM address to read from based on the current pixel position.
 assign loadingAddress = ((x_cnt-(Horizontal_Blank-2)) + (y_cnt-Vertical_Blank)*800);
 // map adress computation by a module :)
-mapAddresses mapAddressesInstance(x_cnt,y_cnt,mapAddress,memoryToLookIn);
+mapAddresses mapAddressesInstance(x_cnt,y_cnt,map,mapAddress,memoryToLookIn);
 //assign mapAddress = ((x_cnt-(Horizontal_Blank-2)) + (y_cnt-Vertical_Blank)*800);
 assign finalAddress = inMapControl ? mapAddress : loadingAddress;
 assign address = display_area_prev ? finalAddress : 19'b0;
