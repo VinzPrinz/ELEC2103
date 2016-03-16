@@ -50,16 +50,16 @@
                                                                                                                                     </div>
     </div>
 <html>
-    <title> Age of Embeded </title>
+    <title> Age of Embedded </title>
     <head>
         <meta charset "utf-8"/>
-        <title> Age of Embeded </title>
+        <title> Age of Embedded </title>
         <link rel="stylesheet" href="my.css" />
     </head>
    
     <body>
         <header>
-            <h1>Age of Embeded </h1>
+            <h1>Age of Embedded </h1>
             <h2>Vincent Schellekens and Olivier Bronchain</h2>
         </header>
         <nav>
@@ -70,7 +70,11 @@
         </nav>
 
         <section>
-                <article>
+            
+            <p>Remaining time: <span id="timer_round" style="font-weigth:normal">?</span></p>
+        </section>
+        <section>
+            <article>
                     <img src="images/vincent.png" class="imagefloat"  height="100" width="100" >
                     <h2>Player 1</h2>
                     <table>
@@ -92,9 +96,6 @@
                         </tr>
                     </table>
                 </arcticle>
-         
-        </section>
-        <section>
                 <article>
                     <img src="images/oli.png" class="imagefloat" height="100" width="100">
                     <h2>Player 2</h2>
@@ -166,6 +167,9 @@ function updateStatus(xmlData) {
             'P2gold');
     document.getElementById('P2sol').innerHTML = getXMLValue(xmlData,
             'P2sol');
+    document.getElementById('timer_round').innerHTML = getXMLValue(xmlData,
+            'timer_round');
+
 
 	//document.getElementById('MyWebMessage').innerHTML = "testlol";
     // TODO display something else than !DEF if no message received

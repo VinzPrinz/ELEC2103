@@ -57,7 +57,10 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
     
     switch(addr){
         case 0x02: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_fight,1);
-                    break;
+                   break;
+        case 0x03: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_coin_reply,1);
+                    printf("End coin reply");
+                   break;
     }
 
         

@@ -29,9 +29,6 @@ header{
     background-position: top right;
 }
 
-body{
-    background-color: lightblue;
-}
 table
 
 {
@@ -41,3 +38,11 @@ td, th /* Mettre une bordure sur les td ET les th */
 {
     border: 1px solid black;
 }
+
+body {
+        font-family: Verdana, Arial, sans-serif;
+            background: lightblue;
+                margin: 0px auto;
+                    padding: 0 0 20px;
+                }
+

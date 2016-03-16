@@ -582,7 +582,7 @@ void MyMIWI_Task(void) {
             case myMIWI_Start_fight:
                 MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 if(received_tag +1 == theData[1]){
-                    MyCyclone_Write(0x12,1);
+                    MyCyclone_Write(0x12,myCyclone_Start_Fight);
                     MyConsole_SendMsg("fight starting \n");
                     received_tag++;
                 }
@@ -591,6 +591,32 @@ void MyMIWI_Task(void) {
                 MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
                 if(received_tag +1 == theData[1]){
                     sprintf(theStr , "end of fight %d \n" , theData[4]);
+                    MyConsole_SendMsg(theStr);
+                    received_tag++;
+                }
+                break;
+            case myMIWI_Start_coin:
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
+                if(received_tag +1 == theData[1]){
+                    MyCyclone_Write(0x12,myCyclone_Start_Coin);
+                    MyConsole_SendMsg("coin starting \n");
+                    received_tag++;
+                }
+                break;
+            case myMIWI_End_coin:
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
+                if(received_tag +1 == theData[1]){
+                    sprintf(theStr , "end of coin %d \n" , theData[4]);
+                    MyCyclone_Write(0x12,myCyclone_End_Coin);
+                    MyConsole_SendMsg(theStr);
+                    received_tag++;
+                }
+                break;
+            case myMIWI_End_coin_reply:
+                MyMIWI_Ack(myMIWI_EnableBroadcast , theData[1]);
+                if(received_tag +1 == theData[1]){
+                    sprintf(theStr , "end of coin reply%d \n" , theData[4]);
+                    Player1.gold = Player1.gold+theData[4];
                     MyConsole_SendMsg(theStr);
                     received_tag++;
                 }

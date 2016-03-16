@@ -213,6 +213,12 @@ int game_over( alt_video_display Display ,TOUCH_HANDLE *pTouch , char *str){
 #include "includes.h"
 
 
+#define myCyclone_Start_Fight    1
+#define myCyclone_End_Fight      2
+#define myCyclone_Start_Coin     3
+#define myCyclone_End_Coin       4
+
+
 /* Definition of Task Stacks*/
 #define   TASK_STACKSIZE       2048
 OS_STK    task_send_data_stk[TASK_STACKSIZE];
@@ -249,6 +255,8 @@ int init();
 
 int counter = 0 ;
 char LT24_state = 0;
+int Operation = 0;
+int coins=0;
 
 alt_video_display Display;
 TOUCH_HANDLE *pTouch;
@@ -258,11 +266,16 @@ void LT24_ISR(void *context){
 	int cnt = IORD(LT24_INTERFACE_IRQ_0_BASE + (4*1),0);
 	char str[64];
 	sprintf(str , "This is counter %x  , %x \n" ,cnt ,  cnt/(256*256*256));
-	IOWR(CYCLONESPI_BASE+(4*0x02) , 0 , cnt /(256*256*256));
+	//IOWR(CYCLONESPI_BASE+(4*0x02) , 0 , cnt /(256*256*256));
 	printf(str);
 	counter++;
 	Clr_BUFFER_FLAG();
-	OSSemPost(Game_Over);
+	if(Operation == myCyclone_Start_Coin){
+		coins++;
+		printf("newCoins");
+	}
+		OSSemPost(Game_Over);
+
 	printf("lol");
 }
 
@@ -421,7 +434,7 @@ void task_send_data(void* pdata)
 	 vid_print_string_alpha(0, 0, 0xff00ff, 0xffffff, tahomabold_20, &Display, "hello");
 
 	while(1){
-		if(Touch_GetXY(pTouch, &X, &Y) && LT24_state==0){
+		if(Touch_GetXY(pTouch, &X, &Y)){
 			OSMboxPost(touchY , (void*)&Y);
 			OSMboxPost(touchX , (void*)&X);
 		}
@@ -432,22 +445,36 @@ void task_send_data(void* pdata)
 		OSTimeDly(DELAY);
 		running_game = (char *)OSMboxAccept(irq_msg);
 
-		if(running_game != NULL){
+		/*if(running_game != NULL){
 			if(game_on == 0){
 				OSMboxPost(Flag2 , (void*) &game_on);
 				OSSemPost(Game1);
 				game_on = 1;
 			}
-			else{
+		else{
 				OSMboxPost(Flag1 , (void*) &game_on);
 				OSSemPost(Game2);
 				game_on = 0;
 			}
-		}
+		}*/
 
-		if (cnt == 0 && IORD(CYCLONESPI_BASE+(4*0x12) , 0) == 1){
-			OSSemPost(Game1);
-			cnt ++;
+		//reading to op
+		int newOp = IORD(CYCLONESPI_BASE+(4*0x12),0);
+		printf("new op %d op %d \n" , newOp , Operation);
+		if (newOp != Operation){
+			printf("in newOp");
+			switch(newOp){
+				case myCyclone_Start_Fight: OSSemPost(Game2); game_on = 0;
+											break;
+				case myCyclone_Start_Coin: OSSemPost(Game1); game_on = 1;
+											coins=0;
+											break;
+				case myCyclone_End_Coin: OSMboxPost(Flag1 , (void*)&game_on);
+										 IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
+										 break;
+
+			}
+			Operation = newOp;
 		}
 
 	}

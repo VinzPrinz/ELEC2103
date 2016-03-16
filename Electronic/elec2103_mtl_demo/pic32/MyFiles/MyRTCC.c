@@ -117,6 +117,9 @@ void __ISR(_RTCC_VECTOR, My_INT_RTCC_IPL) _RtccInterruptHandler(void)
     INTClearFlag(INT_RTCC);
 
     MyRTCC_Flag = TRUE;
+    timer_round--;
+    if(timer_round==0)
+        timer_round=240;
     MyLED0_Toggle();
 
 }

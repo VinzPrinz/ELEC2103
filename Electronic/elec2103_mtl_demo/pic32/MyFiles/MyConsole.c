@@ -86,13 +86,31 @@ void MyConsole_Task(void)
     if (!MyConsole_GetCmd()) return;
 
     if (strcmp(theCmd, "MyTest") == 0) {
-        MyConsole_SendMsg("MyTest ok\n>");
+        MyConsole_SendMsg("MyTest ok lol\n>");
     } else if (strcmp(theCmd, "SendImage")==0){
         MyMDDFS_Send_Image(theCmd);
     }else if (strcmp(theCmd, "StartFight")==0){
         int i = 0;
         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_fight,1); 
-    } else if (strcmp(theCmd, "EnableChat") == 0) {
+    } 
+    else if (strcmp(theCmd, "StartCoin")==0){
+        int i = 0;
+        MyCyclone_Write(0x12,myCyclone_Start_Coin);
+    }
+    else if (strcmp(theCmd, "EndCoin")==0){
+        int i = 0;
+        MyCyclone_Write(0x12,myCyclone_End_Coin);
+    }
+    
+    else if (strcmp(theCmd, "StartCoinMIWI")==0){
+        int i = 0;
+        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
+    }
+    else if (strcmp(theCmd, "EndCoinMIWI")==0){
+        int i = 0;
+        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_End_coin,1);
+    }
+    else if (strcmp(theCmd, "EnableChat") == 0) {
         EnableChat = 1;
         MyConsole_SendMsg("Chat Enabled\n>");
     } else if (strcmp(theCmd, "DisableChat") == 0) {

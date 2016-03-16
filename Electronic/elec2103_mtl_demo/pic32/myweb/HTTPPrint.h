@@ -55,6 +55,7 @@ void HTTPPrint_P1gold(void);
 void HTTPPrint_P1sol(void);
 void HTTPPrint_P2gold(void);
 void HTTPPrint_P2sol(void);
+void HTTPPrint_timer_round(void);
 
 void HTTPPrint(DWORD callbackID)
 {
@@ -245,6 +246,9 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x0000004f:
 			HTTPPrint_P2sol();
+			break;
+        case 0x00000050:
+			HTTPPrint_timer_round();
 			break;
 		default:
 			// Output notification for undefined values

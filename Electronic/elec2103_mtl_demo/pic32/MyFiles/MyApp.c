@@ -104,15 +104,16 @@ int main(void)
     MyConsole_SendMsg(startMsg);
 
     // Start Wireless and Camera connections
-  //  MyMIWI_Start();
+    MyMIWI_Start();
     MyWIFI_Start();
     //MyCamera_Start();
    
-    Player1.gold = 42;
+    Player1.gold = 0;
     Player1.soldiers = 0;
     
     Player2.gold = 0;
-    Player2.soldiers = 42;
+    Player2.soldiers =0;
+    timer_round = 240;
     
     
     // Execute forever
@@ -124,7 +125,7 @@ int main(void)
      //   MyConsole_SendMsg("MyConsole_Task Passed \n");
         MyCAN_Task();
    //     MyConsole_SendMsg("MyCAN_Task Passed \n");
- //       MyMIWI_Task();
+       MyMIWI_Task();
  //       MyConsole_SendMsg("MyMIWI_Task Passed \n");
         MyWIFI_Task();
  //       MyConsole_SendMsg("MyWIFI_Task Passed \n");

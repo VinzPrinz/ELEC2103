@@ -1926,12 +1926,19 @@ void HTTPPrint_P1sol(void){
 
 void HTTPPrint_P2gold(void){
     BYTE str[64];
-    sprintf(str , "%d", Player2.gold);
+    sprintf(str , "%d", 42);
     TCPPutString(sktHTTP ,str);  
 }
+
 
 void HTTPPrint_P2sol(void){
     BYTE str[64];
     sprintf(str , "%d", Player2.soldiers);
     TCPPutString(sktHTTP ,str);  
+}
+
+void HTTPPrint_timer_round(void){
+    BYTE str[64];
+    sprintf(str , "%d:%d" , timer_round/4 , timer_round/2 % 60);
+    TCPPutString(sktHTTP , str);
 }
