@@ -282,14 +282,14 @@ logic [127:0] map;
 		.testled_external_connection_export (LED[3:0]),
 		.touchdata_ext_export               ({reg_x1,reg_y1,isTouchedBuff}),
 		
-		.maptransfer_map_line0              (map[15:0]),
-		.maptransfer_map_line1              (map[31:16]),
-		.maptransfer_map_line2              (map[47:32]),
-		.maptransfer_map_line3              (map[63:48]),
-		.maptransfer_map_line4              (map[79:64]),
-		.maptransfer_map_line5              (map[95:80]),
-		.maptransfer_map_line6              (map[111:96]),
-		.maptransfer_map_line7              (map[127:112]) 
+		.maptransfer_map_map_line0              (map[15:0]),
+		.maptransfer_map_map_line1              (map[31:16]),
+		.maptransfer_map_map_line2              (map[47:32]),
+		.maptransfer_map_map_line3              (map[63:48]),
+		.maptransfer_map_map_line4              (map[79:64]),
+		.maptransfer_map_map_line5              (map[95:80]),
+		.maptransfer_map_map_line6              (map[111:96]),
+		.maptransfer_map_map_line7              (map[127:112]) 
 	);
 
 
@@ -542,7 +542,9 @@ mtl_controller mtl_controller_inst (
 	.inG(Green),
 	.inB(Blue),
 	.inMapControl(reg_draw_type[1]),
-	.map(map)
+	.map(map),
+	.touchX(reg_x1),
+	.touchY(reg_y1)
 );
 
 assign MTL_DCLK = iCLOCK_33;

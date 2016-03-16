@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "system.h"
 #include "terasic_lib/terasic_includes.h"
 
@@ -17,19 +18,98 @@ void translateTouchData(int touchData, int* x, int* y, int* isTouched)
 	*x = (touchData>>10) & 0x03FF; // take 10 bits
 }
 
+void sendMap(char theMap[8][16])
+{
+	int i,j;
+	int data;
+	for(i=0; i<4; i++) // send to 4 addresses
+	{
+		data = 0;
+		// row 0
+		for(j=0; j<16; j++)
+		{
+			data += (theMap[i*2][j] == 'X')<<j;
+		}
+		// row 1
+		for(j=0; j<16; j++)
+		{
+			data += (theMap[i*2+1][j] == 'X')<<(j+16);
+		}
+		// send
+		IOWR(MAPTRANSFER_BASE, i, data);
+	}
+}
+
+// translate pixel coordinates x,y to tile coordinates
+void translateToTiles(int x, int y, int* xTile, int* yTile)
+{
+	*xTile = x/50;
+	*yTile = y/50; // TODO !!!! handle case where out of the map (menu) !!!
+}
+
+int manhattan(int x1, int y1, int x2, int y2)
+{
+	return abs(x1-x2) + abs(y1-y2);
+}
+
 int main()
 {
 	int test,x,y,isTouched;
+	int tileX, tileY,selectX, selectY; // touched tile and selected tile (can only be a soldier)
+	int receive = 0; // indicates when we receive data
+	int lol = 1;
 	printf("Hello from MTL side!\n");
 
 	IOWR(TESTLED_BASE, 0x0, 0x3);
+
+	// create the map : '.' = empty, 'X' = perso
+	char theMap[8][16] = {{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+						  {'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+						  {'.','.','.','X','.','.','.','.','.','.','.','.','.','X','.','.'},
+						  {'.','.','.','.','.','.','.','.','.','.','.','.','X','.','.','.'},
+						  {'.','.','.','X','.','.','.','.','.','.','.','X','.','.','.','.'},
+						  {'.','.','.','X','.','.','.','.','.','.','.','.','.','.','.','.'},
+						  {'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+						  {'.','.','.','.','.','.','.','.','.','.','.','.','.','X','.','.'}};
+	sendMap(theMap);
+
+	// send the starting map in the beginning
+//	IOWR(MAPTRANSFER_BASE, 0x0, 0x00000000);
+//	IOWR(MAPTRANSFER_BASE, 0x1, 0x00000808);
+//	IOWR(MAPTRANSFER_BASE, 0x2, 0x08080000);
+//	IOWR(MAPTRANSFER_BASE, 0x2, 0x00000000);
+
 
 	while(1)
 	{
 		test = IORD(TOUCHDATA_BASE, 0x0);
 		translateTouchData(test, &x, &y, &isTouched);
-		if(isTouched)
-			printf("Lol : (%d,%d)\n",x,y);
+		if(isTouched && !receive) // it is a new touch we sensed
+		{
+			translateToTiles(x, y, &tileX, &tileY);
+			receive = 1;
+
+			if (theMap[tileY][tileX] == 'X') // if we touched a soldier
+			{
+				selectX = tileX;
+				selectY = tileY;
+				printf("Lol select : (%d,%d)\n",tileX,tileY);
+			}
+			else if (manhattan(selectX,selectY,tileX,tileY) < 3) // if dest tile close enough
+			{
+				theMap[tileY][tileX] = 'X'; // move the soldier
+				theMap[selectY][selectX] = '.';
+				selectX = tileX; // modify the selected tile
+				selectY = tileY;
+				sendMap(theMap); // send info
+			}
+		}
+		else if(!isTouched && receive) // end of touch
+		{
+			receive = 0;
+		}
+
+
 	}
 
 	return 0;

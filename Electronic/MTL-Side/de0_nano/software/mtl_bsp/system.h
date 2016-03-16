@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'MTL_SOPC'
  * SOPC Builder design path: ../../MTL_SOPC.sopcinfo
  *
- * Generated: Tue Mar 15 00:38:08 CET 2016
+ * Generated: Wed Mar 16 00:29:18 CET 2016
  */
 
 /*
@@ -132,6 +132,7 @@
 #define __ALTERA_AVALON_PIO
 #define __ALTERA_AVALON_TIMER
 #define __ALTERA_NIOS2_QSYS
+#define __MAPTRANSFER
 
 
 /*
@@ -303,6 +304,20 @@
 #define ALT_MAX_FD 32
 #define ALT_SYS_CLK TIMER
 #define ALT_TIMESTAMP_CLK none
+
+
+/*
+ * mapTransfer configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_mapTransfer mapTransfer
+#define MAPTRANSFER_BASE 0x10
+#define MAPTRANSFER_IRQ -1
+#define MAPTRANSFER_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define MAPTRANSFER_NAME "/dev/mapTransfer"
+#define MAPTRANSFER_SPAN 16
+#define MAPTRANSFER_TYPE "mapTransfer"
 
 
 /*

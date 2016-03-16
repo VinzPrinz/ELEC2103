@@ -89,6 +89,14 @@
          type = "String";
       }
    }
+   element MTL_SOPC
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone IV E";
+         type = "String";
+      }
+   }
    element TESTLED
    {
       datum _sortIndex
@@ -189,7 +197,7 @@
    type="conduit"
    dir="end" />
  <interface
-   name="maptransfer"
+   name="maptransfer_map"
    internal="mapTransfer.map"
    type="conduit"
    dir="end" />

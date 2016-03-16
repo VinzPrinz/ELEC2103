@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>15-mars-2016 0:38:06</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1457998686743</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>16-mars-2016 0:30:24</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1458084624354</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>D:\ELEC\2103-Project\Electronique\IMPORTANT\de0_nano\software\MTL_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\MTL_SOPC.sopcinfo</SopcDesignFile>
@@ -889,6 +889,12 @@
         <MemoryMap>
                 <slaveDescriptor>TOUCHDATA</slaveDescriptor>
                 <addressRange>0x00000000 - 0x0000000F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>mapTransfer</slaveDescriptor>
+                <addressRange>0x00000010 - 0x0000001F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
