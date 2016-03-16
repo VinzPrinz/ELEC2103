@@ -1,0 +1,43 @@
+nav
+{
+    float: left;
+    width: 150px;
+    border: 1px solid black;
+}
+
+section
+{
+    margin-left: 170px;
+    border: 1px solid blue;
+}
+
+footer{
+    position:absolute;
+    bottom:0;
+    border-radius: 10px;
+    font-size:70%
+}
+
+.imagefloat{
+    float:left
+}
+
+header{
+    background-image: url("images/Logoepl.jpg");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: top right;
+}
+
+body{
+    background-color: lightblue;
+}
+table
+
+{
+    border-collapse: collapse;
+}
+td, th /* Mettre une bordure sur les td ET les th */
+{
+    border: 1px solid black;
+}

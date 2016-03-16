@@ -20,7 +20,7 @@
 +ledSelected(2,FALSE)
 +ledSelected(1,TRUE)
 +ledSelected(1,FALSE)
-+version
+version
 +led(0)
 +btn(0)
 +btn(1)
@@ -73,3 +73,8 @@ write_community(2)
 +smtps_en
 +snmp_en
 +MyWebMessage
+P1_gold
++P1gold
++P1sol
++P2gold
++P2sol

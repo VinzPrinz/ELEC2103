@@ -25,7 +25,6 @@ void HTTPPrint_builddate(void);
 void HTTPPrint_led(WORD);
 void HTTPPrint_lcdtext(void);
 void HTTPPrint_ledSelected(WORD,WORD);
-void HTTPPrint_version(void);
 void HTTPPrint_btn(WORD);
 void HTTPPrint_pot(void);
 void HTTPPrint_uploadedmd5(void);
@@ -52,6 +51,10 @@ void HTTPPrint_write_comm(WORD);
 void HTTPPrint_smtps_en(void);
 void HTTPPrint_snmp_en(void);
 void HTTPPrint_MyWebMessage(void);
+void HTTPPrint_P1gold(void);
+void HTTPPrint_P1sol(void);
+void HTTPPrint_P2gold(void);
+void HTTPPrint_P2sol(void);
 
 void HTTPPrint(DWORD callbackID)
 {
@@ -119,9 +122,6 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x00000015:
 			HTTPPrint_ledSelected(1,FALSE);
-			break;
-        case 0x00000016:
-			HTTPPrint_version();
 			break;
         case 0x00000017:
 			HTTPPrint_led(0);
@@ -233,6 +233,18 @@ void HTTPPrint(DWORD callbackID)
 			break;
         case 0x0000004a:
 			HTTPPrint_MyWebMessage();
+			break;
+        case 0x0000004c:
+			HTTPPrint_P1gold();
+			break;
+        case 0x0000004d:
+			HTTPPrint_P1sol();
+			break;
+        case 0x0000004e:
+			HTTPPrint_P2gold();
+			break;
+        case 0x0000004f:
+			HTTPPrint_P2sol();
 			break;
 		default:
 			// Output notification for undefined values

@@ -1911,3 +1911,27 @@ void HTTPPrint_MyWebMessage(void){
     TCPPutString(sktHTTP , MyWebMessage);
     
 }
+
+void HTTPPrint_P1gold(void){
+    BYTE str[64];
+    sprintf(str , "%d", Player1.gold);
+    TCPPutString(sktHTTP ,str);  
+}
+
+void HTTPPrint_P1sol(void){
+    BYTE str[64];
+    sprintf(str , "%d", Player1.soldiers);
+    TCPPutString(sktHTTP ,str);  
+}
+
+void HTTPPrint_P2gold(void){
+    BYTE str[64];
+    sprintf(str , "%d", Player2.gold);
+    TCPPutString(sktHTTP ,str);  
+}
+
+void HTTPPrint_P2sol(void){
+    BYTE str[64];
+    sprintf(str , "%d", Player2.soldiers);
+    TCPPutString(sktHTTP ,str);  
+}
