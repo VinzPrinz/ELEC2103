@@ -69,7 +69,10 @@ module mtl_controller(
 	inG,
 	inB,
 	
-	inMapControl // control signal that enables the mtl controller to let the ROM write the screen
+	inMapControl, // control signal that enables the mtl controller to let the ROM write the screen
+	map, // 128 bit signal containing the map information
+	touchX,
+	touchY
 );
 						
 //============================================================================
@@ -109,8 +112,9 @@ input [7:0] inG;
 input [7:0] inB;
 
 input inMapControl;
-
-
+input [127:0] map;
+input [10:0] touchX;
+input [9:0] touchY;
 
 //=============================================================================
 // REG/WIRE declarations
@@ -208,7 +212,7 @@ assign	display_area_prev =	((x_cnt>(Horizontal_Blank-3)&&
 // This signal updates the ROM address to read from based on the current pixel position.
 assign loadingAddress = ((x_cnt-(Horizontal_Blank-2)) + (y_cnt-Vertical_Blank)*800);
 // map adress computation by a module :)
-mapAddresses mapAddressesInstance(x_cnt,y_cnt,mapAddress,memoryToLookIn);
+mapAddresses mapAddressesInstance(x_cnt,y_cnt,map,mapAddress,memoryToLookIn);
 //assign mapAddress = ((x_cnt-(Horizontal_Blank-2)) + (y_cnt-Vertical_Blank)*800);
 assign finalAddress = inMapControl ? mapAddress : loadingAddress;
 assign address = display_area_prev ? finalAddress : 19'b0;
@@ -226,9 +230,22 @@ always_ff @(posedge iCLK) begin
 		// ...and if no data has been sent yet by the PIC32,
 		// then display a white screen.
 		if (no_data_yet) begin
+			if(Case_Wire[11])begin
 			read_red 	<= 8'd255;
 			read_green 	<= 8'd255;
-			read_blue 	<= 8'd255;
+			//read_blue 	<= 8'd255;
+				case(Counter_Wire)
+				2'b00: read_blue <= 8'd0;
+				2'b10: read_blue <= 8'd255;
+				2'b11: read_blue <= 8'd255;
+				2'b01: read_blue <= 8'd0;
+				endcase
+			end
+			else begin
+				read_blue <= 8'd0;
+				read_red <= 8'd255;
+				read_green <= 8'd0;
+			end
 		// ...and if the slideshow is currently loading,
 		// then display the loading screen.
 		// The current pixel is black (resp. white)
@@ -357,6 +374,82 @@ always@(posedge iCLK or negedge iRST_n) begin
 			oLCD_B <= read_blue;
 		end		
 end
+
+
+	// Used for the fight game
+reg [1:0]	Counter_Reg;
+wire [1:0] 	Counter_Wire;
+assign Counter_Wire  = Counter_Reg;
+
+reg [8:0]	Counter_X_Reg , Counter_Y_Reg;
+wire [8:0]	Counter_Y_Wire, Counter_X_Wire;
+assign Counter_X_Wire = Counter_X_Reg;
+assign Counter_Y_Wire = Counter_Y_Reg;
+
+
+reg	[11:0]	Case_Reg;
+wire	[11:0]	Case_Wire;
+assign Case_Wire = Case_Reg;
+
+parameter Xlength = 200;
+parameter Ylength = 160;
+
+//parameter touchX = 253;
+//parameter touchY = 253;
+// Used to count the X;
+	always_ff @ (posedge iCLK or negedge iRST_n)
+		if(!iRST_n)
+			begin 
+				Counter_Reg <= 2'b0;
+				Counter_X_Reg <= 9'b0;
+				Counter_Y_Reg <= 9'b0;
+				Case_Reg <= 12'hfff;
+			end
+		else if((y_cnt==0 && x_cnt==0))
+			begin 
+				Counter_Reg <= 2'b0;
+				Counter_X_Reg <= 9'b0;
+				Counter_Y_Reg <= 9'b0;
+			end
+		else if(x_cnt>=Horizontal_Blank+10 && x_cnt <Horizontal_Blank+10 + 800  && y_cnt>=Vertical_Blank && y_cnt<Vertical_Blank +480)
+			begin
+				if(x_cnt==850)
+					if(Counter_Y_Wire == Ylength-1)
+					begin
+						Counter_Reg[0] <= Counter_Wire[0]+1'b1;
+						Counter_Reg[1] <= Counter_Wire[0]+1'b1;
+						Counter_X_Reg <= 9'd0;
+						Counter_Y_Reg <= 9'd0;
+						Case_Reg[11:1] <= Case_Wire[10:0];
+						Case_Reg[0]	<= Case_Wire[11];		
+					end
+					else
+						begin
+							Counter_Reg[0] <= Counter_Wire[0];
+							Counter_Reg[1] <= Counter_Wire[0];
+							
+							Case_Reg[11:9] <= Case_Wire[2:0];
+							Case_Reg[8:0]	<= Case_Wire[11:3];
+							Counter_X_Reg <= 9'd0;
+							Counter_Y_Reg <= Counter_Y_Wire + 9'd1;
+						end
+						
+				else if (Counter_X_Wire == Xlength -1)
+						begin
+							Counter_Reg[1] <= Counter_Wire[1] + 1'b1;
+							Counter_Reg[0] <= Counter_Wire[0];
+							Counter_X_Reg <= 9'd0;
+							Case_Reg[11:1] <= Case_Wire[10:0];
+							Case_Reg[0]	<= Case_Wire[11];
+						end
+				else
+					begin
+						Counter_X_Reg <= Counter_X_Wire + 9'd1;
+						Case_Reg <= Case_Wire;
+						if(x_cnt == touchX && y_cnt == touchY)
+							Case_Reg[11] <= 1'b0;
+					end
+			end
 
 	
 						

@@ -33,3 +33,12 @@ SPI_state.S_Data_00 0 0 0 1 0 0 0 0 0 1
 SPI_state.S_Data_01 0 0 1 0 0 0 0 0 0 1 
 SPI_state.S_Data_11 0 1 0 0 0 0 0 0 0 1 
 SPI_state.S_End 1 0 0 0 0 0 0 0 0 1 
+
+State Machine - |DE0_NANO|MTL_SOPC:u0|MTL_SOPC_CPU:cpu|MTL_SOPC_CPU_nios2_oci:the_MTL_SOPC_CPU_nios2_oci|MTL_SOPC_CPU_jtag_debug_module_wrapper:the_MTL_SOPC_CPU_jtag_debug_module_wrapper|MTL_SOPC_CPU_jtag_debug_module_tck:the_MTL_SOPC_CPU_jtag_debug_module_tck|DRsize
+Name DRsize.101 DRsize.100 DRsize.011 DRsize.010 DRsize.001 DRsize.000 
+DRsize.000 0 0 0 0 0 0 
+DRsize.001 0 0 0 0 1 1 
+DRsize.010 0 0 0 1 0 1 
+DRsize.011 0 0 1 0 0 1 
+DRsize.100 0 1 0 0 0 1 
+DRsize.101 1 0 0 0 0 1 

@@ -3,7 +3,7 @@
 # Machine generated for CPU 'CPU' in SOPC Builder design 'MTL_SOPC'
 # SOPC Builder design path: ../../MTL_SOPC.sopcinfo
 #
-# Generated: Fri Mar 11 00:37:17 CET 2016
+# Generated: Tue Mar 15 00:02:18 CET 2016
 
 # DO NOT MODIFY THIS FILE
 #
@@ -46,5 +46,5 @@
 # The cache attribute is specified which improves GDB performance
 # by allowing GDB to cache memory contents on the host.
 
-# SDRAM
-memory 0x2000000 0x3000000 cache
+# mem
+memory 0x8000 0xce20 cache

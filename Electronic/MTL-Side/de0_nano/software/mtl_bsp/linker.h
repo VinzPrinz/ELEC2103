@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'MTL_SOPC'
  * SOPC Builder design path: ../../MTL_SOPC.sopcinfo
  *
- * Generated: Fri Mar 11 00:37:17 CET 2016
+ * Generated: Tue Mar 15 00:02:18 CET 2016
  */
 
 /*
@@ -65,10 +65,10 @@
  *
  */
 
-#define RESET_REGION_BASE 0x2000000
+#define MEM_REGION_BASE 0x8020
+#define MEM_REGION_SPAN 19968
+#define RESET_REGION_BASE 0x8000
 #define RESET_REGION_SPAN 32
-#define SDRAM_REGION_BASE 0x2000020
-#define SDRAM_REGION_SPAN 16777184
 
 
 /*
@@ -76,11 +76,11 @@
  *
  */
 
-#define ALT_EXCEPTIONS_DEVICE SDRAM
-#define ALT_RESET_DEVICE SDRAM
-#define ALT_RODATA_DEVICE SDRAM
-#define ALT_RWDATA_DEVICE SDRAM
-#define ALT_TEXT_DEVICE SDRAM
+#define ALT_EXCEPTIONS_DEVICE MEM
+#define ALT_RESET_DEVICE MEM
+#define ALT_RODATA_DEVICE MEM
+#define ALT_RWDATA_DEVICE MEM
+#define ALT_TEXT_DEVICE MEM
 
 
 /*

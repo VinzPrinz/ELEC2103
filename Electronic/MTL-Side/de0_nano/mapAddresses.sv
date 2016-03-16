@@ -5,6 +5,7 @@
 module mapAddresses( 
 				input logic [10:0] x_cnt, // syncronization signals from the mtl controller
 				input logic [9:0]	y_cnt,
+				input logic [127:0] map,
 				output logic [18:0] mapAddress, // address for the rom
 				output logic [1:0] memoryToLookIn); // first bit = 0 if tile, 1 if menu bar; second bit = type of tile (2 types for now)
 				
@@ -16,7 +17,7 @@ logic [5:0] xpix,ypix; // x and y value inside a tile
 logic [3:0] xtile; // x and y value of the tile itself
 logic [2:0] ytile;
 mapPixels mapPixelsInst(x_cnt,y_cnt,xpix,ypix,xtile,ytile); // call 2 helpful modules (see below)
-mapTiles mapTilesInst(xtile,ytile,memoryToLookIn[0] );
+mapTiles mapTilesInst(xtile,ytile,map,memoryToLookIn[0] );
 
 always_comb
 begin
@@ -54,10 +55,14 @@ endmodule
 
 module mapTiles(input logic [3:0] xtile,
 					 input logic [2:0] ytile,
+					 input logic [127:0] map,
 					 output logic memoryToLookInMap );
 						
-	// to modify to take into account the representation of the map (later)
-		assign memoryToLookInMap = xtile[0] && ytile[0];
+//	// to modify to take into account the representation of the map (later)
+//		assign memoryToLookInMap = xtile[0] && ytile[0];
+
+	assign memoryToLookInMap = map[xtile + 16*ytile]; // ??? push quartus to the max
+	//assign memoryToLookInMap = map && 1<<(xtile + 8*ytile); 
 
 endmodule
 
