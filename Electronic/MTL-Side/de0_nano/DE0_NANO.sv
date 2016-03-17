@@ -484,13 +484,16 @@ mapController mapController_inst(.clk(iCLOCK_33), // iCLOCK?
 											.test(testReg));
 
 assign LED[6:4] = {reg_draw_type[1],testReg[5:4]};
-assign LED[7] = mtl_reset;
+assign LED[7] = mtl_counter[10];
 // This always block is synchronous with the LCD controller
 // and with the read side of the SDRAM controller.
 // Based on the current image, the base and max read
 // addresses are updated each time a frame ends, the
 // read FIFO is emptied as well when a new frame begins.
 // The signals endFrame and newFrame come from the LCD controller.
+
+wire inMapControl;
+assign inMapControl = (mtl_mode == 4'b0010);
 always_ff @(posedge CLOCK_33) begin
 
 	if (PIC32_RESET) begin
@@ -775,7 +778,7 @@ module hold_buffer (
 		end
 		
 	end
-
+	
 	assign pulse = ((count<=32'd1000000) && (count>32'd0)); // TODO : ajuster la periode
 	
 endmodule

@@ -82,9 +82,16 @@ int main()
 //	IOWR(MAPTRANSFER_BASE, 0x2, 0x00000000);
 
 
+
 	while(1)
-	{	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x1);
-		printf("reset mtl\n");
+	{	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x0); // reset game;
+		IOWR(MTL_INTERFACE_IRQ_0_BASE+4 , 0 , 0x0); //
+
+		int j =0;
+		for(j ; j<1000000 ; j++){
+		}
+		printf("this is the counter %d \n" , IORD(MTL_INTERFACE_IRQ_0_BASE+8 ,0 ));
+
 		test = IORD(TOUCHDATA_BASE, 0x0);
 		translateTouchData(test, &x, &y, &isTouched);
 		if(isTouched && !receive) // it is a new touch we sensed
@@ -107,6 +114,7 @@ int main()
 				sendMap(theMap); // send info
 			}
 		}
+
 		else if(!isTouched && receive) // end of touch
 		{
 			receive = 0;

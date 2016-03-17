@@ -127,6 +127,7 @@ input mtl_reset;
 output [31:0] mtl_counter;
 output mtl_irq;
 
+assign mtl_irq = (Case_Wire == 12'd0) && ~mtl_reset;
 //=============================================================================
 // REG/WIRE declarations
 //=============================================================================
@@ -149,10 +150,16 @@ reg			no_data_yet;
 
 wire [1:0]	memoryToLookIn; // 1st bit : 0 if tile, 1 if menu bar; 2nd bit : 0 if tile 0, 1 if tile 1
 
+reg [31:0] counter;
+assign mtl_counter = counter;
+
 //=============================================================================
 // Structural coding
 //=============================================================================
 
+parameter mtl_mode_fight = 4'b0000;
+parameter mtl_mode_load = 4'b0001;
+parameter mtl_mode_map = 4'b0010;
 // Assigning current pixel (not useful anymore)
 assign oXpixel = x_cnt-(Horizontal_Blank-2);
 assign oYpixel = y_cnt-(Vertical_Blank-1);
@@ -186,15 +193,15 @@ assign oYpixel = y_cnt-(Vertical_Blank-1);
 tile0ROM	tile0ROM_inst (
 	.address ( address[11:0] ),
 	.clock ( iCLK ),
-	.rden ( inMapControl ),
+	.rden ( mtl_mode==mtl_mode_map ),
 	.q ( q_rom )
 	);
 
 tile2	tile2_inst (
 	.address ( address[11:0] ),
 	.clock ( iCLK ),
-	.rden ( inMapControl ),
-	.q ( q_rom1 )
+	.rden (mtl_mode==mtl_mode_map),
+	.q (q_rom1)
 	);
 
 
@@ -240,7 +247,7 @@ always_ff @(posedge iCLK) begin
 	end else if (display_area) begin
 		// ...and if no data has been sent yet by the PIC32,
 		// then display a white screen.
-		if (no_data_yet) begin
+		if (mtl_mode == mtl_mode_fight) begin
 			if(Case_Wire[11])begin
 			read_red 	<= 8'd255;
 			read_green 	<= 8'd255;
@@ -262,13 +269,13 @@ always_ff @(posedge iCLK) begin
 		// The current pixel is black (resp. white)
 		// if a 1 (resp. 0) is written in the ROM.
 		///////////////////////////////////////////////////////////////////////////////// TEST!!!
-		end else if (loading_buf ) begin
+		end else if (mtl_mode == mtl_mode_load) begin
 				read_red 	<= 8'd255; // display a yellow screen during loading
 				read_green 	<= 8'd255;
 				read_blue 	<= 8'b0;
 
 		// NEW : control the screen with the ROM content
-		end else if (inMapControl) begin
+		end else if (mtl_mode == mtl_mode_map) begin
 			if (memoryToLookIn[1]) // if menu is to be shown
 			begin 
 				read_red 	<= 8'd0;   // the menu bar is a blue bar
@@ -405,9 +412,7 @@ assign Case_Wire = Case_Reg;
 parameter Xlength = 200;
 parameter Ylength = 160;
 
-//parameter touchX = 253;
-//parameter touchY = 253;
-// Used to count the X;
+
 	always_ff @ (posedge iCLK or negedge iRST_n)
 		if(!iRST_n)
 			begin 
@@ -416,7 +421,7 @@ parameter Ylength = 160;
 				Counter_Y_Reg <= 9'b0;
 				Case_Reg <= 12'hfff;
 			end
-		else if(mtl_reset)
+		else if(mtl_reset && x_cnt==0 && y_cnt==0)
 			begin 
 				Counter_Reg <= 2'b0;
 				Counter_X_Reg <= 9'b0;
@@ -464,13 +469,36 @@ parameter Ylength = 160;
 					begin
 						Counter_X_Reg <= Counter_X_Wire + 9'd1;
 						Case_Reg <= Case_Wire;
-						if(x_cnt == touchX && y_cnt == touchY)
+						if(x_cnt == touchX_new && y_cnt == touchY_new && newTouch)
 							Case_Reg[11] <= 1'b0;
 					end
 			end
-
-	
+			
+		reg [9:0] touchY_new;
+		reg [10:0] touchX_new;
+		reg newTouch;
+		
+		always_ff @(posedge iCLK)
+			if((touchX_new != touchX || touchY != touchY_new)&& x_cnt==0 && y_cnt==0 && ~mtl_reset)
+				begin
+					touchX_new <= touchX;
+					touchY_new <= touchY;
+					newTouch <= 1'b1;
+				end
+			else if(x_cnt==0 && y_cnt ==0)
+				newTouch <= 1'b0;
+			else
+				newTouch <= newTouch;
 						
+		always_ff @(posedge iCLK)
+			if(mtl_reset || !iRST_n)
+				counter <= 32'd0;
+			else if(Case_Reg == 12'd0)
+				counter <= counter;
+			else 
+				counter <= counter + 32'd1;
+				
+			
 endmodule
 
 
