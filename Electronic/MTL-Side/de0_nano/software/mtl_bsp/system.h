@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'MTL_SOPC'
  * SOPC Builder design path: ../../MTL_SOPC.sopcinfo
  *
- * Generated: Thu Mar 17 12:05:55 CET 2016
+ * Generated: Thu Mar 17 18:11:58 CET 2016
  */
 
 /*
@@ -363,8 +363,8 @@
 
 #define ALT_MODULE_CLASS_mtl_interface_irq_0 mtl_interface_irq
 #define MTL_INTERFACE_IRQ_0_BASE 0x11000
-#define MTL_INTERFACE_IRQ_0_IRQ -1
-#define MTL_INTERFACE_IRQ_0_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define MTL_INTERFACE_IRQ_0_IRQ 3
+#define MTL_INTERFACE_IRQ_0_IRQ_INTERRUPT_CONTROLLER_ID 0
 #define MTL_INTERFACE_IRQ_0_NAME "/dev/mtl_interface_irq_0"
 #define MTL_INTERFACE_IRQ_0_SPAN 1024
 #define MTL_INTERFACE_IRQ_0_TYPE "mtl_interface_irq"

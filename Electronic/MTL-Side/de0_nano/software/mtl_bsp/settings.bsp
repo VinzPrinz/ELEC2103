@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Mar 17, 2016 12:05:54 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1458212754470</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Mar 17, 2016 6:14:53 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1458234893622</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/obronchain/git_projects/ELEC2103/Electronic/MTL-Side/de0_nano/software/mtl_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../MTL_SOPC.sopcinfo</SopcDesignFile>

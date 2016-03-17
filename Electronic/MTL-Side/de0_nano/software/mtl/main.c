@@ -10,6 +10,8 @@
 #include "system.h"
 #include "terasic_lib/terasic_includes.h"
 
+char MTL_state = 0;
+
 // translates touch data to x,y and isTouched signals
 void translateTouchData(int touchData, int* x, int* y, int* isTouched)
 {
@@ -52,6 +54,16 @@ int manhattan(int x1, int y1, int x2, int y2)
 	return abs(x1-x2) + abs(y1-y2);
 }
 
+
+void MTL_ISR(void *context){
+	printf("this is the counter %d \n" , IORD(MTL_INTERFACE_IRQ_0_BASE+8 ,0 )); // read counter
+	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x1);
+	int i=  0;
+	for(i;i<10000;i++)
+	{}
+	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x0);
+}
+
 int main()
 {
 	int test,x,y,isTouched;
@@ -75,22 +87,34 @@ int main()
 						  {'.','.','.','.','.','.','.','.','.','.','.','.','.','X','.','.'}};
 	sendMap(theMap);
 
-	// send the starting map in the beginning
+// send the starting map in the beginning
 //	IOWR(MAPTRANSFER_BASE, 0x0, 0x00000000);
 //	IOWR(MAPTRANSFER_BASE, 0x1, 0x00000808);
 //	IOWR(MAPTRANSFER_BASE, 0x2, 0x08080000);
 //	IOWR(MAPTRANSFER_BASE, 0x2, 0x00000000);
 
+	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x1);
+	int i =0;
+	for(i;i<10000;i++)
+	{}
+	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x0);
+
+	int reg_ret = alt_iic_isr_register(MTL_INTERFACE_IRQ_0_IRQ_INTERRUPT_CONTROLLER_ID,
+											MTL_INTERFACE_IRQ_0_IRQ,
+										&MTL_ISR , (void *)&MTL_state , NULL);
+	if(!reg_ret) {
+		printf("Button interrupt service routine (ISR) well registered \n");
+	} else {
+		printf("Something went wrong in the registering; software exits");
+		return -1;
+	}
 
 
 	while(1)
 	{	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x0); // reset game;
-		IOWR(MTL_INTERFACE_IRQ_0_BASE+4 , 0 , 0x0); //
+		IOWR(MTL_INTERFACE_IRQ_0_BASE+4 , 0 , 0x2); // mode
 
-		int j =0;
-		for(j ; j<1000000 ; j++){
-		}
-		printf("this is the counter %d \n" , IORD(MTL_INTERFACE_IRQ_0_BASE+8 ,0 ));
+		//printf("this is the counter %d \n" , IORD(MTL_INTERFACE_IRQ_0_BASE+8 ,0 )); // read counter
 
 		test = IORD(TOUCHDATA_BASE, 0x0);
 		translateTouchData(test, &x, &y, &isTouched);

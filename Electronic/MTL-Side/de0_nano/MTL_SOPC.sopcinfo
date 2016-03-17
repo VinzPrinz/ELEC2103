@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="MTL_SOPC" kind="MTL_SOPC" version="1.0" fabric="QSYS">
  <!-- Format version 15.1 185 (Future versions may contain additional information.) -->
- <!-- 2016.03.17.11:56:19 -->
+ <!-- 2016.03.17.18:05:57 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1458212179</value>
+  <value>1458234357</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -2171,7 +2171,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="internalIrqMaskSystemInfo">
    <type>long</type>
-   <value>5</value>
+   <value>13</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -3152,6 +3152,13 @@ parameters are a RESULT of the module parameters. -->
     <width>32</width>
     <role>irq</role>
    </port>
+   <interrupt>
+    <isBridge>false</isBridge>
+    <moduleName>mtl_interface_irq_0</moduleName>
+    <slaveName>ins_irq0</slaveName>
+    <name>mtl_interface_irq_0.ins_irq0</name>
+    <interruptNumber>3</interruptNumber>
+   </interrupt>
    <interrupt>
     <isBridge>false</isBridge>
     <moduleName>JTAG_UART</moduleName>
@@ -10319,6 +10326,41 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>clock</endConnectionPoint>
  </connection>
  <connection
+   name="CPU.irq/mtl_interface_irq_0.ins_irq0"
+   kind="interrupt"
+   version="15.1"
+   start="CPU.irq"
+   end="mtl_interface_irq_0.ins_irq0">
+  <parameter name="irqNumber">
+   <type>int</type>
+   <value>3</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <startModule>CPU</startModule>
+  <startConnectionPoint>irq</startConnectionPoint>
+  <endModule>mtl_interface_irq_0</endModule>
+  <endConnectionPoint>ins_irq0</endConnectionPoint>
+ </connection>
+ <connection
    name="CPU.irq/JTAG_UART.irq"
    kind="interrupt"
    version="15.1"
@@ -10924,7 +10966,7 @@ parameters are a RESULT of the module parameters. -->
   <version>15.1</version>
  </plugin>
  <plugin>
-  <instanceCount>2</instanceCount>
+  <instanceCount>3</instanceCount>
   <name>interrupt</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IConnection</subtype>

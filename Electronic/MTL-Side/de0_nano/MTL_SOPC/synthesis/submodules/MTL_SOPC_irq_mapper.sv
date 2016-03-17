@@ -20,9 +20,9 @@
 // Altera IRQ Mapper
 //
 // Parameters
-//   NUM_RCVRS        : 2
+//   NUM_RCVRS        : 3
 //   SENDER_IRW_WIDTH : 32
-//   IRQ_MAP          : 0:0,1:2
+//   IRQ_MAP          : 0:3,1:0,2:2
 //
 // -------------------------------------------------------
 
@@ -41,6 +41,7 @@ module MTL_SOPC_irq_mapper
     // -------------------
     input                receiver0_irq,
     input                receiver1_irq,
+    input                receiver2_irq,
 
     // -------------------
     // Command Source (Output)
@@ -52,8 +53,9 @@ module MTL_SOPC_irq_mapper
     always @* begin
 	sender_irq = 0;
 
-        sender_irq[0] = receiver0_irq;
-        sender_irq[2] = receiver1_irq;
+        sender_irq[3] = receiver0_irq;
+        sender_irq[0] = receiver1_irq;
+        sender_irq[2] = receiver2_irq;
     end
 
 endmodule

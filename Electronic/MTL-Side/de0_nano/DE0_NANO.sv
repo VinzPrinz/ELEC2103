@@ -494,6 +494,7 @@ assign LED[7] = mtl_counter[10];
 
 wire inMapControl;
 assign inMapControl = (mtl_mode == 4'b0010);
+
 always_ff @(posedge CLOCK_33) begin
 
 	if (PIC32_RESET) begin
@@ -506,7 +507,7 @@ always_ff @(posedge CLOCK_33) begin
 			max_read_addr <= current_img*RANGE_ADDR_IMG + RANGE_ADDR_IMG;
 			
 		// ok let's try things
-		end else if(tileLoad && reg_draw_type[1]) begin // only if certain draw mode
+		end else if(tileLoad && inMapControl) begin // only if certain draw mode
 			base_read_addr <= map_base_read_addr;
 			max_read_addr <= map_max_read_addr;
 			
@@ -516,7 +517,7 @@ always_ff @(posedge CLOCK_33) begin
 		end
 		
 		//load_new <= newFrame;
-		load_new <= newFrame || (tileLoad && reg_draw_type[1]);
+		load_new <= newFrame || (tileLoad && inMapControl);
 	end
 end
 

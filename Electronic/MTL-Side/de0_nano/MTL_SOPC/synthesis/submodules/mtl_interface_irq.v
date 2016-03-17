@@ -32,7 +32,7 @@ module mtl_interface_irq (
 
 	assign avs_s0_waitrequest = 1'b0;
 
-	assign ins_irq0_irq = 1'b0;
+	assign ins_irq0_irq = mtl_irq;
 
 
 
@@ -56,5 +56,5 @@ module mtl_interface_irq (
 			case(avs_s0_address[1:0])
 				mtl_counter_addr: avs_s0_readdata_reg <= mtl_counter;
 			endcase
-	
+	 
 endmodule

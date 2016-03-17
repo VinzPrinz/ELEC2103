@@ -80,8 +80,9 @@ module MTL_SOPC (
 	wire         mm_interconnect_0_mem_s1_clken;                            // mm_interconnect_0:mem_s1_clken -> mem:clken
 	wire  [31:0] mm_interconnect_0_touchdata_s1_readdata;                   // TOUCHDATA:readdata -> mm_interconnect_0:TOUCHDATA_s1_readdata
 	wire   [1:0] mm_interconnect_0_touchdata_s1_address;                    // mm_interconnect_0:TOUCHDATA_s1_address -> TOUCHDATA:address
-	wire         irq_mapper_receiver0_irq;                                  // JTAG_UART:av_irq -> irq_mapper:receiver0_irq
-	wire         irq_mapper_receiver1_irq;                                  // TIMER:irq -> irq_mapper:receiver1_irq
+	wire         irq_mapper_receiver0_irq;                                  // mtl_interface_irq_0:ins_irq0_irq -> irq_mapper:receiver0_irq
+	wire         irq_mapper_receiver1_irq;                                  // JTAG_UART:av_irq -> irq_mapper:receiver1_irq
+	wire         irq_mapper_receiver2_irq;                                  // TIMER:irq -> irq_mapper:receiver2_irq
 	wire  [31:0] cpu_irq_irq;                                               // irq_mapper:sender_irq -> CPU:irq
 	wire         rst_controller_reset_out_reset;                            // rst_controller:reset_out -> [CPU:reset_n, JTAG_UART:rst_n, KEY:reset_n, TIMER:reset_n, irq_mapper:reset, mm_interconnect_0:CPU_reset_reset_bridge_in_reset_reset, rst_translator:in_reset]
 	wire         rst_controller_reset_out_reset_req;                        // rst_controller:reset_req -> [CPU:reset_req, rst_translator:reset_req_in]
@@ -129,7 +130,7 @@ module MTL_SOPC (
 		.av_write_n     (~mm_interconnect_0_jtag_uart_avalon_jtag_slave_write),      //                  .write_n
 		.av_writedata   (mm_interconnect_0_jtag_uart_avalon_jtag_slave_writedata),   //                  .writedata
 		.av_waitrequest (mm_interconnect_0_jtag_uart_avalon_jtag_slave_waitrequest), //                  .waitrequest
-		.av_irq         (irq_mapper_receiver0_irq)                                   //               irq.irq
+		.av_irq         (irq_mapper_receiver1_irq)                                   //               irq.irq
 	);
 
 	MTL_SOPC_KEY key (
@@ -159,7 +160,7 @@ module MTL_SOPC (
 		.readdata   (mm_interconnect_0_timer_s1_readdata),   //      .readdata
 		.chipselect (mm_interconnect_0_timer_s1_chipselect), //      .chipselect
 		.write_n    (~mm_interconnect_0_timer_s1_write),     //      .write_n
-		.irq        (irq_mapper_receiver1_irq)               //   irq.irq
+		.irq        (irq_mapper_receiver2_irq)               //   irq.irq
 	);
 
 	MTL_SOPC_TOUCHDATA touchdata (
@@ -208,7 +209,7 @@ module MTL_SOPC (
 		.avs_s0_waitrequest (mm_interconnect_0_mtl_interface_irq_0_avs_s0_waitrequest), //              .waitrequest
 		.clock_clk          (clk_clk),                                                  //         clock.clk
 		.reset_reset        (rst_controller_001_reset_out_reset),                       //         reset.reset
-		.ins_irq0_irq       (),                                                         //      ins_irq0.irq
+		.ins_irq0_irq       (irq_mapper_receiver0_irq),                                 //      ins_irq0.irq
 		.mtl_irq            (mtl_interface_irq_0_mtl_interface_mtl_irq),                // mtl_interface.mtl_irq
 		.mtl_reset          (mtl_interface_irq_0_mtl_interface_mtl_reset),              //              .mtl_reset
 		.mtl_mode           (mtl_interface_irq_0_mtl_interface_mtl_mode),               //              .mtl_mode
@@ -284,6 +285,7 @@ module MTL_SOPC (
 		.reset         (rst_controller_reset_out_reset), // clk_reset.reset
 		.receiver0_irq (irq_mapper_receiver0_irq),       // receiver0.irq
 		.receiver1_irq (irq_mapper_receiver1_irq),       // receiver1.irq
+		.receiver2_irq (irq_mapper_receiver2_irq),       // receiver2.irq
 		.sender_irq    (cpu_irq_irq)                     //    sender.irq
 	);
 
