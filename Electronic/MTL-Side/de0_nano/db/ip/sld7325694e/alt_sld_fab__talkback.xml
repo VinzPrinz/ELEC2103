@@ -11,12 +11,12 @@
    <SOPCModuleParameter>
     <C>2</C>
     <Name>DESIGN_HASH</Name>
-    <Value>e076a6f5cb9c886ca138</Value>
+    <Value>d7ddc7b261a783ff826a</Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>3</C>
     <Name>NODE_COUNT</Name>
-    <Value>4</Value>
+    <Value>3</Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>4</C>
@@ -26,12 +26,12 @@
    <SOPCModuleParameter>
     <C>5</C>
     <Name>SETTINGS</Name>
-    <Value>{fabric sld dir agent mfr_code 110 type_code 128 version 1 instance -1 ir_width 1 prefer_host { } psig f63706bb} {fabric sld dir agent mfr_code 70 type_code 34 version 3 instance 0 ir_width 2 psig f63706bb} {fabric sld dir agent mfr_code 110 type_code 1 version 0 instance 0 ir_width 2 psig f63706bb} {fabric sld dir agent mfr_code 110 type_code 0 version 6 instance 0 ir_width 10 psig f63706bb} </Value>
+    <Value>{fabric sld dir agent mfr_code 110 type_code 128 version 1 instance -1 ir_width 1 prefer_host { } psig f63706bb} {fabric sld dir agent mfr_code 70 type_code 34 version 3 instance 0 ir_width 2 psig f63706bb} {fabric sld dir agent mfr_code 110 type_code 0 version 6 instance 0 ir_width 10 psig f63706bb} </Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>6</C>
     <Name>CLOCKS</Name>
-    <Value>{id {} } {id {} } {id {} } {id {} } </Value>
+    <Value>{id {} } {id {} } {id {} } </Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>7</C>
@@ -41,7 +41,7 @@
    <SOPCModuleParameter>
     <C>8</C>
     <Name>EP_INFOS</Name>
-    <Value>{hpath {MTL_SOPC:u0|MTL_SOPC_JTAG_UART:jtag_uart|alt_jtag_atlantic:MTL_SOPC_JTAG_UART_alt_jtag_atlantic|altera_sld_agent_endpoint:inst|altera_fabric_endpoint:ep} } {hpath {MTL_SOPC:u0|MTL_SOPC_CPU:cpu|MTL_SOPC_CPU_nios2_oci:the_MTL_SOPC_CPU_nios2_oci|MTL_SOPC_CPU_jtag_debug_module_wrapper:the_MTL_SOPC_CPU_jtag_debug_module_wrapper|sld_virtual_jtag_basic:MTL_SOPC_CPU_jtag_debug_module_phy|sld_virtual_jtag_impl:sld_virtual_jtag_impl_inst} } {hpath {pzdyqx:nabboc} } {hpath {sld_signaltap:auto_signaltap_0} } </Value>
+    <Value>{hpath {MTL_SOPC:u0|MTL_SOPC_JTAG_UART:jtag_uart|alt_jtag_atlantic:MTL_SOPC_JTAG_UART_alt_jtag_atlantic|altera_sld_agent_endpoint:inst|altera_fabric_endpoint:ep} } {hpath {MTL_SOPC:u0|MTL_SOPC_CPU:cpu|MTL_SOPC_CPU_cpu:cpu|MTL_SOPC_CPU_cpu_nios2_oci:the_MTL_SOPC_CPU_cpu_nios2_oci|MTL_SOPC_CPU_cpu_debug_slave_wrapper:the_MTL_SOPC_CPU_cpu_debug_slave_wrapper|sld_virtual_jtag_basic:MTL_SOPC_CPU_cpu_debug_slave_phy|sld_virtual_jtag_impl:sld_virtual_jtag_impl_inst} } {hpath {sld_signaltap:auto_signaltap_0} } </Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>9</C>
@@ -55,21 +55,26 @@
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>11</C>
+    <Name>COMPOSED_SETTINGS</Name>
+    <Value>{fabric sld dir agent mfr_code 110 type_code 128 version 1 instance 0 ir_width 1 prefer_host {} } {fabric sld dir agent mfr_code 70 type_code 34 version 3 instance 0 ir_width 2 prefer_host {} } {fabric sld dir agent mfr_code 110 type_code 0 version 6 instance 0 ir_width 10 prefer_host {} } </Value>
+   </SOPCModuleParameter>
+   <SOPCModuleParameter>
+    <C>12</C>
     <Name>DEVICE_FAMILY</Name>
     <Value>Cyclone IV E</Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
-    <C>12</C>
+    <C>13</C>
     <Name>AUTO_DEVICE</Name>
     <Value>Unknown</Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
-    <C>13</C>
+    <C>14</C>
     <Name>AUTO_DEVICE_SPEEDGRADE</Name>
     <Value>Unknown</Value>
    </SOPCModuleParameter>
   </SOPCModule>
-  <SystemID>2097553805</SystemID>
+  <SystemID>72021434</SystemID>
  </SOPCSystem>
  <SchemaVersion>schema_2013-01-18</SchemaVersion>
 </ProgramExecution>

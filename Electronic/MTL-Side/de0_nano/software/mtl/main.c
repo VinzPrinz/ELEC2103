@@ -60,6 +60,8 @@ int main()
 	int lol = 1;
 	printf("Hello from MTL side!\n");
 
+	//IOWR(MTL_INTERFACE_IRQ_0_BASE , 0x0 , 0x1);
+
 	IOWR(TESTLED_BASE, 0x0, 0x3);
 
 	// create the map : '.' = empty, 'X' = perso
@@ -81,7 +83,8 @@ int main()
 
 
 	while(1)
-	{
+	{	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x1);
+		printf("reset mtl\n");
 		test = IORD(TOUCHDATA_BASE, 0x0);
 		translateTouchData(test, &x, &y, &isTouched);
 		if(isTouched && !receive) // it is a new touch we sensed

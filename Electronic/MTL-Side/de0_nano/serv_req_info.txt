@@ -1,0 +1,17 @@
+<internal_error>
+<sub_system>ERR</sub_system>
+<callstack>
+	0x7fe063065fc7: ccl_err + 0x7fc7 (_ZN15ERR_STACKWALKER15get_stack_traceEPPKviiPv + 0xb1)
+	0x7fe063068e4a: ccl_err + 0xae4a (_Z14err_terminatorv + 0x4b)
+	0x7fe05ad53796: stdc++.so.6 + 0x63796 (_ZN10__cxxabiv111__terminateEPFvvE + 0x6)
+	0x7fe05ad537c3: stdc++.so.6 + 0x637c3
+	0x7fe05ad539ee: stdc++.so.6 + 0x639ee
+	0x7fe063068d17: ccl_err + 0xad17 (err_sigaction_handler + 0x76)
+	0x7fe05b40fe80: pthread.so.0 + 0x10e80
+	0x7fe03910c800:
+</callstack>
+<error>*** Fatal Error: Unhandled Exception</error>
+<date>Thu Mar 17 10:21:43 2016
+</date>
+<version>Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition</version>
+</internal_error>

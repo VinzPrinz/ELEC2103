@@ -273,6 +273,10 @@ MySPI MySPI_instance (
 //   SOPC INSTANTION !! - see Qsys file
 // ========================================================
 
+wire [3:0] mtl_mode;
+wire [31:0] mtl_counter;
+wire mtl_reset , mtl_irq;
+
 logic [127:0] map;
 
 	MTL_SOPC u0 (
@@ -289,7 +293,12 @@ logic [127:0] map;
 		.maptransfer_map_map_line4              (map[79:64]),
 		.maptransfer_map_map_line5              (map[95:80]),
 		.maptransfer_map_map_line6              (map[111:96]),
-		.maptransfer_map_map_line7              (map[127:112]) 
+		.maptransfer_map_map_line7              (map[127:112]),
+		
+		.mtl_interface_irq_0_mtl_interface_mtl_irq     (mtl_irq),     // mtl_interface_irq_0_mtl_interface.mtl_irq
+		.mtl_interface_irq_0_mtl_interface_mtl_reset   (mtl_reset),   //                                  .mtl_reset
+		.mtl_interface_irq_0_mtl_interface_mtl_mode    (mtl_mode),    //                                  .mtl_mode
+		.mtl_interface_irq_0_mtl_interface_mtl_counter (mtl_counter)  //                                  .mtl_counter
 	);
 
 
@@ -475,7 +484,7 @@ mapController mapController_inst(.clk(iCLOCK_33), // iCLOCK?
 											.test(testReg));
 
 assign LED[6:4] = {reg_draw_type[1],testReg[5:4]};
-assign LED[7] = map[0];
+assign LED[7] = mtl_reset;
 // This always block is synchronous with the LCD controller
 // and with the read side of the SDRAM controller.
 // Based on the current image, the base and max read
@@ -544,7 +553,11 @@ mtl_controller mtl_controller_inst (
 	.inMapControl(reg_draw_type[1]),
 	.map(map),
 	.touchX(reg_x1),
-	.touchY(reg_y1)
+	.touchY(reg_y1),
+	.mtl_reset(mtl_reset),
+	.mtl_mode(mtl_mode),
+	.mtl_counter(mtl_counter),
+	.mtl_irq(mtl_irq),
 );
 
 assign MTL_DCLK = iCLOCK_33;

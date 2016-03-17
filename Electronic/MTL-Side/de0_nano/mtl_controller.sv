@@ -72,7 +72,12 @@ module mtl_controller(
 	inMapControl, // control signal that enables the mtl controller to let the ROM write the screen
 	map, // 128 bit signal containing the map information
 	touchX,
-	touchY
+	touchY,
+	
+	mtl_reset,
+	mtl_mode,
+	mtl_counter,
+	mtl_irq
 );
 						
 //============================================================================
@@ -115,6 +120,12 @@ input inMapControl;
 input [127:0] map;
 input [10:0] touchX;
 input [9:0] touchY;
+
+input [3:0] mtl_mode;
+input mtl_reset;
+
+output [31:0] mtl_counter;
+output mtl_irq;
 
 //=============================================================================
 // REG/WIRE declarations
@@ -399,6 +410,13 @@ parameter Ylength = 160;
 // Used to count the X;
 	always_ff @ (posedge iCLK or negedge iRST_n)
 		if(!iRST_n)
+			begin 
+				Counter_Reg <= 2'b0;
+				Counter_X_Reg <= 9'b0;
+				Counter_Y_Reg <= 9'b0;
+				Case_Reg <= 12'hfff;
+			end
+		else if(mtl_reset)
 			begin 
 				Counter_Reg <= 2'b0;
 				Counter_X_Reg <= 9'b0;
