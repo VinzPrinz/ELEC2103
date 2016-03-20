@@ -503,11 +503,14 @@ always @ (posedge clk)
 		end
 	end
 	
-	
+	wire [31:0] Yflag; 
+	assign Yflag = VY + 32'd1;
 // FSM to choose the position of jean-didier
 	always @ (posedge clk)
-		if(rst || Y1 + VY < 0)
+		if(rst)
 			Y1 <= 10;
+		else if	(Y1+VY >= 320-L1 && VY[31])
+			Y1 <= 320-L1;
 		else if( Y1+VY >= (320-L1))
 			Y1 <= 320-L1;
 		else if( cnt == 32'h000ffffe)
@@ -516,7 +519,7 @@ always @ (posedge clk)
 			Y1 <= Y1;
 			
 	always @ (posedge clk)
-		if(rst || X1 + VX < 0)
+		if(rst || X1 + VX < 1)
 			X1 <= 10;
 		else if( X1+VX >= (240-H1) && ~VX[31]) // VX positif
 			X1 <= 240-H1;
@@ -529,17 +532,6 @@ always @ (posedge clk)
 		else	
 			X1 <= X1;
 			
-	/*always @ (posedge clk)
-		if(rst || bufferFlag_wire == 1'b0)
-			X1C <= lt24_coin_x0;
-		else if (rst || X1C + VXC < 0)
-			X1C <= lt24_coin_x0;
-		else if( X1C+VXC >= (240-H1)) // VX positif
-			X1C <= 1+H1;
-		else if( cnt == 32'h000ffffe) // VX positif
-			X1C <= X1C+VXC;
-		else
-			X1C <= X1C;*/
 		always @ (posedge clk)
 		if (rst || X1C + VXC < 1)
 			X1C <= 240-H1 ;
@@ -551,18 +543,6 @@ always @ (posedge clk)
 			X1C <= X1C+VXC;
 		else
 			X1C <= X1C;
-			
-	/*always @ (posedge clk)
-		if(rst || bufferFlag_wire == 1'b0)
-			Y1C <= lt24_coin_y0;
-		else if(rst || Y1C + VYC < 0)
-			Y1C <= lt24_coin_y0;
-		else if( Y1C+VYC >= (320-L1))
-			Y1C <= 1+L1;
-		else if( cnt == 32'h000ffffe)
-			Y1C <= Y1C+VYC;
-		else
-			Y1C <= Y1C;*/
 			
 	always @ (posedge clk)
 		if(rst || Y1C + VYC < 1)

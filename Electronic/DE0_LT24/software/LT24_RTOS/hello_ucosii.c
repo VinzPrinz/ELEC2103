@@ -218,6 +218,7 @@ int game_over( alt_video_display Display ,TOUCH_HANDLE *pTouch , char *str){
 #define myCyclone_End_Fight      2
 #define myCyclone_Start_Coin     3
 #define myCyclone_End_Coin       4
+#define myCyclone_Wait			 5
 
 
 
@@ -230,9 +231,9 @@ OS_STK    task_game_over_stk[TASK_STACKSIZE];
 
 /* Definition of Task Priorities*/
 #define TASK_SEND_DATA_PRIORITY   	1
-#define TASK_GAME1_PRIORITY      	2
+#define TASK_GAME1_PRIORITY      	3
 #define TASK_GAME2_PRIORITY      	4
-#define TASK_GAME_OVER_PRIORITY 	3
+#define TASK_GAME_OVER_PRIORITY 	2
 
 #define DELAY	5
 
@@ -249,6 +250,7 @@ OS_EVENT *Flag2;
 OS_EVENT *touchX;
 OS_EVENT *touchY;
 OS_EVENT *irq_msg;
+OS_EVENT *GameOverBox;
 
 void task_send_data(void* pdata);
 void task_game1(void* pdata);
@@ -258,8 +260,10 @@ int init();
 
 int counter = 0 ;
 char LT24_state = 0;
-int Operation = myCyclone_Start_Coin;
+int Operation = myCyclone_Wait;
 int coins=0;
+int myOp;
+
 
 alt_video_display Display;
 TOUCH_HANDLE *pTouch;
@@ -274,12 +278,17 @@ void LT24_ISR(void *context){
 	counter++;
 	if(Operation == myCyclone_Start_Coin){
 		coins++;
-		printf("newCoins");
+		myOp = myCyclone_Start_Coin;
+	}
+	else if (Operation == myCyclone_Start_Fight || Operation == myCyclone_End_Coin){
+		myOp = myCyclone_Wait;
+	}
+	if(Operation == myCyclone_Start_Fight){
+		 IOWR(CYCLONESPI_BASE+(4*0x02) , 0 , cnt);
 	}
 
-	OSMboxPost(Flag1, (void*)&Operation);
+	OSMboxPost(Flag2, (void*)&myOp);
 
-	printf("lol");
 }
 
 int init(){
@@ -327,7 +336,7 @@ int init(){
 	Flag1 = OSMboxCreate((void*)0);
 	Flag2 = OSMboxCreate((void*)0);
 	irq_msg = OSMboxCreate((void*)0);
-
+	GameOverBox = OSMboxCreate((void*)0);
 
 	IOWR(LT24_INTERFACE_IRQ_0_BASE + (4*7),0 , 321);
 
@@ -386,10 +395,8 @@ void task_game_over(void* pdata)
 		 OSSemPend(Screen, 0,&err);
 		 Clr_BUFFER_FLAG();
 
-		 X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
-		 Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
-
-
+		 //X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
+		 //Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
 		 Display.interlace = 0;
 		 Display.bytes_per_pixel = 2;
 		 Display.color_depth = 16;
@@ -399,14 +406,12 @@ void task_game_over(void* pdata)
 		 vid_draw_box (0, 0,SCREEN_WIDTH, SCREEN_HEIGHT, 0x00f80000, 1, &Display);
 		 vid_print_string_alpha(0, 0, 0xff00ff, 0xffffff, tahomabold_20, &Display, "hello");
 
-		 X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
-		 Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
-		 OSMboxPost(irq_msg , (void*)&counter);
+		 //X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
+		 //Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
 
-		 printf("in game over \n");
+		 int *lol = (int *)OSMboxPend(GameOverBox , 0 , &err);
 		 OSSemPost(Screen);
 
-		 Set_BUFFER_FLAG();
 		 OSTimeDly(DELAY);
 	 }
 }
@@ -418,6 +423,8 @@ void task_send_data(void* pdata)
 	char game_on = 1;
 
 	Clr_BUFFER_FLAG();
+	int previousOp = 1;
+	int newOp = 0;
 
 	while(1){
 		if(Touch_GetXY(pTouch, &X, &Y)){
@@ -430,10 +437,13 @@ void task_send_data(void* pdata)
 
 		OSTimeDly(DELAY);
 
-		int newOp = IORD(CYCLONESPI_BASE+(4*0x12),0); // read the op asked by pic32
+		previousOp = newOp;
+		newOp = IORD(CYCLONESPI_BASE+(4*0x12),0); // read the op asked by pic32
+		int *opIrq = (int *)OSMboxAccept(Flag2);
+		//printf("in newOp %d Op %d \n" , newOp , Operation);
 
-		if (newOp != Operation && newOp !=0){
-			printf("in newOp");
+		if (newOp != Operation && newOp != previousOp && newOp !=0 && (Operation==myCyclone_Wait|| Operation == myCyclone_End_Fight || Operation == myCyclone_End_Coin || Operation == myCyclone_Start_Coin)){
+			printf("in newOp %d \n" , newOp);
 			switch(newOp){
 				case myCyclone_Start_Fight: OSSemPost(Game2); game_on = 0;
 											break;
@@ -446,11 +456,26 @@ void task_send_data(void* pdata)
 				default:OSSemPost(Game1); game_on = 1;
 						coins=0;
 						break;
-
 			}
-			Operation = newOp;
-		}
+			if(Operation == myCyclone_Wait || Operation == myCyclone_End_Coin || newOp == myCyclone_Start_Fight){
+				OSMboxPost(GameOverBox , (void *)&Operation);
+				printf("poster to gameover \n");
+			}
 
+			if(opIrq == NULL){
+				OSMboxPost(Flag1, (void*)&newOp);
+				Operation = newOp;
+				printf("posted to task game |||||||| new op %d \n" , newOp);
+			}
+			else{
+				OSMboxPost(Flag1 , (void*) opIrq);
+				Operation = *opIrq;
+			}
+		}else if(opIrq !=NULL){
+			OSMboxPost(Flag1 , (void*) opIrq);
+			Operation = *opIrq;
+			printf("sended to task game %d  \n" , *opIrq);
+		}
 	}
 }
 
@@ -462,44 +487,45 @@ void task_game1(void* pdata)
     int err;
 	unsigned int *X, *Y;
     int  *op;
-    int acctualOp = myCyclone_Start_Coin;
+    int acctualOp = myCyclone_Wait ;
 
 
-	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*9),0 , 1); // set default speed to 1
-	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*10),0 , 1);
+	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*9),0 , 0); // set default speed to 1
+	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*10),0 , 0);
 
 	srand(time(NULL)); // initialisation of rand
+	Set_BUFFER_FLAG();
+	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*7),0 , rand() % 220);
+	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*8),0 , rand() % 300);
 
     while(1){
     	op = NULL;
     	OSSemPend(Screen , 0 , &err);
     	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 1); // select the first game
 
-    	Set_BUFFER_FLAG();
     	printf("Started Game1\n");
+		Set_BUFFER_FLAG();
 
-    	while(op==NULL || *op == myCyclone_Start_Coin || *op==myCyclone_Start_Fight){
+    	while(op==NULL || *op == myCyclone_Start_Coin || *op == myCyclone_Start_Fight){
 
 			int vx = IORD(LT24_INTERFACE_IRQ_0_BASE+(4*5),0);
 			int vy = IORD(LT24_INTERFACE_IRQ_0_BASE+(4*6),0);
 
-			printf("x %d y %d \n" , vx , vy);
     		if(acctualOp == myCyclone_Start_Coin){
     			szXYZ = (alt_16 *) OSMboxPend(Accel , 0 , &err);
-    			//if(szXYZ[0] < 255 && szXYZ[0] > -255 && szXYZ[1] < 255 && szXYZ[1] > -255){
     			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/50);
     			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/50);
-    			printf("up date speed \n");
-    			//}
     		}
-
 
     		else if (acctualOp == myCyclone_Start_Fight){
-    			X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
-    			Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
-    			LCD_WR_DATA(*Y);
-    			LCD_WR_REG(*X);
+    			X = (unsigned int *)OSMboxAccept(touchX);
+    			if(X !=NULL){
+    				Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
+    				LCD_WR_DATA(*Y);
+    				LCD_WR_REG(*X);
+    			}
     		}
+
     		OSTimeDly(DELAY);
 
     		if(op != NULL && *op == myCyclone_Start_Coin ){
@@ -507,68 +533,34 @@ void task_game1(void* pdata)
     			int vy = rand()%3 -1;
     			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*9),0 , vx);
     			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*10),0 , vy);
-    			printf("up data speed %d %d %d rand\n" , vx , vy , rand());
     	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 1);
-
     	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*7),0 , rand() % 220);
     	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*8),0 , rand() % 300);
-
-    			// reset the buffer
     			Clr_BUFFER_FLAG();
     			Set_BUFFER_FLAG();
     			acctualOp = *op;
     		}
     		else if (op!=NULL && *op==myCyclone_Start_Fight){
+    			printf("init the fight \n");
+    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0);
     			X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
     			Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
-    			LCD_WR_DATA(*Y);
-    			LCD_WR_REG(*X);
-    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0);
+    			//LCD_WR_DATA(*Y);
+    			//LCD_WR_REG(*X);
     			Clr_BUFFER_FLAG();
     			Set_BUFFER_FLAG();
     			acctualOp = *op;
     		}
+
     		op = (int *)OSMboxAccept(Flag1);
-    		if(op != NULL)
-    			printf("this is op %d \n" , *op);
-
-
+    		if(op != NULL){
+    			acctualOp = *op;
+    			printf("this is op in task game %d \n" , *op);
+    		}
     	}
-    	printf("release\n");
+
     	OSSemPost(Screen);
+		OSTimeDly(DELAY);
+		printf("release game \n");
 	}
-}
-
-/* Used for hardware game1
- * Readdata from mailbox and send it to hardware*/
-void task_game2(void* pdata)
-{
-    alt_16 *szXYZ;
-	unsigned int *X, *Y;
-    int err;
-    bool flag;
-    char *msg;
-
-    //while(1)
-
-    /*while(1){
-    	unsigned int *X, *Y;
-    	OSSemPend(Game2 , 0 , &err);
-    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0);
-    	Set_BUFFER_FLAG();
-    	printf("Started Game2\n");
-    	flag = 1;
-		while(flag){
-			X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
-			Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
-			LCD_WR_DATA(*Y);
-			LCD_WR_REG(*X);
-
-			msg = (char *)OSMboxAccept(Flag2);
-			if(msg != NULL)
-				flag = 0;
-
-			OSTimeDly(DELAY);
-		}
-	}*/
 }
