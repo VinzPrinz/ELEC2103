@@ -51,7 +51,13 @@ module LT24_buffer(
 	lt24_pattern,
 	lt24_counter,
 	VX,
-	VY
+	VY,
+	lt24_coin_x,
+	lt24_coin_y,
+	lt24_coin_x0,
+	lt24_coin_y0,
+	lt24_coin_vx0,
+	lt24_coin_vy0
 );
 
 input clk;
@@ -106,6 +112,16 @@ output 	wire				lt24_finish;
 input		wire	[11:0]	lt24_pattern;
 output	wire	[31:0]	lt24_counter;
 input 	wire [31:0]	VX , VY;    
+
+output wire [31:0] lt24_coin_x;
+output wire [31:0] lt24_coin_y;
+input wire [31:0] lt24_coin_x0;
+input wire [31:0] lt24_coin_y0;
+input wire [31:0] lt24_coin_vx0;
+input wire [31:0] lt24_coin_vy0;
+
+assign lt24_coin_x = X1;
+assign lt24_coin_y = Y1;
 
 reg				lt24_finish_reg;
 reg	[31:0]	lt24_counter_reg;
@@ -265,8 +281,13 @@ reg [10:0]	X1 , Y1;
 reg [31:0]  cnt;
 wire displayCharact;
 
-parameter VXC = 1;
-parameter VYC = 1;
+wire [31:0] VXC , VYC;
+//parameter VXC = 1;
+//parameter VYC = 1;
+//wire [10:0] VYC , VXC;
+
+assign VXC = lt24_coin_vx0;
+assign VYC = lt24_coin_vy0;
 reg [10:0]	X1C , Y1C;
 //parameter X1C = 100;
 //parameter Y1C = 100;
@@ -508,9 +529,22 @@ always @ (posedge clk)
 		else	
 			X1 <= X1;
 			
-	always @ (posedge clk)
-		if(rst || X1C + VXC < 0)
+	/*always @ (posedge clk)
+		if(rst || bufferFlag_wire == 1'b0)
+			X1C <= lt24_coin_x0;
+		else if (rst || X1C + VXC < 0)
+			X1C <= lt24_coin_x0;
+		else if( X1C+VXC >= (240-H1)) // VX positif
+			X1C <= 1+H1;
+		else if( cnt == 32'h000ffffe) // VX positif
+			X1C <= X1C+VXC;
+		else
+			X1C <= X1C;*/
+		always @ (posedge clk)
+		if (rst || X1C + VXC < 0)
 			X1C <= 10;
+		else if (bufferFlag_wire == 1'b0)
+			X1C <= lt24_coin_x0;
 		else if( X1C+VXC >= (240-H1)) // VX positif
 			X1C <= 1 + H1;
 		else if( cnt == 32'h000ffffe) // VX positif
@@ -518,11 +552,25 @@ always @ (posedge clk)
 		else
 			X1C <= X1C;
 			
+	/*always @ (posedge clk)
+		if(rst || bufferFlag_wire == 1'b0)
+			Y1C <= lt24_coin_y0;
+		else if(rst || Y1C + VYC < 0)
+			Y1C <= lt24_coin_y0;
+		else if( Y1C+VYC >= (320-L1))
+			Y1C <= 1+L1;
+		else if( cnt == 32'h000ffffe)
+			Y1C <= Y1C+VYC;
+		else
+			Y1C <= Y1C;*/
+			
 	always @ (posedge clk)
 		if(rst || Y1C + VYC < 0)
 			Y1C <= 10;
+		else if( bufferFlag_wire == 1'b0)
+			Y1C <= lt24_coin_y0;
 		else if( Y1C+VYC >= (320-L1))
-			Y1C <= 1+ L1;
+			Y1C <= 1  + L1;
 		else if( cnt == 32'h000ffffe)
 			Y1C <= Y1C+VYC;
 		else

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="DE0_LT24_SOPC" kind="DE0_LT24_SOPC" version="1.0" fabric="QSYS">
  <!-- Format version 15.1 185 (Future versions may contain additional information.) -->
- <!-- 2016.03.12.13:28:09 -->
+ <!-- 2016.03.19.20:51:41 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1457785689</value>
+  <value>1458417101</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -12989,6 +12989,42 @@ parameters are a RESULT of the module parameters. -->
     <direction>Output</direction>
     <width>32</width>
     <role>vy</role>
+   </port>
+   <port>
+    <name>lt24_coin_x0</name>
+    <direction>Output</direction>
+    <width>32</width>
+    <role>lt24_coin_x0</role>
+   </port>
+   <port>
+    <name>lt24_coin_y0</name>
+    <direction>Output</direction>
+    <width>32</width>
+    <role>lt42_coin_y0</role>
+   </port>
+   <port>
+    <name>lt24_coin_x</name>
+    <direction>Input</direction>
+    <width>32</width>
+    <role>lt24_coinx</role>
+   </port>
+   <port>
+    <name>lt24_coin_y</name>
+    <direction>Input</direction>
+    <width>32</width>
+    <role>lt24_coin_y</role>
+   </port>
+   <port>
+    <name>lt24_coin_vx0</name>
+    <direction>Output</direction>
+    <width>32</width>
+    <role>lt24_coin_vx0</role>
+   </port>
+   <port>
+    <name>lt24_coin_vy0</name>
+    <direction>Output</direction>
+    <width>32</width>
+    <role>lt24_coin_vy0</role>
    </port>
   </interface>
  </module>
