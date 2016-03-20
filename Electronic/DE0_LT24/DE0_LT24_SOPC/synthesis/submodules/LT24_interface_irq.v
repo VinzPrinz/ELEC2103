@@ -83,7 +83,7 @@ module LT24_interface_irq (
 			lt24_coin_y0_reg <= 32'b0;
 			lt24_coin_vx0_reg <= 32'b0;
 			lt24_coin_vy0_reg <= 32'b0;
-			//avs_s0_readdata_reg <= 32'b0;
+//			avs_s0_readdata_reg <= 32'b0;
 		end
 	else if(avs_s0_read)
 		case(avs_s0_address[3:0])

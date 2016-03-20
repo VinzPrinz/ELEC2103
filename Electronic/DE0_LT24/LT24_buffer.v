@@ -541,8 +541,8 @@ always @ (posedge clk)
 		else
 			X1C <= X1C;*/
 		always @ (posedge clk)
-		if (rst || X1C + VXC < 0)
-			X1C <= 10;
+		if (rst || X1C + VXC < 1)
+			X1C <= 240-H1 ;
 		else if (bufferFlag_wire == 1'b0)
 			X1C <= lt24_coin_x0;
 		else if( X1C+VXC >= (240-H1)) // VX positif
@@ -565,8 +565,8 @@ always @ (posedge clk)
 			Y1C <= Y1C;*/
 			
 	always @ (posedge clk)
-		if(rst || Y1C + VYC < 0)
-			Y1C <= 10;
+		if(rst || Y1C + VYC < 1)
+			Y1C <= 320-L1;
 		else if( bufferFlag_wire == 1'b0)
 			Y1C <= lt24_coin_y0;
 		else if( Y1C+VYC >= (320-L1))

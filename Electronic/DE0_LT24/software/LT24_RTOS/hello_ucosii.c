@@ -480,15 +480,20 @@ void task_game1(void* pdata)
 
     	while(op==NULL || *op == myCyclone_Start_Coin || *op==myCyclone_Start_Fight){
 
+			int vx = IORD(LT24_INTERFACE_IRQ_0_BASE+(4*5),0);
+			int vy = IORD(LT24_INTERFACE_IRQ_0_BASE+(4*6),0);
+
+			printf("x %d y %d \n" , vx , vy);
     		if(acctualOp == myCyclone_Start_Coin){
     			szXYZ = (alt_16 *) OSMboxPend(Accel , 0 , &err);
-    			if(szXYZ[0] < 255 && szXYZ[0] > -255 && szXYZ[1] < 255 && szXYZ[1] > -255){
+    			//if(szXYZ[0] < 255 && szXYZ[0] > -255 && szXYZ[1] < 255 && szXYZ[1] > -255){
     			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/50);
     			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/50);
     			printf("up date speed \n");
-    			}
-
+    			//}
     		}
+
+
     		else if (acctualOp == myCyclone_Start_Fight){
     			X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
     			Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
