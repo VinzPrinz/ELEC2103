@@ -118,6 +118,12 @@ module DE0_LT24_SOPC (
 	wire         mm_interconnect_0_lt24_interface_irq_0_avs_s0_read;           // mm_interconnect_0:LT24_interface_irq_0_avs_s0_read -> LT24_interface_irq_0:avs_s0_read
 	wire         mm_interconnect_0_lt24_interface_irq_0_avs_s0_write;          // mm_interconnect_0:LT24_interface_irq_0_avs_s0_write -> LT24_interface_irq_0:avs_s0_write
 	wire  [31:0] mm_interconnect_0_lt24_interface_irq_0_avs_s0_writedata;      // mm_interconnect_0:LT24_interface_irq_0_avs_s0_writedata -> LT24_interface_irq_0:avs_s0_writedata
+	wire  [31:0] mm_interconnect_0_counter_0_avs_s0_readdata;                  // counter_0:avs_s0_readdata -> mm_interconnect_0:counter_0_avs_s0_readdata
+	wire         mm_interconnect_0_counter_0_avs_s0_waitrequest;               // counter_0:avs_s0_waitrequest -> mm_interconnect_0:counter_0_avs_s0_waitrequest
+	wire   [7:0] mm_interconnect_0_counter_0_avs_s0_address;                   // mm_interconnect_0:counter_0_avs_s0_address -> counter_0:avs_s0_address
+	wire         mm_interconnect_0_counter_0_avs_s0_read;                      // mm_interconnect_0:counter_0_avs_s0_read -> counter_0:avs_s0_read
+	wire         mm_interconnect_0_counter_0_avs_s0_write;                     // mm_interconnect_0:counter_0_avs_s0_write -> counter_0:avs_s0_write
+	wire  [31:0] mm_interconnect_0_counter_0_avs_s0_writedata;                 // mm_interconnect_0:counter_0_avs_s0_writedata -> counter_0:avs_s0_writedata
 	wire  [31:0] mm_interconnect_0_cpu_jtag_debug_module_readdata;             // CPU:jtag_debug_module_readdata -> mm_interconnect_0:CPU_jtag_debug_module_readdata
 	wire         mm_interconnect_0_cpu_jtag_debug_module_waitrequest;          // CPU:jtag_debug_module_waitrequest -> mm_interconnect_0:CPU_jtag_debug_module_waitrequest
 	wire         mm_interconnect_0_cpu_jtag_debug_module_debugaccess;          // mm_interconnect_0:CPU_jtag_debug_module_debugaccess -> CPU:jtag_debug_module_debugaccess
@@ -222,7 +228,7 @@ module DE0_LT24_SOPC (
 	wire         rst_controller_001_reset_out_reset;                           // rst_controller_001:reset_out -> [CPU:reset_n, JTAG_UART:rst_n, LT24_CTRL:reset_n, LT24_LCD_RSTN:reset_n, LT24_TOUCH_BUSY:reset_n, LT24_TOUCH_PENIRQ_N:reset_n, LT24_TOUCH_SPI:reset_n, SDRAM_Controler:reset_n, irq_mapper:reset, irq_synchronizer:sender_reset, irq_synchronizer_001:sender_reset, irq_synchronizer_002:sender_reset, irq_synchronizer_003:sender_reset, irq_synchronizer_004:sender_reset, mm_interconnect_0:CPU_reset_n_reset_bridge_in_reset_reset, rst_translator_001:in_reset]
 	wire         rst_controller_001_reset_out_reset_req;                       // rst_controller_001:reset_req -> [CPU:reset_req, rst_translator_001:reset_req_in]
 	wire         rst_controller_002_reset_out_reset;                           // rst_controller_002:reset_out -> [KEY:reset_n, LED_CTRL:RST, TIMER:reset_n, irq_synchronizer_002:receiver_reset, mm_interconnect_0:LED_CTRL_reset_sink_reset_bridge_in_reset_reset]
-	wire         rst_controller_003_reset_out_reset;                           // rst_controller_003:reset_out -> [LT24_buffer_flag:reset_n, LT24_interface_irq_0:reset_reset, gsensor_int:reset_n, gsensor_spi:reset_n, irq_synchronizer:receiver_reset, irq_synchronizer_001:receiver_reset, irq_synchronizer_003:receiver_reset, irq_synchronizer_004:receiver_reset, mm_interconnect_0:LT24_interface_irq_0_reset_reset_bridge_in_reset_reset, mm_interconnect_0:cycloneSPI_reset_sink_reset_bridge_in_reset_reset, sys_clk_timer:reset_n, timer_timestamp:reset_n]
+	wire         rst_controller_003_reset_out_reset;                           // rst_controller_003:reset_out -> [LT24_buffer_flag:reset_n, LT24_interface_irq_0:reset_reset, counter_0:reset_reset, gsensor_int:reset_n, gsensor_spi:reset_n, irq_synchronizer:receiver_reset, irq_synchronizer_001:receiver_reset, irq_synchronizer_003:receiver_reset, irq_synchronizer_004:receiver_reset, mm_interconnect_0:LT24_interface_irq_0_reset_reset_bridge_in_reset_reset, mm_interconnect_0:cycloneSPI_reset_sink_reset_bridge_in_reset_reset, sys_clk_timer:reset_n, timer_timestamp:reset_n]
 
 	DE0_LT24_SOPC_ALT_PLL alt_pll (
 		.clk       (clk_clk),                                       //       inclk_interface.clk
@@ -457,6 +463,17 @@ module DE0_LT24_SOPC (
 		.reset_req2  (rst_controller_reset_out_reset_req)              //       .reset_req
 	);
 
+	counter counter_0 (
+		.avs_s0_address     (mm_interconnect_0_counter_0_avs_s0_address),     // avs_s0.address
+		.avs_s0_read        (mm_interconnect_0_counter_0_avs_s0_read),        //       .read
+		.avs_s0_readdata    (mm_interconnect_0_counter_0_avs_s0_readdata),    //       .readdata
+		.avs_s0_write       (mm_interconnect_0_counter_0_avs_s0_write),       //       .write
+		.avs_s0_writedata   (mm_interconnect_0_counter_0_avs_s0_writedata),   //       .writedata
+		.avs_s0_waitrequest (mm_interconnect_0_counter_0_avs_s0_waitrequest), //       .waitrequest
+		.clock_clk          (clk_clk),                                        //  clock.clk
+		.reset_reset        (rst_controller_003_reset_out_reset)              //  reset.reset
+	);
+
 	MyCycloneSPI cyclonespi (
 		.clk                (clk_clk),                                         //    clock_sink.clk
 		.reset              (~reset_reset_n),                                  //    reset_sink.reset
@@ -579,6 +596,12 @@ module DE0_LT24_SOPC (
 		.background_mem_s1_byteenable                              (mm_interconnect_0_background_mem_s1_byteenable),               //                                                    .byteenable
 		.background_mem_s1_chipselect                              (mm_interconnect_0_background_mem_s1_chipselect),               //                                                    .chipselect
 		.background_mem_s1_clken                                   (mm_interconnect_0_background_mem_s1_clken),                    //                                                    .clken
+		.counter_0_avs_s0_address                                  (mm_interconnect_0_counter_0_avs_s0_address),                   //                                    counter_0_avs_s0.address
+		.counter_0_avs_s0_write                                    (mm_interconnect_0_counter_0_avs_s0_write),                     //                                                    .write
+		.counter_0_avs_s0_read                                     (mm_interconnect_0_counter_0_avs_s0_read),                      //                                                    .read
+		.counter_0_avs_s0_readdata                                 (mm_interconnect_0_counter_0_avs_s0_readdata),                  //                                                    .readdata
+		.counter_0_avs_s0_writedata                                (mm_interconnect_0_counter_0_avs_s0_writedata),                 //                                                    .writedata
+		.counter_0_avs_s0_waitrequest                              (mm_interconnect_0_counter_0_avs_s0_waitrequest),               //                                                    .waitrequest
 		.CPU_jtag_debug_module_address                             (mm_interconnect_0_cpu_jtag_debug_module_address),              //                               CPU_jtag_debug_module.address
 		.CPU_jtag_debug_module_write                               (mm_interconnect_0_cpu_jtag_debug_module_write),                //                                                    .write
 		.CPU_jtag_debug_module_read                                (mm_interconnect_0_cpu_jtag_debug_module_read),                 //                                                    .read

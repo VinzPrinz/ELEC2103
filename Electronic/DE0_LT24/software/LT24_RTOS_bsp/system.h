@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'DE0_LT24_SOPC'
  * SOPC Builder design path: ../../DE0_LT24_SOPC.sopcinfo
  *
- * Generated: Sat Mar 12 11:58:13 CET 2016
+ * Generated: Sun Mar 20 19:17:44 CET 2016
  */
 
 /*
@@ -149,6 +149,7 @@
 #define __ALTERA_AVALON_TIMER
 #define __ALTERA_NIOS2_QSYS
 #define __ALTPLL
+#define __COUNTER
 #define __CYCLONESPI
 #define __LED_CONTROLLER
 #define __LT24_CONTROLLER
@@ -510,6 +511,20 @@
 #define BACKGROUND_MEM_SPAN 12800
 #define BACKGROUND_MEM_TYPE "altera_avalon_onchip_memory2"
 #define BACKGROUND_MEM_WRITABLE 1
+
+
+/*
+ * counter_0 configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_counter_0 counter
+#define COUNTER_0_BASE 0x4010000
+#define COUNTER_0_IRQ -1
+#define COUNTER_0_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define COUNTER_0_NAME "/dev/counter_0"
+#define COUNTER_0_SPAN 1024
+#define COUNTER_0_TYPE "counter"
 
 
 /*

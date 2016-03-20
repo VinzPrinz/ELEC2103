@@ -270,10 +270,10 @@ TOUCH_HANDLE *pTouch;
 
 void LT24_ISR(void *context){
 	IOWR(LT24_INTERFACE_IRQ_0_BASE + (4*7),0 , 321);
-	int cnt = IORD(LT24_INTERFACE_IRQ_0_BASE + (4*1),0);
+	int cnt = IORD(COUNTER_0_BASE,0);
 
 	char str[64];
-	sprintf(str , "This is counter %x  , %x \n" ,cnt ,  cnt/(256*256*256));
+	sprintf(str , "This is counter %x  , %x \n" ,cnt ,  cnt/(256*256*32));
 	printf(str);
 	counter++;
 	if(Operation == myCyclone_Start_Coin){
@@ -284,7 +284,7 @@ void LT24_ISR(void *context){
 		myOp = myCyclone_Wait;
 	}
 	if(Operation == myCyclone_Start_Fight){
-		 IOWR(CYCLONESPI_BASE+(4*0x02) , 0 , cnt);
+		 IOWR(CYCLONESPI_BASE+(4*0x02) , 0 , cnt/(256*256*32));
 	}
 
 	OSMboxPost(Flag2, (void*)&myOp);
@@ -410,6 +410,7 @@ void task_game_over(void* pdata)
 		 //Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
 
 		 int *lol = (int *)OSMboxPend(GameOverBox , 0 , &err);
+		 printf("Game over end \n");
 		 OSSemPost(Screen);
 
 		 OSTimeDly(DELAY);
@@ -457,7 +458,7 @@ void task_send_data(void* pdata)
 						coins=0;
 						break;
 			}
-			if(Operation == myCyclone_Wait || Operation == myCyclone_End_Coin || newOp == myCyclone_Start_Fight){
+			if(Operation == myCyclone_Wait || Operation == myCyclone_End_Coin || newOp == myCyclone_Start_Fight || newOp == myCyclone_Start_Coin){
 				OSMboxPost(GameOverBox , (void *)&Operation);
 				printf("poster to gameover \n");
 			}
@@ -547,6 +548,7 @@ void task_game1(void* pdata)
     			Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
     			//LCD_WR_DATA(*Y);
     			//LCD_WR_REG(*X);
+    			IOWR(COUNTER_0_BASE, 0 , 0);
     			Clr_BUFFER_FLAG();
     			Set_BUFFER_FLAG();
     			acctualOp = *op;

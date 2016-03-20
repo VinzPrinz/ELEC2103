@@ -67,7 +67,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
   </table>
   <table class="blueBar">
    <tr>
-    <td class="l">2016.03.19.20:51:42</td>
+    <td class="l">2016.03.20.19:13:57</td>
     <td class="r">Datasheet</td>
    </tr>
   </table>
@@ -135,6 +135,9 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
      <br/>&#160;&#160;
      <a href="#module_background_mem"><b>background_mem</b>
      </a> altera_avalon_onchip_memory2 15.1
+     <br/>&#160;&#160;
+     <a href="#module_counter_0"><b>counter_0</b>
+     </a> counter 1.0
      <br/>&#160;&#160;
      <a href="#module_cycloneSPI"><b>cycloneSPI</b>
      </a> cycloneSPI 1.0
@@ -367,6 +370,19 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
    <tr>
     <td class="slavem">s2&#160;</td>
     <td class="empty"></td>
+    <td class="empty"></td>
+   </tr>
+   <tr>
+    <td class="slavemodule">&#160;
+     <a href="#module_counter_0"><b>counter_0</b>
+     </a>
+    </td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+   </tr>
+   <tr>
+    <td class="slaveb">avs_s0&#160;</td>
+    <td class="addr"><span style="color:#989898">0x</span>04010000</td>
     <td class="empty"></td>
    </tr>
    <tr>
@@ -1414,7 +1430,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        <a href="#module_ALT_PLL">ALT_PLL</a>
       </td>
       <td class="from">c0&#160;&#160;</td>
-      <td class="main" rowspan="112">CPU</td>
+      <td class="main" rowspan="115">CPU</td>
      </tr>
      <tr>
       <td class="to">&#160;&#160;clk</td>
@@ -1567,6 +1583,22 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
       <td></td>
       <td></td>
       <td class="to">&#160;&#160;ins_irq0</td>
+     </tr>
+     <tr style="height:6px">
+      <td></td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="from">data_master&#160;&#160;</td>
+      <td class="neighbor" rowspan="2">
+       <a href="#module_counter_0">counter_0</a>
+      </td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="to">&#160;&#160;avs_s0</td>
      </tr>
      <tr style="height:6px">
       <td></td>
@@ -2479,7 +2511,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">dataSlaveMapParam</td>
-        <td class="parametervalue">&lt;address-map&gt;&lt;slave name='timer_timestamp.s1' start='0x0' end='0x20' /&gt;&lt;slave name='SDRAM_Controler.s1' start='0x2000000' end='0x4000000' /&gt;&lt;slave name='background_mem.s1' start='0x4000000' end='0x4003200' /&gt;&lt;slave name='pic_mem.s1' start='0x4004000' end='0x4007200' /&gt;&lt;slave name='CPU.jtag_debug_module' start='0x4008800' end='0x4009000' /&gt;&lt;slave name='LT24_interface_irq_0.avs_s0' start='0x4009000' end='0x4009400' /&gt;&lt;slave name='cycloneSPI.avs_s0' start='0x4009400' end='0x4009800' /&gt;&lt;slave name='LED_CTRL.avalon_slave_0' start='0x4009800' end='0x4009C00' /&gt;&lt;slave name='gsensor_spi.slave' start='0x4009C00' end='0x4009C40' /&gt;&lt;slave name='sys_clk_timer.s1' start='0x4009C40' end='0x4009C60' /&gt;&lt;slave name='LT24_TOUCH_SPI.spi_control_port' start='0x4009C60' end='0x4009C80' /&gt;&lt;slave name='TIMER.s1' start='0x4009C80' end='0x4009CA0' /&gt;&lt;slave name='gsensor_int.s1' start='0x4009CA0' end='0x4009CB0' /&gt;&lt;slave name='LT24_buffer_flag.s1' start='0x4009CB0' end='0x4009CC0' /&gt;&lt;slave name='LT24_TOUCH_BUSY.s1' start='0x4009CC0' end='0x4009CD0' /&gt;&lt;slave name='LT24_TOUCH_PENIRQ_N.s1' start='0x4009CD0' end='0x4009CE0' /&gt;&lt;slave name='LT24_LCD_RSTN.s1' start='0x4009CE0' end='0x4009CF0' /&gt;&lt;slave name='KEY.s1' start='0x4009CF0' end='0x4009D00' /&gt;&lt;slave name='ALT_PLL.pll_slave' start='0x4009D00' end='0x4009D10' /&gt;&lt;slave name='LT24_CTRL.avalon_slave_0' start='0x4009D10' end='0x4009D18' /&gt;&lt;slave name='JTAG_UART.avalon_jtag_slave' start='0x4009D18' end='0x4009D20' /&gt;&lt;/address-map&gt;</td>
+        <td class="parametervalue">&lt;address-map&gt;&lt;slave name='timer_timestamp.s1' start='0x0' end='0x20' /&gt;&lt;slave name='SDRAM_Controler.s1' start='0x2000000' end='0x4000000' /&gt;&lt;slave name='background_mem.s1' start='0x4000000' end='0x4003200' /&gt;&lt;slave name='pic_mem.s1' start='0x4004000' end='0x4007200' /&gt;&lt;slave name='CPU.jtag_debug_module' start='0x4008800' end='0x4009000' /&gt;&lt;slave name='LT24_interface_irq_0.avs_s0' start='0x4009000' end='0x4009400' /&gt;&lt;slave name='cycloneSPI.avs_s0' start='0x4009400' end='0x4009800' /&gt;&lt;slave name='LED_CTRL.avalon_slave_0' start='0x4009800' end='0x4009C00' /&gt;&lt;slave name='gsensor_spi.slave' start='0x4009C00' end='0x4009C40' /&gt;&lt;slave name='sys_clk_timer.s1' start='0x4009C40' end='0x4009C60' /&gt;&lt;slave name='LT24_TOUCH_SPI.spi_control_port' start='0x4009C60' end='0x4009C80' /&gt;&lt;slave name='TIMER.s1' start='0x4009C80' end='0x4009CA0' /&gt;&lt;slave name='gsensor_int.s1' start='0x4009CA0' end='0x4009CB0' /&gt;&lt;slave name='LT24_buffer_flag.s1' start='0x4009CB0' end='0x4009CC0' /&gt;&lt;slave name='LT24_TOUCH_BUSY.s1' start='0x4009CC0' end='0x4009CD0' /&gt;&lt;slave name='LT24_TOUCH_PENIRQ_N.s1' start='0x4009CD0' end='0x4009CE0' /&gt;&lt;slave name='LT24_LCD_RSTN.s1' start='0x4009CE0' end='0x4009CF0' /&gt;&lt;slave name='KEY.s1' start='0x4009CF0' end='0x4009D00' /&gt;&lt;slave name='ALT_PLL.pll_slave' start='0x4009D00' end='0x4009D10' /&gt;&lt;slave name='LT24_CTRL.avalon_slave_0' start='0x4009D10' end='0x4009D18' /&gt;&lt;slave name='JTAG_UART.avalon_jtag_slave' start='0x4009D18' end='0x4009D20' /&gt;&lt;slave name='counter_0.avs_s0' start='0x4010000' end='0x4010400' /&gt;&lt;/address-map&gt;</td>
        </tr>
        <tr>
         <td class="parametername">clockFrequency</td>
@@ -5052,6 +5084,69 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
     </tr>
    </table>
   </div>
+  <a name="module_counter_0"> </a>
+  <div>
+   <hr/>
+   <h2>counter_0</h2>counter v1.0
+   <br/>
+   <div class="greydiv">
+    <table class="connectionboxes">
+     <tr>
+      <td class="neighbor" rowspan="2">
+       <a href="#module_CPU">CPU</a>
+      </td>
+      <td class="from">data_master&#160;&#160;</td>
+      <td class="main" rowspan="7">counter_0</td>
+     </tr>
+     <tr>
+      <td class="to">&#160;&#160;avs_s0</td>
+     </tr>
+     <tr style="height:6px">
+      <td></td>
+     </tr>
+     <tr>
+      <td class="neighbor" rowspan="4">
+       <a href="#module_CLK_50">CLK_50</a>
+      </td>
+      <td class="from">clk&#160;&#160;</td>
+     </tr>
+     <tr>
+      <td class="to">&#160;&#160;clock</td>
+     </tr>
+     <tr>
+      <td class="from">clk_reset&#160;&#160;</td>
+     </tr>
+     <tr>
+      <td class="to">&#160;&#160;reset</td>
+     </tr>
+    </table>
+   </div>
+   <br/>
+   <br/>
+   <table class="flowbox">
+    <tr>
+     <td class="parametersbox">
+      <h2>Parameters</h2>
+      <table>
+       <tr>
+        <td class="parametername">deviceFamily</td>
+        <td class="parametervalue">UNKNOWN</td>
+       </tr>
+       <tr>
+        <td class="parametername">generateLegacySim</td>
+        <td class="parametervalue">false</td>
+       </tr>
+      </table>
+     </td>
+    </tr>
+   </table>&#160;&#160;
+   <table class="flowbox">
+    <tr>
+     <td class="parametersbox">
+      <h2>Software Assignments</h2>(none)</td>
+    </tr>
+   </table>
+  </div>
   <a name="module_cycloneSPI"> </a>
   <div>
    <hr/>
@@ -6019,7 +6114,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
   <table class="blueBar">
    <tr>
     <td class="l">generation took 0.02 seconds</td>
-    <td class="r">rendering took 0.17 seconds</td>
+    <td class="r">rendering took 0.19 seconds</td>
    </tr>
   </table>
  </body>
