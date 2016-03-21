@@ -24,9 +24,9 @@
 // agreement for further details.
 
 
-// $Id: //acds/rel/15.1/ip/merlin/altera_merlin_router/altera_merlin_router.sv.terp#1 $
+// $Id: //acds/rel/15.0/ip/merlin/altera_merlin_router/altera_merlin_router.sv.terp#1 $
 // $Revision: #1 $
-// $Date: 2015/08/09 $
+// $Date: 2015/02/08 $
 // $Author: swbranch $
 
 // -------------------------------------------------------
@@ -47,23 +47,23 @@ module MTL_SOPC_mm_interconnect_0_router_001_default_decode
      parameter DEFAULT_CHANNEL = 1,
                DEFAULT_WR_CHANNEL = -1,
                DEFAULT_RD_CHANNEL = -1,
-               DEFAULT_DESTID = 7 
+               DEFAULT_DESTID = 9 
    )
-  (output [81 - 78 : 0] default_destination_id,
-   output [9-1 : 0] default_wr_channel,
-   output [9-1 : 0] default_rd_channel,
-   output [9-1 : 0] default_src_channel
+  (output [86 - 83 : 0] default_destination_id,
+   output [11-1 : 0] default_wr_channel,
+   output [11-1 : 0] default_rd_channel,
+   output [11-1 : 0] default_src_channel
   );
 
   assign default_destination_id = 
-    DEFAULT_DESTID[81 - 78 : 0];
+    DEFAULT_DESTID[86 - 83 : 0];
 
   generate
     if (DEFAULT_CHANNEL == -1) begin : no_default_channel_assignment
       assign default_src_channel = '0;
     end
     else begin : default_channel_assignment
-      assign default_src_channel = 9'b1 << DEFAULT_CHANNEL;
+      assign default_src_channel = 11'b1 << DEFAULT_CHANNEL;
     end
   endgenerate
 
@@ -73,8 +73,8 @@ module MTL_SOPC_mm_interconnect_0_router_001_default_decode
       assign default_rd_channel = '0;
     end
     else begin : default_rw_channel_assignment
-      assign default_wr_channel = 9'b1 << DEFAULT_WR_CHANNEL;
-      assign default_rd_channel = 9'b1 << DEFAULT_RD_CHANNEL;
+      assign default_wr_channel = 11'b1 << DEFAULT_WR_CHANNEL;
+      assign default_rd_channel = 11'b1 << DEFAULT_RD_CHANNEL;
     end
   endgenerate
 
@@ -93,7 +93,7 @@ module MTL_SOPC_mm_interconnect_0_router_001
     // Command Sink (Input)
     // -------------------
     input                       sink_valid,
-    input  [95-1 : 0]    sink_data,
+    input  [100-1 : 0]    sink_data,
     input                       sink_startofpacket,
     input                       sink_endofpacket,
     output                      sink_ready,
@@ -102,8 +102,8 @@ module MTL_SOPC_mm_interconnect_0_router_001
     // Command Source (Output)
     // -------------------
     output                          src_valid,
-    output reg [95-1    : 0] src_data,
-    output reg [9-1 : 0] src_channel,
+    output reg [100-1    : 0] src_data,
+    output reg [11-1 : 0] src_channel,
     output                          src_startofpacket,
     output                          src_endofpacket,
     input                           src_ready
@@ -112,18 +112,18 @@ module MTL_SOPC_mm_interconnect_0_router_001
     // -------------------------------------------------------
     // Local parameters and variables
     // -------------------------------------------------------
-    localparam PKT_ADDR_H = 52;
+    localparam PKT_ADDR_H = 57;
     localparam PKT_ADDR_L = 36;
-    localparam PKT_DEST_ID_H = 81;
-    localparam PKT_DEST_ID_L = 78;
-    localparam PKT_PROTECTION_H = 85;
-    localparam PKT_PROTECTION_L = 83;
-    localparam ST_DATA_W = 95;
-    localparam ST_CHANNEL_W = 9;
+    localparam PKT_DEST_ID_H = 86;
+    localparam PKT_DEST_ID_L = 83;
+    localparam PKT_PROTECTION_H = 90;
+    localparam PKT_PROTECTION_L = 88;
+    localparam ST_DATA_W = 100;
+    localparam ST_CHANNEL_W = 11;
     localparam DECODER_TYPE = 0;
 
-    localparam PKT_TRANS_WRITE = 55;
-    localparam PKT_TRANS_READ  = 56;
+    localparam PKT_TRANS_WRITE = 60;
+    localparam PKT_TRANS_READ  = 61;
 
     localparam PKT_ADDR_W = PKT_ADDR_H-PKT_ADDR_L + 1;
     localparam PKT_DEST_ID_W = PKT_DEST_ID_H-PKT_DEST_ID_L + 1;
@@ -165,7 +165,7 @@ module MTL_SOPC_mm_interconnect_0_router_001
     assign src_startofpacket = sink_startofpacket;
     assign src_endofpacket   = sink_endofpacket;
     wire [PKT_DEST_ID_W-1:0] default_destid;
-    wire [9-1 : 0] default_src_channel;
+    wire [11-1 : 0] default_src_channel;
 
 
 
@@ -191,13 +191,13 @@ module MTL_SOPC_mm_interconnect_0_router_001
 
     // ( 0x8000 .. 0x10000 )
     if ( {address[RG:PAD0],{PAD0{1'b0}}} == 17'h8000   ) begin
-            src_channel = 9'b10;
-            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 7;
+            src_channel = 11'b10;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 9;
     end
 
     // ( 0x10800 .. 0x11000 )
     if ( {address[RG:PAD1],{PAD1{1'b0}}} == 17'h10800   ) begin
-            src_channel = 9'b01;
+            src_channel = 11'b01;
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 0;
     end
 

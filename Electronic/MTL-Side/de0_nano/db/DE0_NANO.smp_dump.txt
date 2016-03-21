@@ -21,16 +21,7 @@ c_state.ST_WRITE 1 0 0 1 0 0
 c_state.ST_ACK 1 0 1 0 0 0 
 c_state.ST_STOP 1 1 0 0 0 0 
 
-State Machine - |DE0_NANO|MTL_SOPC:u0|MTL_SOPC_CPU:cpu|MTL_SOPC_CPU_cpu:cpu|MTL_SOPC_CPU_cpu_nios2_oci:the_MTL_SOPC_CPU_cpu_nios2_oci|MTL_SOPC_CPU_cpu_debug_slave_wrapper:the_MTL_SOPC_CPU_cpu_debug_slave_wrapper|MTL_SOPC_CPU_cpu_debug_slave_tck:the_MTL_SOPC_CPU_cpu_debug_slave_tck|DRsize
-Name DRsize.101 DRsize.100 DRsize.011 DRsize.010 DRsize.001 DRsize.000 
-DRsize.000 0 0 0 0 0 0 
-DRsize.001 0 0 0 0 1 1 
-DRsize.010 0 0 0 1 0 1 
-DRsize.011 0 0 1 0 0 1 
-DRsize.100 0 1 0 0 0 1 
-DRsize.101 1 0 0 0 0 1 
-
-State Machine - |DE0_NANO|MySPI:MySPI_instance|SPI_state
+State Machine - |DE0_NANO|MTL_SOPC:u0|MyCycloneSPI:cyclonespi_0|MySPI_oli:SPI_inst|SPI_state
 Name SPI_state.S_End SPI_state.S_Data_11 SPI_state.S_Data_01 SPI_state.S_Data_00 SPI_state.S_Data SPI_state.S_Addr_11 SPI_state.S_Addr_01 SPI_state.S_Addr_00 SPI_state.S_Addr SPI_state.S_Wait 
 SPI_state.S_Wait 0 0 0 0 0 0 0 0 0 0 
 SPI_state.S_Addr 0 0 0 0 0 0 0 0 1 1 
@@ -42,3 +33,12 @@ SPI_state.S_Data_00 0 0 0 1 0 0 0 0 0 1
 SPI_state.S_Data_01 0 0 1 0 0 0 0 0 0 1 
 SPI_state.S_Data_11 0 1 0 0 0 0 0 0 0 1 
 SPI_state.S_End 1 0 0 0 0 0 0 0 0 1 
+
+State Machine - |DE0_NANO|MTL_SOPC:u0|MTL_SOPC_CPU:cpu|MTL_SOPC_CPU_nios2_oci:the_MTL_SOPC_CPU_nios2_oci|MTL_SOPC_CPU_jtag_debug_module_wrapper:the_MTL_SOPC_CPU_jtag_debug_module_wrapper|MTL_SOPC_CPU_jtag_debug_module_tck:the_MTL_SOPC_CPU_jtag_debug_module_tck|DRsize
+Name DRsize.101 DRsize.100 DRsize.011 DRsize.010 DRsize.001 DRsize.000 
+DRsize.000 0 0 0 0 0 0 
+DRsize.001 0 0 0 0 1 1 
+DRsize.010 0 0 0 1 0 1 
+DRsize.011 0 0 1 0 0 1 
+DRsize.100 0 1 0 0 0 1 
+DRsize.101 1 0 0 0 0 1 

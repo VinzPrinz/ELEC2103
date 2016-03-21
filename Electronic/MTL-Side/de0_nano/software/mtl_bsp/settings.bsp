@@ -2,11 +2,11 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Mar 17, 2016 12:05:54 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1458212754470</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>/home/obronchain/git_projects/ELEC2103/Electronic/MTL-Side/de0_nano/software/mtl_bsp</BspGeneratedLocation>
+        <BspGeneratedTimeStamp>21-mars-2016 15:37:42</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1458571062639</BspGeneratedUnixTimeStamp>
+        <BspGeneratedLocation>D:\ELEC\2103-Project\Electronique\IMPORTANT\de0_nano\software\MTL_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
-        <SopcDesignFile>../../MTL_SOPC.sopcinfo</SopcDesignFile>
+        <SopcDesignFile>..\..\MTL_SOPC.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
         <Cpu>CPU</Cpu>
         <SchemaVersion>1.9</SchemaVersion>
@@ -887,16 +887,22 @@
                 <Group xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
         </Setting>
         <MemoryMap>
+                <slaveDescriptor>mapTransfer</slaveDescriptor>
+                <addressRange>0x00000000 - 0x0000001F</addressRange>
+                <addressSpan>32</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>TURN</slaveDescriptor>
+                <addressRange>0x00000020 - 0x0000002F</addressRange>
+                <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
                 <slaveDescriptor>mem</slaveDescriptor>
                 <addressRange>0x00008000 - 0x0000CE1F</addressRange>
                 <addressSpan>20000</addressSpan>
                 <attributes>memory</attributes>
-        </MemoryMap>
-        <MemoryMap>
-                <slaveDescriptor>mtl_interface_irq_0</slaveDescriptor>
-                <addressRange>0x00011000 - 0x000113FF</addressRange>
-                <addressSpan>1024</addressSpan>
-                <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>TIMER</slaveDescriptor>
@@ -923,16 +929,22 @@
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>mapTransfer</slaveDescriptor>
-                <addressRange>0x00011450 - 0x0001145F</addressRange>
-                <addressSpan>16</addressSpan>
-                <attributes/>
-        </MemoryMap>
-        <MemoryMap>
                 <slaveDescriptor>JTAG_UART</slaveDescriptor>
                 <addressRange>0x00011460 - 0x00011467</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes>printable</attributes>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>mtl_interface_irq_0</slaveDescriptor>
+                <addressRange>0x00300000 - 0x003003FF</addressRange>
+                <addressSpan>1024</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>cycloneSPI_0</slaveDescriptor>
+                <addressRange>0x00300400 - 0x003007FF</addressRange>
+                <addressSpan>1024</addressSpan>
+                <attributes/>
         </MemoryMap>
         <LinkerSection>
                 <sectionName>.text</sectionName>

@@ -194,7 +194,7 @@ assign PIC32_SCK1A	= GPIO_2[2];  //Comes from master PIC clock
 assign PIC32_CS_FPGA	= GPIO_2[3];  //Assigned to CS_FPGA from the PIC
 
 //Interrupts:
-assign GPIO_2[4]     = PIC32_INT1;
+//assign GPIO_2[4]     = PIC32_INT1; //lol
 assign GPIO_2[5]     = PIC32_INT2;
 
 //Reset button:
@@ -248,37 +248,37 @@ assign gestureInfo[0] = 1'b0;
  *           Trigger enables writing the pixel to the SDRAM.
  */
 
-
-MySPI MySPI_instance (
-	.theClock(CLOCK_50), .theReset(PIC32_RESET),
-	.MySPI_clk(PIC32_SCK1A), .MySPI_cs(PIC32_CS_FPGA), .MySPI_sdi(PIC32_SDO1A), .MySPI_sdo(PIC32_SDI1A),
-	.Config(Config),
-	.Status(Status),
-	.Led70(Led70),
-	.Red(Red),
-	.Green(Green),
-	.Blue(Blue),
-	.ImgNum(ImgNum),
-	.Trigger(Trigger),
-	
-	.reg_gesture(gestureInfo),
-	.reg_xpos(reg_x1[7:0]),
-	.reg_ypos(reg_y1[7:0]),
-	
-	.draw_type(reg_draw_type),
-	.sdram_write_load(sdram_write_load)
-);
+//
+//MySPI MySPI_instance (
+//	.theClock(CLOCK_50), .theReset(PIC32_RESET),
+//	.MySPI_clk(PIC32_SCK1A), .MySPI_cs(PIC32_CS_FPGA), .MySPI_sdi(PIC32_SDO1A), .MySPI_sdo(PIC32_SDI1A),
+//	.Config(Config),
+//	.Status(Status),
+//	.Led70(Led70),
+//	.Red(Red),
+//	.Green(Green),
+//	.Blue(Blue),
+//	.ImgNum(ImgNum),
+//	.Trigger(Trigger),
+//	
+//	.reg_gesture(gestureInfo),
+//	.reg_xpos(reg_x1[7:0]),
+//	.reg_ypos(reg_y1[7:0]),
+//	
+//	.draw_type(reg_draw_type),
+//	.sdram_write_load(sdram_write_load)
+//);
 
 // ========================================================
 //   SOPC INSTANTION !! - see Qsys file
 // ========================================================
 
-wire [3:0] mtl_mode;
+logic [255:0] map;
+logic turn; // = 0 if player = red
+
 wire [31:0] mtl_counter;
-wire mtl_reset , mtl_irq;
-
-logic [127:0] map;
-
+wire [3:0] mtl_mode;
+wire mtl_reset ,mtl_irq;
 	MTL_SOPC u0 (
 		.clk_clk                            (CLOCK_50),
 		.from_key_export                    (KEY[1]),
@@ -286,19 +286,30 @@ logic [127:0] map;
 		.testled_external_connection_export (LED[3:0]),
 		.touchdata_ext_export               ({reg_x1,reg_y1,isTouchedBuff}),
 		
-		.maptransfer_map_map_line0              (map[15:0]),
-		.maptransfer_map_map_line1              (map[31:16]),
-		.maptransfer_map_map_line2              (map[47:32]),
-		.maptransfer_map_map_line3              (map[63:48]),
-		.maptransfer_map_map_line4              (map[79:64]),
-		.maptransfer_map_map_line5              (map[95:80]),
-		.maptransfer_map_map_line6              (map[111:96]),
-		.maptransfer_map_map_line7              (map[127:112]),
+		.maptransfer_map_map_line0              (map[31:0]),
+		.maptransfer_map_map_line1              (map[63:32]),
+		.maptransfer_map_map_line2              (map[95:64]),
+		.maptransfer_map_map_line3              (map[127:96]),
+		.maptransfer_map_map_line4              (map[159:128]),
+		.maptransfer_map_map_line5              (map[191:160]),
+		.maptransfer_map_map_line6              (map[223:192]),
+		.maptransfer_map_map_line7              (map[255:224]),
 		
-		.mtl_interface_irq_0_mtl_interface_mtl_irq     (mtl_irq),     // mtl_interface_irq_0_mtl_interface.mtl_irq
-		.mtl_interface_irq_0_mtl_interface_mtl_reset   (mtl_reset),   //                                  .mtl_reset
-		.mtl_interface_irq_0_mtl_interface_mtl_mode    (mtl_mode),    //                                  .mtl_mode
-		.mtl_interface_irq_0_mtl_interface_mtl_counter (mtl_counter)  //                                  .mtl_counter
+		.turn_ext_export                    (turn),
+		
+		.mtl_interface_irq_0_mtl_intreface_mtl_counter (mtl_counter), // mtl_interface_irq_0_mtl_intreface.mtl_counter
+		.mtl_interface_irq_0_mtl_intreface_mtl_irq     (mtl_irq),     //                                  .mtl_irq
+		.mtl_interface_irq_0_mtl_intreface_mtl_reset   (mtl_reset),   //                                  .mtl_reset
+		.mtl_interface_irq_0_mtl_intreface_mtl_mode    (mtl_mode),
+		
+		.cyclonespi_0_spi_interface_Config             (Config),             //        cyclonespi_0_spi_interface.Config
+		.cyclonespi_0_spi_interface_SPI_CS             (PIC32_CS_FPGA),             //                                  .SPI_CS
+		.cyclonespi_0_spi_interface_SPI_SDI            (PIC32_SDO1A),            //                                  .SPI_SDI
+		.cyclonespi_0_spi_interface_SPI_SDO            (PIC32_SDI1A),            //                                  .SPI_SDO
+		.cyclonespi_0_spi_interface_SPI_clk            (PIC32_SCK1A),            //                                  .SPI_clk
+		.cyclonespi_0_spi_interface_data_out           (),           //                                  .data_out
+		.cyclonespi_0_spi_interface_data_out_enable    (),    //                                  .data_out_enable
+		.cyclonespi_0_spi_interface_spi_irq            (GPIO_2[4])
 	);
 
 
@@ -473,6 +484,7 @@ logic [9:0]  oYpixel;
 // for test
 logic [7:0] testReg;
 // instantiate the map controller to produce base and max read addresses as a function of the current pixel position
+// useless
 mapController mapController_inst(.clk(iCLOCK_33), // iCLOCK?
 											.reset(dly_rst || PIC32_RESET),
 											.newFrame(newFrame),
@@ -484,16 +496,13 @@ mapController mapController_inst(.clk(iCLOCK_33), // iCLOCK?
 											.test(testReg));
 
 assign LED[6:4] = {reg_draw_type[1],testReg[5:4]};
-assign LED[7] = mtl_counter[10];
+assign LED[7] = turn;
 // This always block is synchronous with the LCD controller
 // and with the read side of the SDRAM controller.
 // Based on the current image, the base and max read
 // addresses are updated each time a frame ends, the
 // read FIFO is emptied as well when a new frame begins.
 // The signals endFrame and newFrame come from the LCD controller.
-
-wire inMapControl;
-assign inMapControl = (mtl_mode == 4'b0010);
 always_ff @(posedge CLOCK_33) begin
 
 	if (PIC32_RESET) begin
@@ -553,14 +562,15 @@ mtl_controller mtl_controller_inst (
 	.inR(Red),
 	.inG(Green),
 	.inB(Blue),
-	.inMapControl(reg_draw_type[1]),
+	//.inMapControl(reg_draw_type[1]),
 	.map(map),
 	.touchX(reg_x1),
 	.touchY(reg_y1),
+	
 	.mtl_reset(mtl_reset),
 	.mtl_mode(mtl_mode),
 	.mtl_counter(mtl_counter),
-	.mtl_irq(mtl_irq),
+	.mtl_irq(mtl_irq)
 );
 
 assign MTL_DCLK = iCLOCK_33;
@@ -769,17 +779,17 @@ module hold_buffer (
 		end else begin
 			if (trigger && !active)
 				active <= 1'b1;
-			else if (active && (count < 32'd25000000))
+			else if (active && (count < 32'd20000000))
 				count <= count + 32'b1;
-			else if (count >= 32'd250000) begin
+			else if (count >= 32'd2000000) begin
 				active <= 1'b0;
 				count <= 32'd0;
 			end
 		end
 		
 	end
-	
-	assign pulse = ((count<=32'd1000000) && (count>32'd0)); // TODO : ajuster la periode
+
+	assign pulse = ((count<=32'd100000) && (count>32'd0)); // TODO : ajuster la periode
 	
 endmodule
 

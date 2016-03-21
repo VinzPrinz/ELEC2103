@@ -26,15 +26,35 @@ module mtl_interface_irq (
 	);
 
 	// TODO: Auto-generated HDL template
-
-	assign avs_s0_readdata = 32'b00000000000000000000000000000000;
+	reg [31:0] avs_s0_readdata_reg;
+	
+	assign avs_s0_readdata = avs_s0_readdata_reg;
 
 	assign avs_s0_waitrequest = 1'b0;
 
 	assign ins_irq0_irq = 1'b0;
 
-	assign mtl_mode = 4'b0000;
 
-	assign mtl_reset = 1'b0;
 
+	parameter mtl_reset_addr = 2'b00;
+	parameter mtl_mode_addr = 2'b01;
+	parameter mtl_counter_addr = 2'b10;
+	
+	reg [3:0] mtl_mode_reg;
+	reg mtl_reset_reg;
+	
+	assign mtl_reset = mtl_reset_reg;
+	assign mtl_mode = mtl_mode_reg;
+	
+	always @(posedge clock_clk)
+		if(avs_s0_write)
+		case(avs_s0_address[1:0])
+			mtl_reset_addr: mtl_reset_reg <= avs_s0_writedata[0];
+			mtl_mode_addr: mtl_mode_reg <= avs_s0_writedata[3:0];
+		endcase 
+		else if (avs_s0_read)
+			case(avs_s0_address[1:0])
+				mtl_counter_addr: avs_s0_readdata_reg <= mtl_counter;
+			endcase
+	
 endmodule

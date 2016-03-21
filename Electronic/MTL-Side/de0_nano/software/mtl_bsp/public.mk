@@ -77,12 +77,12 @@ ALT_CPPFLAGS += -pipe
 
 # This following VERSION comment indicates the version of the tool used to 
 # generate this makefile. A makefile variable is provided for VERSION as well. 
-# ACDS_VERSION: 15.1
-ACDS_VERSION := 15.1
+# ACDS_VERSION: 15.0
+ACDS_VERSION := 15.0
 
 # This following BUILD_NUMBER comment indicates the build number of the tool 
 # used to generate this makefile. 
-# BUILD_NUMBER: 185
+# BUILD_NUMBER: 145
 
 # Quartus Generated JDI File. Required for resolving node instance ID's with 
 # design component names. 
@@ -126,8 +126,8 @@ ELF_PATCH_FLAG  += --cpu_name $(CPU_NAME)
 ALT_CFLAGS += -mno-hw-div
 
 # Hardware Multiplier present. 
-# setting HARDWARE_MULTIPLY is false
-ALT_CFLAGS += -mno-hw-mul
+# setting HARDWARE_MULTIPLY is true
+ALT_CFLAGS += -mhw-mul
 
 # Hardware Mulx present. 
 # setting HARDWARE_MULX is false

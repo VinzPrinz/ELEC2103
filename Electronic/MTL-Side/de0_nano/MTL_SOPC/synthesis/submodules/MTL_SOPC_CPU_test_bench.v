@@ -83,7 +83,7 @@ module MTL_SOPC_CPU_test_bench (
   input   [  7: 0] M_bht_ptr_unfiltered;
   input   [  1: 0] M_bht_wr_data_unfiltered;
   input            M_bht_wr_en_unfiltered;
-  input   [ 16: 0] M_mem_baddr;
+  input   [ 21: 0] M_mem_baddr;
   input   [ 16: 0] M_target_pcb;
   input            M_valid;
   input   [  4: 0] W_dst_regnum;
@@ -95,7 +95,7 @@ module MTL_SOPC_CPU_test_bench (
   input   [ 55: 0] W_vinst;
   input            W_wr_dst_reg;
   input            clk;
-  input   [ 16: 0] d_address;
+  input   [ 21: 0] d_address;
   input   [  3: 0] d_byteenable;
   input            d_read;
   input            d_write;
@@ -104,7 +104,7 @@ module MTL_SOPC_CPU_test_bench (
   input            i_readdatavalid;
   input            reset_n;
 
-  reg     [ 16: 0] A_mem_baddr;
+  reg     [ 21: 0] A_mem_baddr;
   reg     [ 16: 0] A_target_pcb;
   wire    [ 31: 0] A_wr_data_filtered;
   wire             A_wr_data_unfiltered_0_is_x;

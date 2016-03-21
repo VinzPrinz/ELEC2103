@@ -1,5 +1,5 @@
 --dcfifo_mixed_widths CARRY_CHAIN="MANUAL" CARRY_CHAIN_LENGTH=48 DEVICE_FAMILY="Cyclone IV E" IGNORE_CARRY_BUFFERS="OFF" LPM_NUMWORDS=2048 LPM_SHOWAHEAD="OFF" LPM_WIDTH=16 LPM_WIDTH_R=32 LPM_WIDTHU=11 LPM_WIDTHU_R=10 OVERFLOW_CHECKING="ON" RDSYNC_DELAYPIPE=4 READ_ACLR_SYNCH="ON" UNDERFLOW_CHECKING="ON" USE_EAB="ON" WRITE_ACLR_SYNCH="ON" WRSYNC_DELAYPIPE=4 aclr data q rdclk rdreq wrclk wrreq wrusedw CYCLONEII_M4K_COMPATIBILITY="ON" INTENDED_DEVICE_FAMILY="Cyclone IV E" LOW_POWER_MODE="AUTO" ALTERA_INTERNAL_OPTIONS=AUTO_SHIFT_REGISTER_RECOGNITION=OFF
---VERSION_BEGIN 15.1 cbx_a_gray2bin 2015:10:14:18:59:15:SJ cbx_a_graycounter 2015:10:14:18:59:15:SJ cbx_altdpram 2015:10:14:18:59:15:SJ cbx_altera_syncram 2015:10:14:18:59:15:SJ cbx_altera_syncram_nd_impl 2015:10:14:18:59:15:SJ cbx_altsyncram 2015:10:14:18:59:15:SJ cbx_cycloneii 2015:10:14:18:59:15:SJ cbx_dcfifo 2015:10:21:18:07:36:SJ cbx_fifo_common 2015:10:14:18:59:15:SJ cbx_lpm_add_sub 2015:10:14:18:59:15:SJ cbx_lpm_compare 2015:10:14:18:59:15:SJ cbx_lpm_counter 2015:10:14:18:59:15:SJ cbx_lpm_decode 2015:10:14:18:59:15:SJ cbx_lpm_mux 2015:10:14:18:59:15:SJ cbx_mgl 2015:10:21:19:02:34:SJ cbx_nadder 2015:10:14:18:59:15:SJ cbx_scfifo 2015:10:14:18:59:15:SJ cbx_stratix 2015:10:14:18:59:15:SJ cbx_stratixii 2015:10:14:18:59:15:SJ cbx_stratixiii 2015:10:14:18:59:15:SJ cbx_stratixv 2015:10:14:18:59:15:SJ cbx_util_mgl 2015:10:14:18:59:15:SJ  VERSION_END
+--VERSION_BEGIN 15.0 cbx_a_gray2bin 2015:04:22:18:04:07:SJ cbx_a_graycounter 2015:04:22:18:04:07:SJ cbx_altdpram 2015:04:22:18:04:07:SJ cbx_altsyncram 2015:04:22:18:04:07:SJ cbx_cycloneii 2015:04:22:18:04:07:SJ cbx_dcfifo 2015:04:22:18:04:07:SJ cbx_fifo_common 2015:04:22:18:04:07:SJ cbx_lpm_add_sub 2015:04:22:18:04:07:SJ cbx_lpm_compare 2015:04:22:18:04:07:SJ cbx_lpm_counter 2015:04:22:18:04:07:SJ cbx_lpm_decode 2015:04:22:18:04:08:SJ cbx_lpm_mux 2015:04:22:18:04:08:SJ cbx_mgl 2015:04:22:18:06:50:SJ cbx_scfifo 2015:04:22:18:04:08:SJ cbx_stratix 2015:04:22:18:04:08:SJ cbx_stratixii 2015:04:22:18:04:08:SJ cbx_stratixiii 2015:04:22:18:04:08:SJ cbx_stratixv 2015:04:22:18:04:08:SJ cbx_util_mgl 2015:04:22:18:04:08:SJ  VERSION_END
 
 
 -- Copyright (C) 1991-2015 Altera Corporation. All rights reserved.
@@ -9,7 +9,7 @@
 --  (including device programming or simulation files), and any 
 --  associated documentation or information are expressly subject 
 --  to the terms and conditions of the Altera Program License 
---  Subscription Agreement, the Altera Quartus Prime License Agreement,
+--  Subscription Agreement, the Altera Quartus II License Agreement,
 --  the Altera MegaCore Function License Agreement, or other 
 --  applicable license agreement, including, without limitation, 
 --  that your use is for the sole purpose of programming logic 
@@ -28,13 +28,13 @@ FUNCTION altsyncram_dm31 (aclr1, address_a[10..0], address_b[9..0], addressstall
 RETURNS ( q_b[31..0]);
 FUNCTION dffpipe_3dc (clock, clrn, d[0..0])
 RETURNS ( q[0..0]);
-FUNCTION alt_synch_pipe_bpl (clock, clrn, d[10..0])
+FUNCTION alt_synch_pipe_rld (clock, clrn, d[10..0])
 RETURNS ( q[10..0]);
 FUNCTION dffpipe_pe9 (clock, clrn, d[10..0])
 RETURNS ( q[10..0]);
 FUNCTION dffpipe_re9 (clock, clrn, d[11..0])
 RETURNS ( q[11..0]);
-FUNCTION alt_synch_pipe_cpl (clock, clrn, d[10..0])
+FUNCTION alt_synch_pipe_sld (clock, clrn, d[10..0])
 RETURNS ( q[10..0]);
 FUNCTION cmpr_o76 (dataa[10..0], datab[10..0])
 RETURNS ( aeb);
@@ -65,11 +65,11 @@ VARIABLE
 	rdptr_g[10..0] : dffe;
 	wrptr_g[11..0] : dffe;
 	rdaclr : dffpipe_3dc;
-	rs_dgwp : alt_synch_pipe_bpl;
+	rs_dgwp : alt_synch_pipe_rld;
 	wraclr : dffpipe_3dc;
 	ws_brp : dffpipe_pe9;
 	ws_bwp : dffpipe_re9;
-	ws_dgrp : alt_synch_pipe_cpl;
+	ws_dgrp : alt_synch_pipe_sld;
 	wrusedw_sub_dataa[11..0]	:	WIRE;
 	wrusedw_sub_datab[11..0]	:	WIRE;
 	wrusedw_sub_result[11..0]	:	WIRE;

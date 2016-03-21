@@ -24,9 +24,9 @@
 // agreement for further details.
 
 
-// $Id: //acds/rel/15.1/ip/merlin/altera_merlin_multiplexer/altera_merlin_multiplexer.sv.terp#1 $
+// $Id: //acds/rel/15.0/ip/merlin/altera_merlin_multiplexer/altera_merlin_multiplexer.sv.terp#1 $
 // $Revision: #1 $
-// $Date: 2015/08/09 $
+// $Date: 2015/02/08 $
 // $Author: swbranch $
 
 // ------------------------------------------
@@ -43,9 +43,9 @@
 //   ARBITRATION_SHARES:  1 1
 //   ARBITRATION_SCHEME   "round-robin"
 //   PIPELINE_ARB:        1
-//   PKT_TRANS_LOCK:      57 (arbitration locking enabled)
-//   ST_DATA_W:           95
-//   ST_CHANNEL_W:        9
+//   PKT_TRANS_LOCK:      62 (arbitration locking enabled)
+//   ST_DATA_W:           100
+//   ST_CHANNEL_W:        10
 // ------------------------------------------
 
 module MTL_SOPC_mm_interconnect_0_cmd_mux_003
@@ -54,15 +54,15 @@ module MTL_SOPC_mm_interconnect_0_cmd_mux_003
     // Sinks
     // ----------------------
     input                       sink0_valid,
-    input [95-1   : 0]  sink0_data,
-    input [9-1: 0]  sink0_channel,
+    input [100-1   : 0]  sink0_data,
+    input [10-1: 0]  sink0_channel,
     input                       sink0_startofpacket,
     input                       sink0_endofpacket,
     output                      sink0_ready,
 
     input                       sink1_valid,
-    input [95-1   : 0]  sink1_data,
-    input [9-1: 0]  sink1_channel,
+    input [100-1   : 0]  sink1_data,
+    input [10-1: 0]  sink1_channel,
     input                       sink1_startofpacket,
     input                       sink1_endofpacket,
     output                      sink1_ready,
@@ -72,8 +72,8 @@ module MTL_SOPC_mm_interconnect_0_cmd_mux_003
     // Source
     // ----------------------
     output                      src_valid,
-    output [95-1    : 0] src_data,
-    output [9-1 : 0] src_channel,
+    output [100-1    : 0] src_data,
+    output [10-1 : 0] src_channel,
     output                      src_startofpacket,
     output                      src_endofpacket,
     input                       src_ready,
@@ -84,13 +84,13 @@ module MTL_SOPC_mm_interconnect_0_cmd_mux_003
     input clk,
     input reset
 );
-    localparam PAYLOAD_W        = 95 + 9 + 2;
+    localparam PAYLOAD_W        = 100 + 10 + 2;
     localparam NUM_INPUTS       = 2;
     localparam SHARE_COUNTER_W  = 1;
     localparam PIPELINE_ARB     = 1;
-    localparam ST_DATA_W        = 95;
-    localparam ST_CHANNEL_W     = 9;
-    localparam PKT_TRANS_LOCK   = 57;
+    localparam ST_DATA_W        = 100;
+    localparam ST_CHANNEL_W     = 10;
+    localparam PKT_TRANS_LOCK   = 62;
 
     // ------------------------------------------
     // Signals
@@ -122,8 +122,8 @@ module MTL_SOPC_mm_interconnect_0_cmd_mux_003
     // ------------------------------------------
     reg [NUM_INPUTS - 1 : 0] lock;
     always @* begin
-      lock[0] = sink0_data[57];
-      lock[1] = sink1_data[57];
+      lock[0] = sink0_data[62];
+      lock[1] = sink1_data[62];
     end
     reg [NUM_INPUTS - 1 : 0] locked = '0;
     always @(posedge clk or posedge reset) begin

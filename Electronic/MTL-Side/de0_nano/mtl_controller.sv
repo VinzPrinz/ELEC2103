@@ -1,48 +1,4 @@
-
-// --------------------------------------------------------------------
-// Copyright (c) 2007 by Terasic Technologies Inc. 
-// --------------------------------------------------------------------
-//
-// Permission:
-//
-//   Terasic grants permission to use and modify this code for use
-//   in synthesis for all Terasic Development Boards and Altera Development 
-//   Kits made by Terasic.  Other use of this code, including the selling 
-//   ,duplication, or modification of any portion is strictly prohibited.
-//
-// Disclaimer:
-//
-//   This VHDL/Verilog or C/C++ source code is intended as a design reference
-//   which illustrates how these types of functions can be implemented.
-//   It is the user's responsibility to verify their design for
-//   consistency and functionality through the use of formal
-//   verification methods.  Terasic provides no warranty regarding the use 
-//   or functionality of this code.
-//
-// --------------------------------------------------------------------
-//           
-//                     Terasic Technologies Inc
-//                     356 Fu-Shin E. Rd Sec. 1. JhuBei City,
-//                     HsinChu County, Taiwan
-//                     302
-//
-//                     web: http://www.terasic.com/
-//                     email: support@terasic.com
-//
-// --------------------------------------------------------------------
-//
-// Major Functions of V2.0:	MTL controller adapted to a slideshow application
-//										on the DE0-Nano board.
-//
-// --------------------------------------------------------------------
-//
-// Revision History :
-// --------------------------------------------------------------------
-//   Ver  :| Author            		:| Mod. Date :| Changes Made:
-//   V1.0 :| Johnny Fan					:| 07/06/30  :| Initial Revision
-//	  V2.0 :| Charlotte Frenkel      :| 14/08/03  :| Improvements and adaptation to a
-//																	 slideshow application on the DE0-Nano
-// --------------------------------------------------------------------
+// copyright blablabla
 
 module mtl_controller(
 	// Host Side
@@ -61,7 +17,7 @@ module mtl_controller(
 	oLCD_G,           // Output LCD green color data  
 	oLCD_B,            // Output LCD blue color data  
 	
-	// output the pixel being written now
+	// output the pixel being written now (useless, to be deleted)
 	oXpixel,
 	oYpixel,
 	
@@ -69,7 +25,6 @@ module mtl_controller(
 	inG,
 	inB,
 	
-	inMapControl, // control signal that enables the mtl controller to let the ROM write the screen
 	map, // 128 bit signal containing the map information
 	touchX,
 	touchY,
@@ -92,6 +47,11 @@ parameter Horizontal_Blank = 46;          //H_SYNC + H_Back_Porch
 parameter Horizontal_Front_Porch = 210;
 parameter Vertical_Blank = 23;      	   //V_SYNC + V_BACK_PORCH
 parameter Vertical_Front_Porch = 22;
+
+parameter mtl_mode_fight = 4'b0000;
+parameter mtl_mode_load = 4'b0001;
+parameter mtl_mode_map_player0 = 4'b0010;
+parameter mtl_mode_map_player1 = 4'b0011;
 
 //===========================================================================
 // PORT declarations
@@ -116,8 +76,7 @@ input [7:0] inR;
 input [7:0] inG;
 input [7:0] inB;
 
-input inMapControl;
-input [127:0] map;
+input [255:0] map;
 input [10:0] touchX;
 input [9:0] touchY;
 
@@ -128,6 +87,7 @@ output [31:0] mtl_counter;
 output mtl_irq;
 
 assign mtl_irq = (Case_Wire == 12'd0) && ~mtl_reset;
+
 //=============================================================================
 // REG/WIRE declarations
 //=============================================================================
@@ -138,7 +98,7 @@ wire [7:0]	read_red;
 wire [7:0]	read_green;
 wire [7:0]	read_blue; 
 wire			display_area, display_area_prev;
-wire [23:0] q_rom,q_rom1;
+wire [23:0] q_rom,q_rom1,q_rom1aftercolor;
 wire [18:0] mapAddress; // address to display in map case
 wire [18:0] loadingAddress; // address to display in loading case
 wire [18:0] finalAddress;
@@ -148,7 +108,15 @@ reg			mvd;
 reg			loading_buf;
 reg			no_data_yet;
 
-wire [1:0]	memoryToLookIn; // 1st bit : 0 if tile, 1 if menu bar; 2nd bit : 0 if tile 0, 1 if tile 1
+
+wire inMapControl; // control signal that enables the mtl controller to let the ROM write the screen
+assign inMapControl = (mtl_mode == mtl_mode_map_player0 || mtl_mode == mtl_mode_map_player1);
+
+wire turn;
+assign turn = inMapControl ? mtl_mode == mtl_mode_map_player1 : 1'bz; // signal valid only if inmap (for now)
+
+wire [2:0]	memoryToLookIn; // 1st bit : 0 if tile, 1 if menu bar; 2nd bit : 0 if tile 0, 1 if tile 1
+
 
 reg [31:0] counter;
 assign mtl_counter = counter;
@@ -157,9 +125,6 @@ assign mtl_counter = counter;
 // Structural coding
 //=============================================================================
 
-parameter mtl_mode_fight = 4'b0000;
-parameter mtl_mode_load = 4'b0001;
-parameter mtl_mode_map = 4'b0010;
 // Assigning current pixel (not useful anymore)
 assign oXpixel = x_cnt-(Horizontal_Blank-2);
 assign oYpixel = y_cnt-(Vertical_Blank-1);
@@ -167,43 +132,30 @@ assign oYpixel = y_cnt-(Vertical_Blank-1);
 //--- Assigning the right color data as a function -------------------------
 //--- of the current pixel position ----------------------------------------
 
-// This loading ROM contains B/W data to display the loading screen.
-// The data is available in the rom.mif file in the project folder.
-// Note that it is just a gadget for the demonstration, it is not efficient!
-// Indeed, it must contain 1bit x 800 x 480 = 384000 bits of data,
-// which is more than 60% of the total memory bits of the FPGA.
-// Don't hesitate to suppress it.
-//Loading_ROM	Loading_ROM_inst (
-//	.address (address),
-//	.clock (iCLK),
-//	.q (q_rom),
-//	//.rden (iLoading) ///////////////////////////////////////////////////////////////////////////////////////
-//	.rden (iLoading) // || ~loading_buf
-//);
-
-// other ROM :)
-//testROM	testROM_inst (
-//	.address ( address[17:0] ),
-//	.clock ( iCLK ),
-//	.rden ( iLoading || inMapControl ),
-//	.q ( q_rom )
-//	);
 
 // ROM number 3 lol
 tile0ROM	tile0ROM_inst (
 	.address ( address[11:0] ),
 	.clock ( iCLK ),
-	.rden ( mtl_mode==mtl_mode_map ),
+	.rden ( inMapControl ),
 	.q ( q_rom )
 	);
 
 tile2	tile2_inst (
 	.address ( address[11:0] ),
 	.clock ( iCLK ),
-	.rden (mtl_mode==mtl_mode_map),
-	.q (q_rom1)
+	.rden ( inMapControl ),
+	.q ( q_rom1 )
 	);
-
+// map color for peyo
+mapPinkColorToTeamColor colormapper(
+								.inR(q_rom1[23:16]),
+								.inG(q_rom1[15:8]),
+								.inB(q_rom1[7:0]),
+								.team(memoryToLookIn[0]), //0 = red, 1 = blue
+								.outR(q_rom1aftercolor[23:16]),
+								.outG(q_rom1aftercolor[15:8]),
+								.outB(q_rom1aftercolor[7:0]));
 
 
 
@@ -229,9 +181,11 @@ assign	display_area_prev =	((x_cnt>(Horizontal_Blank-3)&&
 						
 // This signal updates the ROM address to read from based on the current pixel position.
 assign loadingAddress = ((x_cnt-(Horizontal_Blank-2)) + (y_cnt-Vertical_Blank)*800);
+
 // map adress computation by a module :)
 mapAddresses mapAddressesInstance(x_cnt,y_cnt,map,mapAddress,memoryToLookIn);
 //assign mapAddress = ((x_cnt-(Horizontal_Blank-2)) + (y_cnt-Vertical_Blank)*800);
+
 assign finalAddress = inMapControl ? mapAddress : loadingAddress;
 assign address = display_area_prev ? finalAddress : 19'b0;
 
@@ -247,7 +201,7 @@ always_ff @(posedge iCLK) begin
 	end else if (display_area) begin
 		// ...and if no data has been sent yet by the PIC32,
 		// then display a white screen.
-		if (mtl_mode == mtl_mode_fight) begin
+		if (mtl_mode == mtl_mode_fight ) begin
 			if(Case_Wire[11])begin
 			read_red 	<= 8'd255;
 			read_green 	<= 8'd255;
@@ -270,25 +224,26 @@ always_ff @(posedge iCLK) begin
 		// if a 1 (resp. 0) is written in the ROM.
 		///////////////////////////////////////////////////////////////////////////////// TEST!!!
 		end else if (mtl_mode == mtl_mode_load) begin
-				read_red 	<= 8'd255; // display a yellow screen during loading
-				read_green 	<= 8'd255;
-				read_blue 	<= 8'b0;
+				read_red 	<= 8'd0; // display a blue screen during loading
+				read_green 	<= 8'd0;
+				read_blue 	<= 8'd255;
 
 		// NEW : control the screen with the ROM content
-		end else if (mtl_mode == mtl_mode_map) begin
-			if (memoryToLookIn[1]) // if menu is to be shown
+		//end else if (inMapControl) begin
+		end else if (inMapControl) begin
+			if (memoryToLookIn[2]) // if menu is to be shown
 			begin 
-				read_red 	<= 8'd0;   // the menu bar is a blue bar
-				read_green 	<= 8'd100;
-				read_blue 	<= 8'd200;
-			end else if (~memoryToLookIn[0]) begin // type of tile = tile 0
+				read_red 	<= turn ? 8'd0 : 8'd200;   // the menu bar is the player's color
+				read_green 	<= 8'd50;
+				read_blue 	<= turn ? 8'd200 : 8'd0;
+			end else if (~memoryToLookIn[1]) begin // type of tile = tile 0
 				read_red 	<= q_rom[23:16];
 				read_green 	<= q_rom[15:8];
 				read_blue 	<= q_rom[7:0];
-			end else begin // type of tile = tile 1 (other rom)
-				read_red 	<= q_rom1[23:16];
+			end else begin// type of tile = tile 1 (other rom) and red or blue
+				read_red 	<= q_rom1aftercolor[23:16];
 				read_green 	<= q_rom1[15:8];
-				read_blue 	<= q_rom1[7:0];
+				read_blue 	<= q_rom1aftercolor[7:0];
 			end
 		// ...and if the slideshow has been loaded,
 		// then display the values read from the SDRAM.
@@ -393,7 +348,6 @@ always@(posedge iCLK or negedge iRST_n) begin
 		end		
 end
 
-
 	// Used for the fight game
 reg [1:0]	Counter_Reg;
 wire [1:0] 	Counter_Wire;
@@ -479,7 +433,7 @@ parameter Ylength = 160;
 		reg newTouch;
 		
 		always_ff @(posedge iCLK)
-			if((touchX_new != touchX || touchY != touchY_new)&& x_cnt==0 && y_cnt==0 && ~mtl_reset)
+			if((touchX_new != touchX || touchY != touchY_new)&& x_cnt==0 && y_cnt==0 && ~mtl_reset && ~inMapControl) // add condition?
 				begin
 					touchX_new <= touchX;
 					touchY_new <= touchY;
@@ -498,9 +452,38 @@ parameter Ylength = 160;
 			else 
 				counter <= counter + 32'd1;
 				
-			
+	
+						
 endmodule
 
 
+// module to map pink color
+module mapPinkColorToTeamColor(
+								input logic [7:0] inR,
+								input logic [7:0] inG,
+								input logic [7:0] inB,
+								input logic team, //0 = red, 1 = blue
+								output logic [7:0] outR,
+								output logic [7:0] outG,
+								output logic [7:0] outB);
+								
+		logic [23:0] inColor, outColor;
+		assign inColor = {inR,inG,inB};
+		assign {outR,outG,outB} = outColor;
+		
+		always_comb
+		begin
+			case(inColor)
+				24'h_ff_00_ff : 	outColor = team ? 24'h_00_00_ff : 24'h_ff_00_00;
+				24'h_c8_00_c8 : 	outColor = team ? 24'h_00_00_c8 : 24'h_c8_00_00;
+				24'h_b4_00_b4 : 	outColor = team ? 24'h_00_00_b4 : 24'h_b4_00_00;
+				24'h_ff_00_fd : 	outColor = team ? 24'h_aa_aa_ff : 24'h_ff_aa_aa; // todo : image with better/less nuances
+				24'h_ff_00_fb : 	outColor = team ? 24'h_aa_aa_ff : 24'h_ff_aa_aa;
+				24'h_ff_00_f3 : 	outColor = team ? 24'h_aa_aa_ff : 24'h_ff_aa_aa;
+				default:				outColor = inColor;
+			endcase
+		end
+		
+endmodule 
 
 

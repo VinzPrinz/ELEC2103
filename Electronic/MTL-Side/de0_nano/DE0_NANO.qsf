@@ -6,7 +6,7 @@ set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE22F17C6
 set_global_assignment -name TOP_LEVEL_ENTITY "DE0_NANO"
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 10.1
-set_global_assignment -name LAST_QUARTUS_VERSION 15.1.0
+set_global_assignment -name LAST_QUARTUS_VERSION 15.0.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "19:39:13 JUNE 21,2014"
 set_global_assignment -name DEVICE_FILTER_PACKAGE FBGA
 set_global_assignment -name DEVICE_FILTER_PIN_COUNT 256
@@ -512,5 +512,6 @@ set_global_assignment -name HEX_FILE tile2.hex
 set_global_assignment -name QIP_FILE tile2.qip
 set_global_assignment -name HEX_FILE tile_grass.hex
 set_global_assignment -name HEX_FILE tile_peyo.hex
+set_global_assignment -name HEX_FILE tile_peyo2.hex
 set_global_assignment -name SLD_FILE db/stp_MTL_ports_auto_stripped.stp
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

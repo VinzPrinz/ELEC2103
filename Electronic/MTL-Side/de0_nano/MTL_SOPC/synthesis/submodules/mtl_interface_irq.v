@@ -32,7 +32,7 @@ module mtl_interface_irq (
 
 	assign avs_s0_waitrequest = 1'b0;
 
-	assign ins_irq0_irq = 1'b0;
+	assign ins_irq0_irq = mtl_irq;
 
 
 
