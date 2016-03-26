@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>ucosii</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Mar 20, 2016 7:17:43 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1458497863287</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Mar 21, 2016 12:09:44 AM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1458515384764</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24/software/LT24_RTOS_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../DE0_LT24_SOPC.sopcinfo</SopcDesignFile>
@@ -1740,14 +1740,14 @@
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>background_mem</slaveDescriptor>
-                <addressRange>0x04000000 - 0x040031FF</addressRange>
-                <addressSpan>12800</addressSpan>
+                <addressRange>0x04000000 - 0x0400257F</addressRange>
+                <addressSpan>9600</addressSpan>
                 <attributes>memory</attributes>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>pic_mem</slaveDescriptor>
-                <addressRange>0x04004000 - 0x040071FF</addressRange>
-                <addressSpan>12800</addressSpan>
+                <addressRange>0x04004000 - 0x0400418F</addressRange>
+                <addressSpan>400</addressSpan>
                 <attributes>memory</attributes>
         </MemoryMap>
         <MemoryMap>

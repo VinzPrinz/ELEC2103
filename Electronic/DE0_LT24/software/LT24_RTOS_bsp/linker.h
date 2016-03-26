@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'DE0_LT24_SOPC'
  * SOPC Builder design path: ../../DE0_LT24_SOPC.sopcinfo
  *
- * Generated: Sat Mar 12 11:55:21 CET 2016
+ * Generated: Mon Mar 21 00:09:45 CET 2016
  */
 
 /*
@@ -66,9 +66,9 @@
  */
 
 #define BACKGROUND_MEM_REGION_BASE 0x4000000
-#define BACKGROUND_MEM_REGION_SPAN 12800
+#define BACKGROUND_MEM_REGION_SPAN 9600
 #define PIC_MEM_REGION_BASE 0x4004000
-#define PIC_MEM_REGION_SPAN 12800
+#define PIC_MEM_REGION_SPAN 400
 #define RESET_REGION_BASE 0x2000000
 #define RESET_REGION_SPAN 32
 #define SDRAM_CONTROLER_REGION_BASE 0x2000020

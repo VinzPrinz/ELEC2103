@@ -304,10 +304,11 @@ assign 	background_mem_s2_writedata = 16'h0;
 assign	background_mem_s2_write = 1'b0;
 assign  	background_mem_s2_byteenable = 2'b11;
 //the 80x60 pixels image of background is replicated 16 times on the whole screen
-assign 	background_mem_s2_address = ({2'b0,posX} % 13'd80) + (13'd80*({2'b0,posY} % 13'd80));
+assign 	background_mem_s2_address = ({2'b0,posX} % 13'd60) + (13'd60*({2'b0,posY} % 13'd80));
 //the background is only read when the screen is browsed
 assign 	background_mem_s2_chipselect = (screenState >= 18'd6) && (screenState < 18'd76806);
 assign 	background_mem_s2_clken = background_mem_s2_chipselect;
+
 
 //the limits of the area of the screen where the character is displayed (it is a 64x64 picture)
 // ok, let's make some changes here! it is a 30x40 pic
@@ -329,13 +330,15 @@ assign  	pic_mem_s2_byteenable = 2'b11;
 //The current position within the picture of the character
 //assign 	characPosX = posX - (pointerX - 11'd31);
 //assign 	characPosY = posY - (pointerY - 11'd31);
-assign 	characPosX = posX - (pointerX - 11'd19);
-assign 	characPosY = posY - (pointerY - 11'd14);
+assign 	characPosX = posX - (X1C); 
+assign 	characPosY = posY - (Y1C);
 
 //The address of the current pixel in the 64x64 picture of the character (picmem)
-assign 	pic_mem_s2_address =  ({2'b0,posX} % 16'd80) + (16'd80*({2'b0,posY} % 16'd80));
+//assign 	pic_mem_s2_address = {1'b0,characPosX} + (12'd64*{1'b0,characPosY});
+
+assign 	pic_mem_s2_address =  {1'b0,characPosX} + (12 'd20*({1'b0,characPosY}));
 //if the current pixel is within the character area : the character is displayed
-assign 	pic_mem_s2_chipselect = (screenState >= 18'd6) && (screenState < 18'd76806);
+assign 	pic_mem_s2_chipselect = (characPosX >= 11'd0) && (characPosX < 11'd20) && (characPosY >= 11'd0) && (11'd20 > characPosX);
 assign 	pic_mem_s2_clken = pic_mem_s2_chipselect;
 
 
@@ -581,13 +584,13 @@ always
 			case({displayCharact , displayCoin})
 				2'b11: Game1_Color <= 16'h0000;
 				2'b10: Game1_Color <= 16'hf0ff;
-				2'b01: Game1_Color <= 16'h00aa;
-				default: Game1_Color <= 16'hffff;
+				2'b01: Game1_Color <= pic_mem_s2_readdata;
+				default: Game1_Color <= background_mem_s2_readdata;
 			endcase 
 		else if(Case_Wire[11])
 			case(Counter_Wire)
-				2'b00: Game1_Color <= pic_mem_s2_readdata;
-				2'b01: Game1_Color <= pic_mem_s2_readdata;
+				2'b00: Game1_Color <= background_mem_s2_readdata;
+				2'b01: Game1_Color <= background_mem_s2_readdata;
 				2'b11: Game1_Color <= 16'h00aa;
 				2'b10: Game1_Color <= 16'h00aa;
 			endcase

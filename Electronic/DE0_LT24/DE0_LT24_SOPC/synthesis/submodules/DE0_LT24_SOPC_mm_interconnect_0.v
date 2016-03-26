@@ -116,7 +116,7 @@ module DE0_LT24_SOPC_mm_interconnect_0 (
 		input  wire [15:0] LT24_TOUCH_SPI_spi_control_port_readdata,                  //                                                    .readdata
 		output wire [15:0] LT24_TOUCH_SPI_spi_control_port_writedata,                 //                                                    .writedata
 		output wire        LT24_TOUCH_SPI_spi_control_port_chipselect,                //                                                    .chipselect
-		output wire [12:0] pic_mem_s1_address,                                        //                                          pic_mem_s1.address
+		output wire [7:0]  pic_mem_s1_address,                                        //                                          pic_mem_s1.address
 		output wire        pic_mem_s1_write,                                          //                                                    .write
 		input  wire [15:0] pic_mem_s1_readdata,                                       //                                                    .readdata
 		output wire [15:0] pic_mem_s1_writedata,                                      //                                                    .writedata
@@ -2728,7 +2728,7 @@ module DE0_LT24_SOPC_mm_interconnect_0 (
 	);
 
 	altera_merlin_slave_translator #(
-		.AV_ADDRESS_W                   (13),
+		.AV_ADDRESS_W                   (8),
 		.AV_DATA_W                      (16),
 		.UAV_DATA_W                     (16),
 		.AV_BURSTCOUNT_W                (1),

@@ -137,7 +137,7 @@ module DE0_LT24_SOPC_mm_interconnect_0_router
     localparam PAD0 = log2ceil(64'h20 - 64'h0); 
     localparam PAD1 = log2ceil(64'h4000000 - 64'h2000000); 
     localparam PAD2 = log2ceil(64'h4004000 - 64'h4000000); 
-    localparam PAD3 = log2ceil(64'h4008000 - 64'h4004000); 
+    localparam PAD3 = log2ceil(64'h4004200 - 64'h4004000); 
     localparam PAD4 = log2ceil(64'h4009000 - 64'h4008800); 
     localparam PAD5 = log2ceil(64'h4009400 - 64'h4009000); 
     localparam PAD6 = log2ceil(64'h4009800 - 64'h4009400); 
@@ -234,7 +234,7 @@ module DE0_LT24_SOPC_mm_interconnect_0_router
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 14;
     end
 
-    // ( 0x4004000 .. 0x4008000 )
+    // ( 0x4004000 .. 0x4004200 )
     if ( {address[RG:PAD3],{PAD3{1'b0}}} == 27'h4004000   ) begin
             src_channel = 22'b0000000010000000000000;
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 19;

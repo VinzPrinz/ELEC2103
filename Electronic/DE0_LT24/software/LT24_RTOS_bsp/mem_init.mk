@@ -190,7 +190,7 @@ $(MEM_0)_CREATE_LANES := 0
 SDRAM_Controler: check_elf_exists $(HDL_SIM_DIR)/$(MEM_0).dat $(HDL_SIM_DIR)/$(MEM_0).sym
 
 # Memory: background_mem
-MEM_1 := lol
+MEM_1 := myNewBackground
 $(MEM_1)_NAME := background_mem
 $(MEM_1)_MEM_INIT_FILE_PARAM_NAME := INIT_FILE
 HEX_FILES += $(MEM_INIT_DIR)/$(MEM_1).hex
@@ -200,8 +200,8 @@ HDL_SIM_INSTALL_FILES += $(HDL_SIM_INSTALL_DIR)/$(MEM_1).dat
 SYM_FILES += $(HDL_SIM_DIR)/$(MEM_1).sym
 HDL_SIM_INSTALL_FILES += $(HDL_SIM_INSTALL_DIR)/$(MEM_1).sym
 $(MEM_1)_START := 0x04000000
-$(MEM_1)_END := 0x040031ff
-$(MEM_1)_SPAN := 0x00003200
+$(MEM_1)_END := 0x0400257f
+$(MEM_1)_SPAN := 0x00002580
 $(MEM_1)_HIERARCHICAL_PATH := background_mem
 $(MEM_1)_WIDTH := 16
 $(MEM_1)_HEX_DATA_WIDTH := 16
@@ -212,7 +212,7 @@ $(MEM_1)_CREATE_LANES := 0
 background_mem: check_elf_exists $(MEM_INIT_DIR)/$(MEM_1).hex $(HDL_SIM_DIR)/$(MEM_1).dat $(HDL_SIM_DIR)/$(MEM_1).sym
 
 # Memory: pic_mem
-MEM_2 := lol2
+MEM_2 := piece
 $(MEM_2)_NAME := pic_mem
 $(MEM_2)_MEM_INIT_FILE_PARAM_NAME := INIT_FILE
 HEX_FILES += $(MEM_INIT_DIR)/$(MEM_2).hex
@@ -222,8 +222,8 @@ HDL_SIM_INSTALL_FILES += $(HDL_SIM_INSTALL_DIR)/$(MEM_2).dat
 SYM_FILES += $(HDL_SIM_DIR)/$(MEM_2).sym
 HDL_SIM_INSTALL_FILES += $(HDL_SIM_INSTALL_DIR)/$(MEM_2).sym
 $(MEM_2)_START := 0x04004000
-$(MEM_2)_END := 0x040071ff
-$(MEM_2)_SPAN := 0x00003200
+$(MEM_2)_END := 0x0400418f
+$(MEM_2)_SPAN := 0x00000190
 $(MEM_2)_HIERARCHICAL_PATH := pic_mem
 $(MEM_2)_WIDTH := 16
 $(MEM_2)_HEX_DATA_WIDTH := 16

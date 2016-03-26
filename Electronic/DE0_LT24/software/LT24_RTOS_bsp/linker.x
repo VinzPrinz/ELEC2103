@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'DE0_LT24_SOPC'
  * SOPC Builder design path: ../../DE0_LT24_SOPC.sopcinfo
  *
- * Generated: Sat Mar 12 11:55:21 CET 2016
+ * Generated: Mon Mar 21 00:09:45 CET 2016
  */
 
 /*
@@ -52,8 +52,8 @@ MEMORY
 {
     reset : ORIGIN = 0x2000000, LENGTH = 32
     SDRAM_Controler : ORIGIN = 0x2000020, LENGTH = 33554400
-    background_mem : ORIGIN = 0x4000000, LENGTH = 12800
-    pic_mem : ORIGIN = 0x4004000, LENGTH = 12800
+    background_mem : ORIGIN = 0x4000000, LENGTH = 9600
+    pic_mem : ORIGIN = 0x4004000, LENGTH = 400
 }
 
 /* Define symbols for each memory base-address */

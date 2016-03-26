@@ -54,7 +54,7 @@ module DE0_LT24_SOPC (
 		output wire        lt24_touch_spi_MOSI,                         //                                     .MOSI
 		output wire        lt24_touch_spi_SCLK,                         //                                     .SCLK
 		output wire        lt24_touch_spi_SS_n,                         //                                     .SS_n
-		input  wire [12:0] pic_mem_s2_address,                          //                           pic_mem_s2.address
+		input  wire [7:0]  pic_mem_s2_address,                          //                           pic_mem_s2.address
 		input  wire        pic_mem_s2_chipselect,                       //                                     .chipselect
 		input  wire        pic_mem_s2_clken,                            //                                     .clken
 		input  wire        pic_mem_s2_write,                            //                                     .write
@@ -158,7 +158,7 @@ module DE0_LT24_SOPC (
 	wire   [1:0] mm_interconnect_0_lt24_touch_busy_s1_address;                 // mm_interconnect_0:LT24_TOUCH_BUSY_s1_address -> LT24_TOUCH_BUSY:address
 	wire         mm_interconnect_0_pic_mem_s1_chipselect;                      // mm_interconnect_0:pic_mem_s1_chipselect -> pic_mem:chipselect
 	wire  [15:0] mm_interconnect_0_pic_mem_s1_readdata;                        // pic_mem:readdata -> mm_interconnect_0:pic_mem_s1_readdata
-	wire  [12:0] mm_interconnect_0_pic_mem_s1_address;                         // mm_interconnect_0:pic_mem_s1_address -> pic_mem:address
+	wire   [7:0] mm_interconnect_0_pic_mem_s1_address;                         // mm_interconnect_0:pic_mem_s1_address -> pic_mem:address
 	wire   [1:0] mm_interconnect_0_pic_mem_s1_byteenable;                      // mm_interconnect_0:pic_mem_s1_byteenable -> pic_mem:byteenable
 	wire         mm_interconnect_0_pic_mem_s1_write;                           // mm_interconnect_0:pic_mem_s1_write -> pic_mem:write
 	wire  [15:0] mm_interconnect_0_pic_mem_s1_writedata;                       // mm_interconnect_0:pic_mem_s1_writedata -> pic_mem:writedata

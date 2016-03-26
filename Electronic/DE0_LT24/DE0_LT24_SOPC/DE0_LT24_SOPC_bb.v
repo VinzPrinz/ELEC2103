@@ -119,7 +119,7 @@ module DE0_LT24_SOPC (
 	output		lt24_touch_spi_MOSI;
 	output		lt24_touch_spi_SCLK;
 	output		lt24_touch_spi_SS_n;
-	input	[12:0]	pic_mem_s2_address;
+	input	[7:0]	pic_mem_s2_address;
 	input		pic_mem_s2_chipselect;
 	input		pic_mem_s2_clken;
 	input		pic_mem_s2_write;

@@ -1,204 +1,3 @@
-/*************************************************************************
-* Copyright (c) 2004 Altera Corporation, San Jose, California, USA.      *
-* All rights reserved. All use of this software and documentation is     *
-* subject to the License Agreement located at the end of this file below.*
-**************************************************************************
-* Description:                                                           *
-* The following is a simple hello world program running MicroC/OS-II.The * 
-* purpose of the design is to be a very simple application that just     *
-* demonstrates MicroC/OS-II running on NIOS II.The design doesn't account*
-* for issues such as checking system call return codes. etc.             *
-*                                                                        *
-* Requirements:                                                          *
-*   -Supported Example Hardware Platforms                                *
-*     Standard                                                           *
-*     Full Featured                                                      *
-*     Low Cost                                                           *
-*   -Supported Development Boards                                        *
-*     Nios II Development Board, Stratix II Edition                      *
-*     Nios Development Board, Stratix Professional Edition               *
-*     Nios Development Board, Stratix Edition                            *
-*     Nios Development Board, Cyclone Edition                            *
-*   -System Library Settings                                             *
-*     RTOS Type - MicroC/OS-II                                           *
-*     Periodic System Timer                                              *
-*   -Know Issues                                                         *
-*     If this design is run on the ISS, terminal output will take several*
-*     minutes per iteration.                                             *
-**************************************************************************/
-/*
- *  Created on: Feb 25, 2016
- *      Author: obronchain
- */
-
-
-/*#include "terasic_lib/terasic_includes.h"
-#include "terasic_lib/touch_spi.h"
-#include "graphic_lib/alt_video_display.h"
-#include "graphic_lib/ILI9341.h"
-#include "demo/gui.h"
-#include "fonts/fonts.h"
-#include "HAL/inc/priv/alt_iic_isr_register.h"
-#include "altera_avalon_pio_regs.h"
-#include "terasic_includes.h"
-#include "accelerometer_adxl345_spi.h"
-#include "io.h"
-#include "includes.h"
-
-
-int game_over( alt_video_display Display,TOUCH_HANDLE *pTouch , char *str);
-int hardware( TOUCH_HANDLE *pTouch);
-int counter = 0 ;
-char LT24_state = 0;
-
-alt_video_display Display;
-TOUCH_HANDLE *pTouch;
-
-void LT24_ISR(void *context){
-	IOWR(LT24_INTERFACE_IRQ_0_BASE + (4*7),0 , 321);
-	counter++;
-	char *LT24 = (char* ) context;
-	char str[64];
-	*LT24 = 1;
-}
-
-
-int main(void)
-{
-	Clr_BUFFER_FLAG();
-	unsigned int X, Y;
-	unsigned int posTamper =0;
-
-	int reg_ret = alt_iic_isr_register(LT24_INTERFACE_IRQ_0_IRQ_INTERRUPT_CONTROLLER_ID,
-										LT24_INTERFACE_IRQ_0_IRQ,
-										&LT24_ISR , (void *)&LT24_state , NULL);
-	if(!reg_ret) {
-		printf("Button interrupt service routine (ISR) well registered \n");
-	} else {
-		printf("Something went wrong in the registering; software exits");
-		return 1;
-	}
-	 Clr_BUFFER_FLAG()Clr_BUFFER_FLAGClr_BUFFER_FLAG;
-
-
-	IOWR(LT24_INTERFACE_IRQ_0_BASE+ (4*3),0, -1);
-	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0,-1);
-
-	bool bSuccess;
-
-    bSuccess = ADXL345_SPI_Init(GSENSOR_SPI_BASE);
-    if(bSuccess)
-    	printf("error init gsensor\n");
-
-	printf("Welcome to LT24 Demo \n");
-
-	// Write 0x3C on LED[6:0] through the dedicated custom IP
-	IOWR(LED_CTRL_BASE, 0x0, 0x3C);
-	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0);
-
-
-	// TOUCH INITIALIZATION
-	pTouch = Touch_Init(LT24_TOUCH_SPI_BASE,  LT24_TOUCH_PENIRQ_N_BASE, LT24_TOUCH_PENIRQ_N_IRQ);
-	if (!pTouch){
-		printf("Failed to init touch\r\n");
-	}else{
-		printf("Init touch successfully\r\n");
-	}
-
-	// LCD INITIALIZATION
-	LCD_Init();
-	hardware(pTouch);
-
-	while(1){
-		printf("LT24_state: %d\n" , LT24_state);
-
-		if(LT24_state == 0)
-			hardware(pTouch);
-		else if(LT24_state==1){
-			char str[64];
-			sprintf(str , "Touch the screen %d \n" , counter);
-			game_over(Display , pTouch , str );
-			LT24_state = 0;
-		}
-	}
-
-	return 0;
-}
-
-
-int hardware( TOUCH_HANDLE *pTouch){
-	Set_BUFFER_FLAG();
-	unsigned int X, Y;
-	unsigned int posTamper =0;
-	while(LT24_state==0){
-		 if(Touch_GetXY(pTouch, &X, &Y) && LT24_state==0){
-			 LCD_WR_DATA(Y);
-			 LCD_WR_REG(X);
-		 }
-		 if(IORD_32DIRECT(LT24_INTERFACE_IRQ_0_BASE,0)){
-			 return 0;
-		 }
-
-		    alt_16 szXYZ[3];
-		    if (ADXL345_SPI_IsDataReady(GSENSOR_SPI_BASE) && ADXL345_SPI_XYZ_Read(GSENSOR_SPI_BASE, szXYZ)){
-		    	if( szXYZ[0] < 512 && szXYZ[0]> -512 && szXYZ[1] < 512 && szXYZ[1]>-512){
-		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/50);
-		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/50);
-		    	}
-		    	printf("Accel %d \n", szXYZ[0]);
-		    }
-	}
-
-	printf("out of hardware \n");
-	return 0;
-}
-
-int game_over( alt_video_display Display ,TOUCH_HANDLE *pTouch , char *str){
-	 Clr_BUFFER_FLAG();
-	 Display.interlace = 0;
-	 Display.bytes_per_pixel = 2;
-	 Display.color_depth = 16;
-	 Display.height = SCREEN_HEIGHT;
-	 Display.width = SCREEN_WIDTH;
-	 vid_draw_box (0, 0,SCREEN_WIDTH, SCREEN_HEIGHT, 0x00f80000, 1, &Display);
-	 vid_print_string_alpha(0, 0, 0xff00ff, 0xffffff, tahomabold_20, &Display, str);
-	 unsigned int X, Y;
-	 while(1){
-		 if(Touch_GetXY(pTouch, &X, &Y) && LT24_state==1){
-			 return 0;
-		 }
-	 }
-	 return 0;
-}
-
-/*int hardware( TOUCH_HANDLE *pTouch){
-	Set_BUFFER_FLAG();
-	unsigned int X, Y;
-	unsigned int posTamper =0;
-	while(LT24_state==0){
-		 if(Touch_GetXY(pTouch, &X, &Y) && LT24_state==0){
-			 LCD_WR_DATA(Y);
-			 LCD_WR_REG(X);
-		 }
-		 if(IORD_32DIRECT(LT24_INTERFACE_IRQ_0_BASE,0)){
-			 return 0;
-		 }
-
-		    alt_16 szXYZ[3];
-		    if (ADXL345_SPI_IsDataReady(GSENSOR_SPI_BASE) && ADXL345_SPI_XYZ_Read(GSENSOR_SPI_BASE, szXYZ)){
-		    	if( szXYZ[0] < 512 && szXYZ[0]> -512 && szXYZ[1] < 512 && szXYZ[1]>-512){
-		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/50);
-		    		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/50);
-		    	}
-		    	printf("Accel %d \n", szXYZ[0]);
-		    }
-	}
-
-	printf("out of hardware \n");
-	return 0;
-}
-*/
-
 #include "terasic_lib/terasic_includes.h"
 #include "terasic_lib/touch_spi.h"
 #include "graphic_lib/alt_video_display.h"
@@ -263,7 +62,7 @@ char LT24_state = 0;
 int Operation = myCyclone_Wait;
 int coins=0;
 int myOp;
-
+bool restartcoin =0;
 
 alt_video_display Display;
 TOUCH_HANDLE *pTouch;
@@ -273,10 +72,10 @@ void LT24_ISR(void *context){
 	int cnt = IORD(COUNTER_0_BASE,0);
 
 	char str[64];
-	sprintf(str , "This is counter %x  , %x \n" ,cnt ,  cnt/(256*256*32));
+	sprintf(str , "||||||||||||||||||| This is counter %x  , %x \n" ,cnt ,  cnt/(256*256));
 	printf(str);
 	counter++;
-	if(Operation == myCyclone_Start_Coin){
+	if(Operation == myCyclone_Start_Coin ||Operation == myCyclone_End_Fight){
 		coins++;
 		myOp = myCyclone_Start_Coin;
 	}
@@ -284,7 +83,8 @@ void LT24_ISR(void *context){
 		myOp = myCyclone_Wait;
 	}
 	if(Operation == myCyclone_Start_Fight){
-		 IOWR(CYCLONESPI_BASE+(4*0x02) , 0 , cnt/(256*256*32));
+		 IOWR(CYCLONESPI_BASE+(4*0x02) , 0 ,cnt/(256*256*32));
+		 myOp = myCyclone_Start_Coin;
 	}
 
 	OSMboxPost(Flag2, (void*)&myOp);
@@ -395,8 +195,6 @@ void task_game_over(void* pdata)
 		 OSSemPend(Screen, 0,&err);
 		 Clr_BUFFER_FLAG();
 
-		 //X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
-		 //Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
 		 Display.interlace = 0;
 		 Display.bytes_per_pixel = 2;
 		 Display.color_depth = 16;
@@ -406,8 +204,6 @@ void task_game_over(void* pdata)
 		 vid_draw_box (0, 0,SCREEN_WIDTH, SCREEN_HEIGHT, 0x00f80000, 1, &Display);
 		 vid_print_string_alpha(0, 0, 0xff00ff, 0xffffff, tahomabold_20, &Display, "hello");
 
-		 //X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
-		 //Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
 
 		 int *lol = (int *)OSMboxPend(GameOverBox , 0 , &err);
 		 printf("Game over end \n");
@@ -441,23 +237,31 @@ void task_send_data(void* pdata)
 		previousOp = newOp;
 		newOp = IORD(CYCLONESPI_BASE+(4*0x12),0); // read the op asked by pic32
 		int *opIrq = (int *)OSMboxAccept(Flag2);
-		//printf("in newOp %d Op %d \n" , newOp , Operation);
+		// printf("in newOp %d Op %d \n" , newOp , Operation);
 
 		if (newOp != Operation && newOp != previousOp && newOp !=0 && (Operation==myCyclone_Wait|| Operation == myCyclone_End_Fight || Operation == myCyclone_End_Coin || Operation == myCyclone_Start_Coin)){
 			printf("in newOp %d \n" , newOp);
 			switch(newOp){
 				case myCyclone_Start_Fight: OSSemPost(Game2); game_on = 0;
+											restartcoin = (Operation == myCyclone_Start_Coin);
+											IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
+											 coins =0;
 											break;
 				case myCyclone_Start_Coin: OSSemPost(Game1); game_on = 1;
-											coins=0;
-											break;
-				case myCyclone_End_Coin: OSMboxPost(Flag1 , (void*)&game_on);
+										   coins=0;
+										   break;
+				case myCyclone_End_Coin: //OSMboxPost(Flag1 , (void*)&game_on);
 										 IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
+										 coins =0;
 										 break;
 				default:OSSemPost(Game1); game_on = 1;
-						coins=0;
 						break;
 			}
+			/// Force end of game over
+
+			if(opIrq != NULL)
+				newOp = *opIrq;
+
 			if(Operation == myCyclone_Wait || Operation == myCyclone_End_Coin || newOp == myCyclone_Start_Fight || newOp == myCyclone_Start_Coin){
 				OSMboxPost(GameOverBox , (void *)&Operation);
 				printf("poster to gameover \n");
@@ -472,8 +276,12 @@ void task_send_data(void* pdata)
 				OSMboxPost(Flag1 , (void*) opIrq);
 				Operation = *opIrq;
 			}
+
 		}else if(opIrq !=NULL){
 			OSMboxPost(Flag1 , (void*) opIrq);
+			if(Operation == myCyclone_End_Fight || Operation == myCyclone_Start_Fight)
+				OSMboxPost(GameOverBox , (void *)&Operation);
+
 			Operation = *opIrq;
 			printf("sended to task game %d  \n" , *opIrq);
 		}
@@ -507,12 +315,12 @@ void task_game1(void* pdata)
     	printf("Started Game1\n");
 		Set_BUFFER_FLAG();
 
-    	while(op==NULL || *op == myCyclone_Start_Coin || *op == myCyclone_Start_Fight){
+    	while(op==NULL || *op == myCyclone_Start_Coin || *op == myCyclone_Start_Fight || *op == myCyclone_End_Fight){
 
 			int vx = IORD(LT24_INTERFACE_IRQ_0_BASE+(4*5),0);
 			int vy = IORD(LT24_INTERFACE_IRQ_0_BASE+(4*6),0);
 
-    		if(acctualOp == myCyclone_Start_Coin){
+    		if(acctualOp == myCyclone_Start_Coin || acctualOp == myCyclone_End_Fight){
     			szXYZ = (alt_16 *) OSMboxPend(Accel , 0 , &err);
     			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/50);
     			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/50);
@@ -544,13 +352,19 @@ void task_game1(void* pdata)
     		else if (op!=NULL && *op==myCyclone_Start_Fight){
     			printf("init the fight \n");
     	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0);
+    	    	IOWR(COUNTER_0_BASE+8, 0 , 0);
+    	    	    			int cnt = IORD(COUNTER_0_BASE,0);
+    	    	    			int i = 0;
+    	    	    			i ++;
+    	    	    			int cnt2 = IORD(COUNTER_0_BASE,0);
+    	    	    			printf("|||||||||||||||||||||||||cnt just after %d cnt2 %d|||||||||||||||||\n" ,cnt , cnt2);
+    	    	 Clr_BUFFER_FLAG();
+    	    	Set_BUFFER_FLAG();
     			X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
     			Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
     			//LCD_WR_DATA(*Y);
     			//LCD_WR_REG(*X);
-    			IOWR(COUNTER_0_BASE, 0 , 0);
-    			Clr_BUFFER_FLAG();
-    			Set_BUFFER_FLAG();
+
     			acctualOp = *op;
     		}
 

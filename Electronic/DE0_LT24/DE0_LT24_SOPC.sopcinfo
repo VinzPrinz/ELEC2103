@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="DE0_LT24_SOPC" kind="DE0_LT24_SOPC" version="1.0" fabric="QSYS">
  <!-- Format version 15.1 185 (Future versions may contain additional information.) -->
- <!-- 2016.03.20.19:13:57 -->
+ <!-- 2016.03.21.00:00:36 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1458497636</value>
+  <value>1458514835</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -4011,7 +4011,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="dataSlaveMapParam">
    <type>java.lang.String</type>
-   <value><![CDATA[<address-map><slave name='timer_timestamp.s1' start='0x0' end='0x20' /><slave name='SDRAM_Controler.s1' start='0x2000000' end='0x4000000' /><slave name='background_mem.s1' start='0x4000000' end='0x4003200' /><slave name='pic_mem.s1' start='0x4004000' end='0x4007200' /><slave name='CPU.jtag_debug_module' start='0x4008800' end='0x4009000' /><slave name='LT24_interface_irq_0.avs_s0' start='0x4009000' end='0x4009400' /><slave name='cycloneSPI.avs_s0' start='0x4009400' end='0x4009800' /><slave name='LED_CTRL.avalon_slave_0' start='0x4009800' end='0x4009C00' /><slave name='gsensor_spi.slave' start='0x4009C00' end='0x4009C40' /><slave name='sys_clk_timer.s1' start='0x4009C40' end='0x4009C60' /><slave name='LT24_TOUCH_SPI.spi_control_port' start='0x4009C60' end='0x4009C80' /><slave name='TIMER.s1' start='0x4009C80' end='0x4009CA0' /><slave name='gsensor_int.s1' start='0x4009CA0' end='0x4009CB0' /><slave name='LT24_buffer_flag.s1' start='0x4009CB0' end='0x4009CC0' /><slave name='LT24_TOUCH_BUSY.s1' start='0x4009CC0' end='0x4009CD0' /><slave name='LT24_TOUCH_PENIRQ_N.s1' start='0x4009CD0' end='0x4009CE0' /><slave name='LT24_LCD_RSTN.s1' start='0x4009CE0' end='0x4009CF0' /><slave name='KEY.s1' start='0x4009CF0' end='0x4009D00' /><slave name='ALT_PLL.pll_slave' start='0x4009D00' end='0x4009D10' /><slave name='LT24_CTRL.avalon_slave_0' start='0x4009D10' end='0x4009D18' /><slave name='JTAG_UART.avalon_jtag_slave' start='0x4009D18' end='0x4009D20' /><slave name='counter_0.avs_s0' start='0x4010000' end='0x4010400' /></address-map>]]></value>
+   <value><![CDATA[<address-map><slave name='timer_timestamp.s1' start='0x0' end='0x20' /><slave name='SDRAM_Controler.s1' start='0x2000000' end='0x4000000' /><slave name='background_mem.s1' start='0x4000000' end='0x4002580' /><slave name='pic_mem.s1' start='0x4004000' end='0x4004190' /><slave name='CPU.jtag_debug_module' start='0x4008800' end='0x4009000' /><slave name='LT24_interface_irq_0.avs_s0' start='0x4009000' end='0x4009400' /><slave name='cycloneSPI.avs_s0' start='0x4009400' end='0x4009800' /><slave name='LED_CTRL.avalon_slave_0' start='0x4009800' end='0x4009C00' /><slave name='gsensor_spi.slave' start='0x4009C00' end='0x4009C40' /><slave name='sys_clk_timer.s1' start='0x4009C40' end='0x4009C60' /><slave name='LT24_TOUCH_SPI.spi_control_port' start='0x4009C60' end='0x4009C80' /><slave name='TIMER.s1' start='0x4009C80' end='0x4009CA0' /><slave name='gsensor_int.s1' start='0x4009CA0' end='0x4009CB0' /><slave name='LT24_buffer_flag.s1' start='0x4009CB0' end='0x4009CC0' /><slave name='LT24_TOUCH_BUSY.s1' start='0x4009CC0' end='0x4009CD0' /><slave name='LT24_TOUCH_PENIRQ_N.s1' start='0x4009CD0' end='0x4009CE0' /><slave name='LT24_LCD_RSTN.s1' start='0x4009CE0' end='0x4009CF0' /><slave name='KEY.s1' start='0x4009CF0' end='0x4009D00' /><slave name='ALT_PLL.pll_slave' start='0x4009D00' end='0x4009D10' /><slave name='LT24_CTRL.avalon_slave_0' start='0x4009D10' end='0x4009D18' /><slave name='JTAG_UART.avalon_jtag_slave' start='0x4009D18' end='0x4009D20' /><slave name='counter_0.avs_s0' start='0x4010000' end='0x4010400' /></address-map>]]></value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -4705,7 +4705,7 @@ parameters are a RESULT of the module parameters. -->
     <slaveName>s1</slaveName>
     <name>pic_mem.s1</name>
     <baseAddress>67125248</baseAddress>
-    <span>12800</span>
+    <span>400</span>
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
@@ -4721,7 +4721,7 @@ parameters are a RESULT of the module parameters. -->
     <slaveName>s1</slaveName>
     <name>background_mem.s1</name>
     <baseAddress>67108864</baseAddress>
-    <span>12800</span>
+    <span>9600</span>
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
@@ -14784,7 +14784,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.INIT_CONTENTS_FILE</name>
-   <value>lol</value>
+   <value>myNewBackground</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.INIT_MEM_CONTENT</name>
@@ -14816,7 +14816,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.SIZE_VALUE</name>
-   <value>12800</value>
+   <value>9600</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.WRITABLE</name>
@@ -14848,7 +14848,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.memoryInfo.MEM_INIT_FILENAME</name>
-   <value>lol</value>
+   <value>myNewBackground</value>
   </assignment>
   <assignment>
    <name>postgeneration.simulation.init_file.param_name</name>
@@ -14900,7 +14900,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="initializationFileName">
    <type>java.lang.String</type>
-   <value>./lol.hex</value>
+   <value>./myNewBackground.hex</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -14916,7 +14916,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="memorySize">
    <type>long</type>
-   <value>12800</value>
+   <value>9600</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -15079,7 +15079,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_init_file_name">
    <type>java.lang.String</type>
-   <value>./lol.hex</value>
+   <value>./myNewBackground.hex</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -15176,7 +15176,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="addressSpan">
     <type>java.math.BigInteger</type>
-    <value>12800</value>
+    <value>9600</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -15264,7 +15264,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="explicitAddressSpan">
     <type>java.math.BigInteger</type>
-    <value>12800</value>
+    <value>9600</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -15604,7 +15604,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="addressSpan">
     <type>java.math.BigInteger</type>
-    <value>12800</value>
+    <value>9600</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -15692,7 +15692,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="explicitAddressSpan">
     <type>java.math.BigInteger</type>
-    <value>12800</value>
+    <value>9600</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -18497,7 +18497,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.INIT_CONTENTS_FILE</name>
-   <value>lol2</value>
+   <value>piece</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.INIT_MEM_CONTENT</name>
@@ -18529,7 +18529,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.SIZE_VALUE</name>
-   <value>12800</value>
+   <value>400</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.WRITABLE</name>
@@ -18561,7 +18561,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.memoryInfo.MEM_INIT_FILENAME</name>
-   <value>lol2</value>
+   <value>piece</value>
   </assignment>
   <assignment>
    <name>postgeneration.simulation.init_file.param_name</name>
@@ -18613,7 +18613,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="initializationFileName">
    <type>java.lang.String</type>
-   <value>./lol2.hex</value>
+   <value>./piece.hex</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -18629,7 +18629,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="memorySize">
    <type>long</type>
-   <value>12800</value>
+   <value>400</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -18760,7 +18760,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_set_addr_width">
    <type>int</type>
-   <value>13</value>
+   <value>8</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -18792,7 +18792,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="derived_init_file_name">
    <type>java.lang.String</type>
-   <value>./lol2.hex</value>
+   <value>./piece.hex</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -18889,7 +18889,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="addressSpan">
     <type>java.math.BigInteger</type>
-    <value>12800</value>
+    <value>400</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -18977,7 +18977,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="explicitAddressSpan">
     <type>java.math.BigInteger</type>
-    <value>12800</value>
+    <value>400</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -19188,7 +19188,7 @@ parameters are a RESULT of the module parameters. -->
    <port>
     <name>address</name>
     <direction>Input</direction>
-    <width>13</width>
+    <width>8</width>
     <role>address</role>
    </port>
    <port>
@@ -19317,7 +19317,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="addressSpan">
     <type>java.math.BigInteger</type>
-    <value>12800</value>
+    <value>400</value>
     <derived>true</derived>
     <enabled>true</enabled>
     <visible>false</visible>
@@ -19405,7 +19405,7 @@ parameters are a RESULT of the module parameters. -->
    </parameter>
    <parameter name="explicitAddressSpan">
     <type>java.math.BigInteger</type>
-    <value>12800</value>
+    <value>400</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -19616,7 +19616,7 @@ parameters are a RESULT of the module parameters. -->
    <port>
     <name>address2</name>
     <direction>Input</direction>
-    <width>13</width>
+    <width>8</width>
     <role>address</role>
    </port>
    <port>

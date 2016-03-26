@@ -167,8 +167,8 @@ agreement for further details.
 	(port
 		(pt 0 1224)
 		(input)
-		(text "pic_mem_s2_address[12..0]" (rect 0 0 114 12)(font "Arial" (font_size 8)))
-		(text "pic_mem_s2_address[12..0]" (rect 4 1213 154 1224)(font "Arial" (font_size 8)))
+		(text "pic_mem_s2_address[7..0]" (rect 0 0 110 12)(font "Arial" (font_size 8)))
+		(text "pic_mem_s2_address[7..0]" (rect 4 1213 148 1224)(font "Arial" (font_size 8)))
 		(line (pt 0 1224)(pt 240 1224)(line_width 3))
 	)
 	(port
