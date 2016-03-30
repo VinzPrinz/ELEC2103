@@ -13,6 +13,7 @@
 #include "system.h"
 #include "terasic_lib/terasic_includes.h"
 
+<<<<<<< HEAD
 // mode definitions
 #define MODE_FIGHT 0x0
 #define MODE_MAP_PLAYER0 0x2
@@ -34,6 +35,9 @@ char theMap[8][16] = {{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','
 					  {'.','.','X','.','.','.','.','.','.','.','.','.','.','Y','.','.'},
 					  {'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'}};
 
+=======
+char MTL_state = 0;
+>>>>>>> addd119a196e0f16961ae63bce1fbb921569d96d
 
 // translates touch data to x,y and isTouched signals
 void translateTouchData(int touchData, int* x, int* y, int* isTouched)
@@ -76,6 +80,7 @@ int manhattan(int x1, int y1, int x2, int y2)
 	return abs(x1-x2) + abs(y1-y2);
 }
 
+<<<<<<< HEAD
 // send mode to MTL AND to SPI interfaces
 void sendMode(int mode)
 {
@@ -99,6 +104,62 @@ void MTL_ISR(void *context){
 	sendMode(playersTurn ? MODE_MAP_PLAYER1 : MODE_MAP_PLAYER0); // end the fight
 	map = 1;
 }
+=======
+
+void MTL_ISR(void *context){
+	printf("this is the counter %d \n" , IORD(MTL_INTERFACE_IRQ_0_BASE+8 ,0 )); // read counter
+	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x1);
+	int i=  0;
+	for(i;i<10000;i++)
+	{}
+	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x0);
+}
+
+int main()
+{
+	int test,x,y,isTouched;
+	int tileX, tileY,selectX, selectY; // touched tile and selected tile (can only be a soldier)
+	int receive = 0; // indicates when we receive data
+	int lol = 1;
+	printf("Hello from MTL side!\n");
+
+	//IOWR(MTL_INTERFACE_IRQ_0_BASE , 0x0 , 0x1);
+
+	IOWR(TESTLED_BASE, 0x0, 0x3);
+
+	// create the map : '.' = empty, 'X' = perso
+	char theMap[8][16] = {{'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+						  {'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+						  {'.','.','.','X','.','.','.','.','.','.','.','.','.','X','.','.'},
+						  {'.','.','.','.','.','.','.','.','.','.','.','.','X','.','.','.'},
+						  {'.','.','.','X','.','.','.','.','.','.','.','X','.','.','.','.'},
+						  {'.','.','.','X','.','.','.','.','.','.','.','.','.','.','.','.'},
+						  {'.','.','.','.','.','.','.','.','.','.','.','.','.','.','.','.'},
+						  {'.','.','.','.','.','.','.','.','.','.','.','.','.','X','.','.'}};
+	sendMap(theMap);
+
+// send the starting map in the beginning
+//	IOWR(MAPTRANSFER_BASE, 0x0, 0x00000000);
+//	IOWR(MAPTRANSFER_BASE, 0x1, 0x00000808);
+//	IOWR(MAPTRANSFER_BASE, 0x2, 0x08080000);
+//	IOWR(MAPTRANSFER_BASE, 0x2, 0x00000000);
+
+	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x1);
+	int i =0;
+	for(i;i<10000;i++)
+	{}
+	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x0);
+
+	int reg_ret = alt_iic_isr_register(MTL_INTERFACE_IRQ_0_IRQ_INTERRUPT_CONTROLLER_ID,
+											MTL_INTERFACE_IRQ_0_IRQ,
+										&MTL_ISR , (void *)&MTL_state , NULL);
+	if(!reg_ret) {
+		printf("Button interrupt service routine (ISR) well registered \n");
+	} else {
+		printf("Something went wrong in the registering; software exits");
+		return -1;
+	}
+>>>>>>> addd119a196e0f16961ae63bce1fbb921569d96d
 
 void MTL_reset()
 {
@@ -109,6 +170,7 @@ void MTL_reset()
 	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x0);
 }
 
+<<<<<<< HEAD
 int main()
 {
 	int x,y,isTouched; // (x,y) coordinates of the touch, and isTouched = 1 if screen is being touched
@@ -133,6 +195,13 @@ int main()
 
 	// player 0 begins to play
 	sendMode(MODE_MAP_PLAYER0);
+=======
+	while(1)
+	{	IOWR(MTL_INTERFACE_IRQ_0_BASE , 0 , 0x0); // reset game;
+		IOWR(MTL_INTERFACE_IRQ_0_BASE+4 , 0 , 0x2); // mode
+
+		//printf("this is the counter %d \n" , IORD(MTL_INTERFACE_IRQ_0_BASE+8 ,0 )); // read counter
+>>>>>>> addd119a196e0f16961ae63bce1fbb921569d96d
 
 	while(1) // begin game forever TODO : end game if no soldiers of one color (later)
 	{

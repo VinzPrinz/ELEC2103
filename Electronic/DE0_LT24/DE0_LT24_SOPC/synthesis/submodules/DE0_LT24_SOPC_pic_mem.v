@@ -45,13 +45,13 @@ module DE0_LT24_SOPC_pic_mem (
                              )
 ;
 
-  parameter INIT_FILE = "./lol2.hex";
+  parameter INIT_FILE = "./piece.hex";
 
 
   output  [ 15: 0] readdata;
   output  [ 15: 0] readdata2;
-  input   [ 12: 0] address;
-  input   [ 12: 0] address2;
+  input   [  7: 0] address;
+  input   [  7: 0] address2;
   input   [  1: 0] byteenable;
   input   [  1: 0] byteenable2;
   input            chipselect;
@@ -103,9 +103,9 @@ module DE0_LT24_SOPC_pic_mem (
            the_altsyncram.indata_reg_b = "CLOCK1",
            the_altsyncram.init_file = INIT_FILE,
            the_altsyncram.lpm_type = "altsyncram",
-           the_altsyncram.maximum_depth = 6400,
-           the_altsyncram.numwords_a = 6400,
-           the_altsyncram.numwords_b = 6400,
+           the_altsyncram.maximum_depth = 200,
+           the_altsyncram.numwords_a = 200,
+           the_altsyncram.numwords_b = 200,
            the_altsyncram.operation_mode = "BIDIR_DUAL_PORT",
            the_altsyncram.outdata_reg_a = "UNREGISTERED",
            the_altsyncram.outdata_reg_b = "UNREGISTERED",
@@ -115,8 +115,8 @@ module DE0_LT24_SOPC_pic_mem (
            the_altsyncram.width_b = 16,
            the_altsyncram.width_byteena_a = 2,
            the_altsyncram.width_byteena_b = 2,
-           the_altsyncram.widthad_a = 13,
-           the_altsyncram.widthad_b = 13,
+           the_altsyncram.widthad_a = 8,
+           the_altsyncram.widthad_b = 8,
            the_altsyncram.wrcontrol_wraddress_reg_b = "CLOCK1";
 
   //s1, which is an e_avalon_slave

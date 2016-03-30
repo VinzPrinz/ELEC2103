@@ -32,11 +32,17 @@
 			lt24_conduit_rd                             : out   std_logic;                                        -- rd
 			lt24_conduit_wr                             : out   std_logic;                                        -- wr
 			lt24_conduit_data                           : out   std_logic_vector(15 downto 0);                    -- data
-			lt24_conduit_1_finish_flag                  : in    std_logic                     := 'X';             -- finish_flag
-			lt24_conduit_1_counter                      : in    std_logic_vector(31 downto 0) := (others => 'X'); -- counter
-			lt24_conduit_1_pattern                      : out   std_logic_vector(11 downto 0);                    -- pattern
-			lt24_conduit_1_vx                           : out   std_logic_vector(31 downto 0);                    -- vx
-			lt24_conduit_1_vy                           : out   std_logic_vector(31 downto 0);                    -- vy
+			lt24_conduit_0_finish_flag                  : in    std_logic                     := 'X';             -- finish_flag
+			lt24_conduit_0_counter                      : in    std_logic_vector(31 downto 0) := (others => 'X'); -- counter
+			lt24_conduit_0_pattern                      : out   std_logic_vector(11 downto 0);                    -- pattern
+			lt24_conduit_0_vx                           : out   std_logic_vector(31 downto 0);                    -- vx
+			lt24_conduit_0_vy                           : out   std_logic_vector(31 downto 0);                    -- vy
+			lt24_conduit_0_lt24_coin_x0                 : out   std_logic_vector(31 downto 0);                    -- lt24_coin_x0
+			lt24_conduit_0_lt42_coin_y0                 : out   std_logic_vector(31 downto 0);                    -- lt42_coin_y0
+			lt24_conduit_0_lt24_coinx                   : in    std_logic_vector(31 downto 0) := (others => 'X'); -- lt24_coinx
+			lt24_conduit_0_lt24_coin_y                  : in    std_logic_vector(31 downto 0) := (others => 'X'); -- lt24_coin_y
+			lt24_conduit_0_lt24_coin_vx0                : out   std_logic_vector(31 downto 0);                    -- lt24_coin_vx0
+			lt24_conduit_0_lt24_coin_vy0                : out   std_logic_vector(31 downto 0);                    -- lt24_coin_vy0
 			lt24_lcd_rstn_export                        : out   std_logic;                                        -- export
 			lt24_touch_busy_export                      : in    std_logic                     := 'X';             -- export
 			lt24_touch_penirq_n_export                  : in    std_logic                     := 'X';             -- export
@@ -44,7 +50,7 @@
 			lt24_touch_spi_MOSI                         : out   std_logic;                                        -- MOSI
 			lt24_touch_spi_SCLK                         : out   std_logic;                                        -- SCLK
 			lt24_touch_spi_SS_n                         : out   std_logic;                                        -- SS_n
-			pic_mem_s2_address                          : in    std_logic_vector(12 downto 0) := (others => 'X'); -- address
+			pic_mem_s2_address                          : in    std_logic_vector(7 downto 0)  := (others => 'X'); -- address
 			pic_mem_s2_chipselect                       : in    std_logic                     := 'X';             -- chipselect
 			pic_mem_s2_clken                            : in    std_logic                     := 'X';             -- clken
 			pic_mem_s2_write                            : in    std_logic                     := 'X';             -- write
@@ -61,6 +67,12 @@
 			sdram_controler_wire_dqm                    : out   std_logic_vector(1 downto 0);                     -- dqm
 			sdram_controler_wire_ras_n                  : out   std_logic;                                        -- ras_n
 			sdram_controler_wire_we_n                   : out   std_logic;                                        -- we_n
+			snake_mem_address                           : in    std_logic_vector(9 downto 0)  := (others => 'X'); -- address
+			snake_mem_chipselect                        : in    std_logic                     := 'X';             -- chipselect
+			snake_mem_clken                             : in    std_logic                     := 'X';             -- clken
+			snake_mem_write                             : in    std_logic                     := 'X';             -- write
+			snake_mem_readdata                          : out   std_logic_vector(7 downto 0);                     -- readdata
+			snake_mem_writedata                         : in    std_logic_vector(7 downto 0)  := (others => 'X'); -- writedata
 			to_led_export                               : out   std_logic_vector(7 downto 0)                      -- export
 		);
 	end component DE0_LT24_SOPC;
@@ -99,11 +111,17 @@
 			lt24_conduit_rd                             => CONNECTED_TO_lt24_conduit_rd,                             --                                     .rd
 			lt24_conduit_wr                             => CONNECTED_TO_lt24_conduit_wr,                             --                                     .wr
 			lt24_conduit_data                           => CONNECTED_TO_lt24_conduit_data,                           --                                     .data
-			lt24_conduit_1_finish_flag                  => CONNECTED_TO_lt24_conduit_1_finish_flag,                  --                       lt24_conduit_1.finish_flag
-			lt24_conduit_1_counter                      => CONNECTED_TO_lt24_conduit_1_counter,                      --                                     .counter
-			lt24_conduit_1_pattern                      => CONNECTED_TO_lt24_conduit_1_pattern,                      --                                     .pattern
-			lt24_conduit_1_vx                           => CONNECTED_TO_lt24_conduit_1_vx,                           --                                     .vx
-			lt24_conduit_1_vy                           => CONNECTED_TO_lt24_conduit_1_vy,                           --                                     .vy
+			lt24_conduit_0_finish_flag                  => CONNECTED_TO_lt24_conduit_0_finish_flag,                  --                       lt24_conduit_0.finish_flag
+			lt24_conduit_0_counter                      => CONNECTED_TO_lt24_conduit_0_counter,                      --                                     .counter
+			lt24_conduit_0_pattern                      => CONNECTED_TO_lt24_conduit_0_pattern,                      --                                     .pattern
+			lt24_conduit_0_vx                           => CONNECTED_TO_lt24_conduit_0_vx,                           --                                     .vx
+			lt24_conduit_0_vy                           => CONNECTED_TO_lt24_conduit_0_vy,                           --                                     .vy
+			lt24_conduit_0_lt24_coin_x0                 => CONNECTED_TO_lt24_conduit_0_lt24_coin_x0,                 --                                     .lt24_coin_x0
+			lt24_conduit_0_lt42_coin_y0                 => CONNECTED_TO_lt24_conduit_0_lt42_coin_y0,                 --                                     .lt42_coin_y0
+			lt24_conduit_0_lt24_coinx                   => CONNECTED_TO_lt24_conduit_0_lt24_coinx,                   --                                     .lt24_coinx
+			lt24_conduit_0_lt24_coin_y                  => CONNECTED_TO_lt24_conduit_0_lt24_coin_y,                  --                                     .lt24_coin_y
+			lt24_conduit_0_lt24_coin_vx0                => CONNECTED_TO_lt24_conduit_0_lt24_coin_vx0,                --                                     .lt24_coin_vx0
+			lt24_conduit_0_lt24_coin_vy0                => CONNECTED_TO_lt24_conduit_0_lt24_coin_vy0,                --                                     .lt24_coin_vy0
 			lt24_lcd_rstn_export                        => CONNECTED_TO_lt24_lcd_rstn_export,                        --                        lt24_lcd_rstn.export
 			lt24_touch_busy_export                      => CONNECTED_TO_lt24_touch_busy_export,                      --                      lt24_touch_busy.export
 			lt24_touch_penirq_n_export                  => CONNECTED_TO_lt24_touch_penirq_n_export,                  --                  lt24_touch_penirq_n.export
@@ -128,6 +146,12 @@
 			sdram_controler_wire_dqm                    => CONNECTED_TO_sdram_controler_wire_dqm,                    --                                     .dqm
 			sdram_controler_wire_ras_n                  => CONNECTED_TO_sdram_controler_wire_ras_n,                  --                                     .ras_n
 			sdram_controler_wire_we_n                   => CONNECTED_TO_sdram_controler_wire_we_n,                   --                                     .we_n
+			snake_mem_address                           => CONNECTED_TO_snake_mem_address,                           --                            snake_mem.address
+			snake_mem_chipselect                        => CONNECTED_TO_snake_mem_chipselect,                        --                                     .chipselect
+			snake_mem_clken                             => CONNECTED_TO_snake_mem_clken,                             --                                     .clken
+			snake_mem_write                             => CONNECTED_TO_snake_mem_write,                             --                                     .write
+			snake_mem_readdata                          => CONNECTED_TO_snake_mem_readdata,                          --                                     .readdata
+			snake_mem_writedata                         => CONNECTED_TO_snake_mem_writedata,                         --                                     .writedata
 			to_led_export                               => CONNECTED_TO_to_led_export                                --                               to_led.export
 		);
 

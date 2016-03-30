@@ -48,3 +48,8 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+/Electronic/elec2103_mtl_demo/pic32/dist/default/
+*/dv/*
+*/incremental_db/*
+*.bak
+*.back

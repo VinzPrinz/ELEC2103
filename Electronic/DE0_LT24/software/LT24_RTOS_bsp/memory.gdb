@@ -3,7 +3,7 @@
 # Machine generated for CPU 'CPU' in SOPC Builder design 'DE0_LT24_SOPC'
 # SOPC Builder design path: ../../DE0_LT24_SOPC.sopcinfo
 #
-# Generated: Sat Mar 12 11:55:21 CET 2016
+# Generated: Sat Mar 26 22:20:19 CET 2016
 
 # DO NOT MODIFY THIS FILE
 #
@@ -46,11 +46,14 @@
 # The cache attribute is specified which improves GDB performance
 # by allowing GDB to cache memory contents on the host.
 
+# snake_mem
+memory 0x10000 0x102f8 cache
+
 # SDRAM_Controler
 memory 0x2000000 0x4000000 cache
 
 # background_mem
-memory 0x4000000 0x4003200 cache
+memory 0x4000000 0x4002580 cache
 
 # pic_mem
-memory 0x4004000 0x4007200 cache
+memory 0x4006400 0x4006590 cache

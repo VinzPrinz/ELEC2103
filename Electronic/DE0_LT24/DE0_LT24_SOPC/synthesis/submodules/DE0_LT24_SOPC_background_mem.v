@@ -45,7 +45,7 @@ module DE0_LT24_SOPC_background_mem (
                                     )
 ;
 
-  parameter INIT_FILE = "./lol.hex";
+  parameter INIT_FILE = "./myNewBackground.hex";
 
 
   output  [ 15: 0] readdata;
@@ -103,9 +103,9 @@ module DE0_LT24_SOPC_background_mem (
            the_altsyncram.indata_reg_b = "CLOCK1",
            the_altsyncram.init_file = INIT_FILE,
            the_altsyncram.lpm_type = "altsyncram",
-           the_altsyncram.maximum_depth = 6400,
-           the_altsyncram.numwords_a = 6400,
-           the_altsyncram.numwords_b = 6400,
+           the_altsyncram.maximum_depth = 4800,
+           the_altsyncram.numwords_a = 4800,
+           the_altsyncram.numwords_b = 4800,
            the_altsyncram.operation_mode = "BIDIR_DUAL_PORT",
            the_altsyncram.outdata_reg_a = "UNREGISTERED",
            the_altsyncram.outdata_reg_b = "UNREGISTERED",

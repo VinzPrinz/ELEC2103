@@ -32,11 +32,17 @@ module DE0_LT24_SOPC (
 	lt24_conduit_rd,
 	lt24_conduit_wr,
 	lt24_conduit_data,
-	lt24_conduit_1_finish_flag,
-	lt24_conduit_1_counter,
-	lt24_conduit_1_pattern,
-	lt24_conduit_1_vx,
-	lt24_conduit_1_vy,
+	lt24_conduit_0_finish_flag,
+	lt24_conduit_0_counter,
+	lt24_conduit_0_pattern,
+	lt24_conduit_0_vx,
+	lt24_conduit_0_vy,
+	lt24_conduit_0_lt24_coin_x0,
+	lt24_conduit_0_lt42_coin_y0,
+	lt24_conduit_0_lt24_coinx,
+	lt24_conduit_0_lt24_coin_y,
+	lt24_conduit_0_lt24_coin_vx0,
+	lt24_conduit_0_lt24_coin_vy0,
 	lt24_lcd_rstn_export,
 	lt24_touch_busy_export,
 	lt24_touch_penirq_n_export,
@@ -61,6 +67,12 @@ module DE0_LT24_SOPC (
 	sdram_controler_wire_dqm,
 	sdram_controler_wire_ras_n,
 	sdram_controler_wire_we_n,
+	snake_mem_address,
+	snake_mem_chipselect,
+	snake_mem_clken,
+	snake_mem_write,
+	snake_mem_readdata,
+	snake_mem_writedata,
 	to_led_export);	
 
 	input		alt_pll_areset_conduit_export;
@@ -95,11 +107,17 @@ module DE0_LT24_SOPC (
 	output		lt24_conduit_rd;
 	output		lt24_conduit_wr;
 	output	[15:0]	lt24_conduit_data;
-	input		lt24_conduit_1_finish_flag;
-	input	[31:0]	lt24_conduit_1_counter;
-	output	[11:0]	lt24_conduit_1_pattern;
-	output	[31:0]	lt24_conduit_1_vx;
-	output	[31:0]	lt24_conduit_1_vy;
+	input		lt24_conduit_0_finish_flag;
+	input	[31:0]	lt24_conduit_0_counter;
+	output	[11:0]	lt24_conduit_0_pattern;
+	output	[31:0]	lt24_conduit_0_vx;
+	output	[31:0]	lt24_conduit_0_vy;
+	output	[31:0]	lt24_conduit_0_lt24_coin_x0;
+	output	[31:0]	lt24_conduit_0_lt42_coin_y0;
+	input	[31:0]	lt24_conduit_0_lt24_coinx;
+	input	[31:0]	lt24_conduit_0_lt24_coin_y;
+	output	[31:0]	lt24_conduit_0_lt24_coin_vx0;
+	output	[31:0]	lt24_conduit_0_lt24_coin_vy0;
 	output		lt24_lcd_rstn_export;
 	input		lt24_touch_busy_export;
 	input		lt24_touch_penirq_n_export;
@@ -107,7 +125,7 @@ module DE0_LT24_SOPC (
 	output		lt24_touch_spi_MOSI;
 	output		lt24_touch_spi_SCLK;
 	output		lt24_touch_spi_SS_n;
-	input	[12:0]	pic_mem_s2_address;
+	input	[7:0]	pic_mem_s2_address;
 	input		pic_mem_s2_chipselect;
 	input		pic_mem_s2_clken;
 	input		pic_mem_s2_write;
@@ -124,5 +142,11 @@ module DE0_LT24_SOPC (
 	output	[1:0]	sdram_controler_wire_dqm;
 	output		sdram_controler_wire_ras_n;
 	output		sdram_controler_wire_we_n;
+	input	[9:0]	snake_mem_address;
+	input		snake_mem_chipselect;
+	input		snake_mem_clken;
+	input		snake_mem_write;
+	output	[7:0]	snake_mem_readdata;
+	input	[7:0]	snake_mem_writedata;
 	output	[7:0]	to_led_export;
 endmodule

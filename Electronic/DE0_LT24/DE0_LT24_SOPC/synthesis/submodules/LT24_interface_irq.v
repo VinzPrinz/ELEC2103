@@ -13,8 +13,27 @@ module LT24_interface_irq (
 		input  wire [31:0] counter,            //            .new_signal_1
 		output wire [11:0] pattern,             //            .new_signal_2
       output wire [31:0]  vx,
-      output wire [31:0]  vy
+      output wire [31:0]  vy, 
+		input wire [31:0] lt24_coin_x,
+		input wire [31:0] lt24_coin_y,
+		output wire [31:0] lt24_coin_x0,
+		output wire [31:0] lt24_coin_y0,
+		output wire [31:0] lt24_coin_vx0,
+		output wire [31:0] lt24_coin_vy0
+		
     );
+	 
+	parameter finish_flag_addr = 4'b0000;
+	parameter counter_addr = 4'b0001;
+	parameter pattern_addr = 4'b0010;
+	parameter vx_addr = 4'b0011;
+	parameter vy_addr = 4'b0100;
+	parameter lt24_coin_x_addr = 4'b0101;
+	parameter lt24_coin_y_addr = 4'b0110;
+	parameter lt24_coin_x0_addr = 4'b0111;
+	parameter lt24_coin_y0_addr = 4'b1000;
+	parameter lt24_coin_vx0_addr = 4'b1001;
+	parameter lt24_coin_vy0_addr = 4'b1010;
 	 
 	reg [31:0] my_counter;
 	wire [31:0] my_counter_wire;
@@ -44,9 +63,15 @@ module LT24_interface_irq (
 	reg [11:0] pattern_reg;
 	assign pattern = pattern_reg;
 	
-	reg [31:0] vx_reg , vy_reg;
+	reg [31:0] vx_reg , vy_reg , lt24_coin_x0_reg , lt24_coin_y0_reg , lt24_coin_vx0_reg , lt24_coin_vy0_reg;
 	assign vx =  vx_reg;
 	assign vy = vy_reg;
+	assign lt24_coin_x0 = lt24_coin_x0_reg;
+	assign lt24_coin_y0 = lt24_coin_y0_reg;
+	assign lt24_coin_vx0 = lt24_coin_vx0_reg;
+	assign lt24_coin_vy0 = lt24_coin_vy0_reg;
+
+
 	
 	always @(clock_clk)
 	if(reset_reset)
@@ -54,19 +79,42 @@ module LT24_interface_irq (
 			pattern_reg <= 12'b0;
 			vy_reg <= 32'b0;
 			vx_reg <= 32'b0;
+			lt24_coin_x0_reg <= 32'b0;
+			lt24_coin_y0_reg <= 32'b0;
+			lt24_coin_vx0_reg <= 32'b0;
+			lt24_coin_vy0_reg <= 32'b0;
+			avs_s0_readdata_reg <= 32'b0;
 		end
 	else if(avs_s0_read)
-		case(avs_s0_address[2:0])
-			3'b000: avs_s0_readdata_reg <= {31'b0 , finish_flag};
-			3'b001: avs_s0_readdata_reg <= my_counter;
+		case(avs_s0_address[3:0])
+			finish_flag_addr: avs_s0_readdata_reg <= {31'b0 , finish_flag};
+			counter_addr: avs_s0_readdata_reg <= my_counter;
+			lt24_coin_x_addr: avs_s0_readdata_reg <= lt24_coin_x;
+			lt24_coin_y_addr: avs_s0_readdata_reg <= lt24_coin_y;
 		endcase
 	else if(avs_s0_write)
-		case(avs_s0_address[2:0])
-			3'b010: pattern_reg <= avs_s0_writedata[11:0];
-			3'b011: vx_reg <= avs_s0_writedata;
-			3'b100: vy_reg <= avs_s0_writedata;
+		case(avs_s0_address[3:0])
+			pattern_addr: pattern_reg <= avs_s0_writedata[11:0];
+			vx_addr: vx_reg <= avs_s0_writedata;
+			vy_addr: vy_reg <= avs_s0_writedata;
+			lt24_coin_x0_addr:  lt24_coin_x0_reg <= avs_s0_writedata;
+			lt24_coin_y0_addr:  lt24_coin_y0_reg <= avs_s0_writedata;
+			lt24_coin_vx0_addr:  lt24_coin_vx0_reg <= avs_s0_writedata;
+			lt24_coin_vy0_addr:  lt24_coin_vy0_reg <= avs_s0_writedata;			
 		endcase
-			
+	/*else
+		begin
+			avs_s0_readdata_reg <= avs_s0_readdata_reg;
+			lt24_coin_x0_reg <= lt24_coin_x0_reg;
+			lt24_coin_y0_reg <= lt24_coin_y0_reg;
+			lt24_coin_vx0_reg <= lt24_coin_vx0_reg;
+			lt24_coin_vy0_reg <= lt24_coin_vy0_reg;
+			vx_reg <= vx_reg;
+			vy_reg <= vy_reg;
+			pattern_reg <= pattern_reg;
+		end*/
+		
+		
 	always @ (posedge clock_clk)
 		if(reset_reset || ~finish_flag)
 			irq_flag <= 1'b1;

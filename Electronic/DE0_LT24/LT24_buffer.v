@@ -1,4 +1,4 @@
-`timescale 1 ps / 1 ps
+//`timescale 1 ps / 1 ps
 module LT24_buffer(
 	clk,
 	rst_n,
@@ -47,11 +47,25 @@ module LT24_buffer(
 	background_mem_s2_writedata,                
 	background_mem_s2_byteenable, 
 	
+	snake_mem_address,                   
+	snake_mem_chipselect,               
+	snake_mem_clken,                     
+	snake_mem_write,                    
+	snake_mem_readdata,                 
+	snake_mem_writedata,                
+	snake_mem_byteenable, 
+	
 	lt24_finish,
 	lt24_pattern,
 	lt24_counter,
 	VX,
-	VY
+	VY,
+	lt24_coin_x,
+	lt24_coin_y,
+	lt24_coin_x0,
+	lt24_coin_y0,
+	lt24_coin_vx0,
+	lt24_coin_vy0
 );
 
 input clk;
@@ -101,11 +115,30 @@ input   wire [15:0] background_mem_s2_readdata;
 output  wire [15:0] background_mem_s2_writedata;                
 output  wire [1:0]  background_mem_s2_byteenable; 
 
+output  wire [9:0] snake_mem_address;                   
+output  wire        snake_mem_chipselect;               
+output  wire        snake_mem_clken;                     
+output  wire        snake_mem_write;                    
+input   wire [7:0]  snake_mem_readdata;                 
+output  wire [7:0]  snake_mem_writedata;                
+output  wire [1:0]  snake_mem_byteenable; 
+
+
 input 	wire				lt24_buffer_flag;
 output 	wire				lt24_finish;
 input		wire	[11:0]	lt24_pattern;
 output	wire	[31:0]	lt24_counter;
 input 	wire [31:0]	VX , VY;    
+
+output wire [31:0] lt24_coin_x;
+output wire [31:0] lt24_coin_y;
+input wire [31:0] lt24_coin_x0;
+input wire [31:0] lt24_coin_y0;
+input wire [31:0] lt24_coin_vx0;
+input wire [31:0] lt24_coin_vy0;
+
+assign lt24_coin_x = X1;
+assign lt24_coin_y = Y1;
 
 reg				lt24_finish_reg;
 reg	[31:0]	lt24_counter_reg;
@@ -227,7 +260,7 @@ end
 
 
 wire [10:0]  limLowX, limLowY, limHighX, limHighY, characPosX, characPosY;
-reg 	[10:0] posX, posY, pointerX, pointerY;
+reg  [10:0] posX, posY, pointerX, pointerY;
 
 
 // Used for the fight game
@@ -265,8 +298,13 @@ reg [10:0]	X1 , Y1;
 reg [31:0]  cnt;
 wire displayCharact;
 
-parameter VXC = 1;
-parameter VYC = 1;
+wire [31:0] VXC , VYC;
+//parameter VXC = 1;
+//parameter VYC = 1;
+//wire [10:0] VYC , VXC;
+
+assign VXC = lt24_coin_vx0;
+assign VYC = lt24_coin_vy0;
 reg [10:0]	X1C , Y1C;
 //parameter X1C = 100;
 //parameter Y1C = 100;
@@ -283,10 +321,11 @@ assign 	background_mem_s2_writedata = 16'h0;
 assign	background_mem_s2_write = 1'b0;
 assign  	background_mem_s2_byteenable = 2'b11;
 //the 80x60 pixels image of background is replicated 16 times on the whole screen
-assign 	background_mem_s2_address = ({2'b0,posX} % 13'd80) + (13'd80*({2'b0,posY} % 13'd80));
+assign 	background_mem_s2_address = ({2'b0,posX} % 13'd60) + (13'd60*({2'b0,posY} % 13'd80));
 //the background is only read when the screen is browsed
 assign 	background_mem_s2_chipselect = (screenState >= 18'd6) && (screenState < 18'd76806);
 assign 	background_mem_s2_clken = background_mem_s2_chipselect;
+
 
 //the limits of the area of the screen where the character is displayed (it is a 64x64 picture)
 // ok, let's make some changes here! it is a 30x40 pic
@@ -308,13 +347,15 @@ assign  	pic_mem_s2_byteenable = 2'b11;
 //The current position within the picture of the character
 //assign 	characPosX = posX - (pointerX - 11'd31);
 //assign 	characPosY = posY - (pointerY - 11'd31);
-assign 	characPosX = posX - (pointerX - 11'd19);
-assign 	characPosY = posY - (pointerY - 11'd14);
+assign 	characPosX = posX - (X1C); 
+assign 	characPosY = posY - (Y1C);
 
 //The address of the current pixel in the 64x64 picture of the character (picmem)
-assign 	pic_mem_s2_address =  ({2'b0,posX} % 16'd80) + (16'd80*({2'b0,posY} % 16'd80));
+//assign 	pic_mem_s2_address = {1'b0,characPosX} + (12'd64*{1'b0,characPosY});
+
+assign 	pic_mem_s2_address =  {1'b0,characPosX} + (12 'd20*({1'b0,characPosY}));
 //if the current pixel is within the character area : the character is displayed
-assign 	pic_mem_s2_chipselect = (screenState >= 18'd6) && (screenState < 18'd76806);
+assign 	pic_mem_s2_chipselect = (characPosX >= 11'd0) && (characPosX < 11'd20) && (characPosY >= 11'd0) && (11'd20 > characPosX);
 assign 	pic_mem_s2_clken = pic_mem_s2_chipselect;
 
 
@@ -444,7 +485,7 @@ always @ (posedge clk)
 		posX <= posX;
 		posY <= posY;
 
-		lt24_finish_reg <=  (!lt24_pattern[0] && Case_Reg == 12'b0) || (lt24_pattern[0]==1'b1 && col_wire==1'b1);
+		lt24_finish_reg <=  (!lt24_pattern[0] && Case_Reg == 12'b0) || (lt24_pattern[0] && col_wire==1'b1);
 		if(posX == pointerX && posY == pointerY)
 			Case_Reg[11] <= 1'b0;
 		end
@@ -482,11 +523,14 @@ always @ (posedge clk)
 		end
 	end
 	
-	
+	wire [31:0] Yflag; 
+	assign Yflag = VY + 32'd1;
 // FSM to choose the position of jean-didier
 	always @ (posedge clk)
-		if(rst || Y1 + VY < 0)
+		if(rst)
 			Y1 <= 10;
+		else if	(Y1+VY >= 320-L1 && VY[31])
+			Y1 <= 320-L1;
 		else if( Y1+VY >= (320-L1))
 			Y1 <= 320-L1;
 		else if( cnt == 32'h000ffffe)
@@ -495,7 +539,7 @@ always @ (posedge clk)
 			Y1 <= Y1;
 			
 	always @ (posedge clk)
-		if(rst || X1 + VX < 0)
+		if(rst || X1 + VX < 1)
 			X1 <= 10;
 		else if( X1+VX >= (240-H1) && ~VX[31]) // VX positif
 			X1 <= 240-H1;
@@ -508,9 +552,11 @@ always @ (posedge clk)
 		else	
 			X1 <= X1;
 			
-	always @ (posedge clk)
-		if(rst || X1C + VXC < 0)
-			X1C <= 10;
+		always @ (posedge clk)
+		if (rst || X1C + VXC < 1)
+			X1C <= 240-H1 ;
+		else if (bufferFlag_wire == 1'b0)
+			X1C <= lt24_coin_x0;
 		else if( X1C+VXC >= (240-H1)) // VX positif
 			X1C <= 1 + H1;
 		else if( cnt == 32'h000ffffe) // VX positif
@@ -519,10 +565,12 @@ always @ (posedge clk)
 			X1C <= X1C;
 			
 	always @ (posedge clk)
-		if(rst || Y1C + VYC < 0)
-			Y1C <= 10;
+		if(rst || Y1C + VYC < 1)
+			Y1C <= 320-L1;
+		else if( bufferFlag_wire == 1'b0)
+			Y1C <= lt24_coin_y0;
 		else if( Y1C+VYC >= (320-L1))
-			Y1C <= 1+ L1;
+			Y1C <= 1  + L1;
 		else if( cnt == 32'h000ffffe)
 			Y1C <= Y1C+VYC;
 		else
@@ -547,47 +595,78 @@ always @ (posedge clk)
 reg [15:0] Game1_Color;
 wire [15:0] Game1_Color_wire;
 assign Game1_Color_wire = Game1_Color;
+reg [7:0] snake1 , snake2;
 
 always
-		if(lt24_pattern[0])
+		if(snakeX % 4 == 0 && snake_mem_readdata[1]==1'b1)
+			snake1 <= 8'h0f;
+		else if(snakeX % 4 == 1 && snake_mem_readdata[3] == 1'b1)
+			snake1 <= 8'h0f;
+		else if(snakeX % 6'd4 == 6'd2 && snake_mem_readdata[5] == 1'b1)
+			snake1 <= 8'h0f;
+		else if(snakeX % 6'd4 == 6'd3 && snake_mem_readdata[7] == 1'b1)
+			snake1 <= 8'h0f;
+		else 
+			snake1 <= 8'hff;
+			
+always
+		if(snakeX % 4 == 0 && snake_mem_readdata[0]==1'b1)
+			snake2 <= 8'h0f;
+		else if(snakeX % 4 == 1 && snake_mem_readdata[2] == 1'b1)
+			snake2 <= 8'h0f;
+		else if(snakeX % 6'd4 == 6'd2 && snake_mem_readdata[4] == 1'b1)
+			snake2 <= 8'h0f;
+		else if(snakeX % 6'd4 == 6'd3 && snake_mem_readdata[6] == 1'b1)
+			snake2 <= 8'h0f;
+		else 
+			snake2 <= 8'hff;
+			
+			
+	always 	@ (posedge clk)	
+		if(lt24_pattern[1:0] == 2'b10)
+				Game1_Color <= {snake2   ,snake1};
+		else if(lt24_pattern[0])
 			case({displayCharact , displayCoin})
 				2'b11: Game1_Color <= 16'h0000;
 				2'b10: Game1_Color <= 16'hf0ff;
-				2'b01: Game1_Color <= 16'h00aa;
-				default: Game1_Color <= 16'hffff;
+				2'b01: Game1_Color <= pic_mem_s2_readdata;
+				default: Game1_Color <= background_mem_s2_readdata;
 			endcase 
 		else if(Case_Wire[11])
 			case(Counter_Wire)
-				2'b00: Game1_Color <= pic_mem_s2_readdata;
-				2'b01: Game1_Color <= pic_mem_s2_readdata;
+				2'b00: Game1_Color <= background_mem_s2_readdata;
+				2'b01: Game1_Color <= background_mem_s2_readdata;
 				2'b11: Game1_Color <= 16'h00aa;
 				2'b10: Game1_Color <= 16'h00aa;
 			endcase
 		else
 			Game1_Color <= 16'haa00;
-
-// lt24_counter
-
-/*always @(posedge clk)
-	case({rst , lt24_finish})
-		2'b1x:lt24_counter_reg <= 32'b0;
-		2'b01:lt24_counter_reg <= lt24_counter;
-		2'b00:lt24_counter_reg <= lt24_counter + 32'd1;
-	endcase*/
+			
 	parameter ZERO = 32'd0;
 	parameter ONE = 32'd1;
+
 	
-/*	always @ (posedge clk)
-		if(rst)
-			lt24_counter_reg <= 0 ;
-		//else if( bufferFlag_wire == 1'b0)
-		//	lt24_counter_reg <= 0;
-		else if(lt24_finish)
-			lt24_counter_reg <= lt24_counter_wire;
-		else
-//			lt24_counter_reg <= lt24_counter_wire + 1;
+	
+////////////////////////////// SNAKE GAME ///////////////////////////
+assign snake_mem_address = (snakeX)/4 + (snakeY)*9'd8;                 
+assign snake_mem_chipselect = background_mem_s2_chipselect;           
+assign snake_mem_clken  = snake_mem_chipselect;                     
+assign snake_mem_write = 1'b0;//(snakeX == 10 && snakeY == 10);// && newCaseSnake;                                     
+
+assign snake_mem_writedata = 8'h0;
+assign snake_mem_byteenable = 2'b11; 
+
+reg [7:0] snake_mem_writedata_reg;
+reg [31:0] snakeCnt;
+wire [5:0] snakeX , snakeY;
+wire newCaseSnake;
+
+assign snakeX = posX / 11'd10;
+assign snakeY = posY / 11'd10;
+
+assign newCaseSnake = (posX %  11'd10 == 0 && posY % 11'd10 ==0);
+	
+	
 			
-		//	lt24_counter_reg <= lt24_counter_reg;*/
-	
 	
 endmodule

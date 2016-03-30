@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'DE0_LT24_SOPC'
  * SOPC Builder design path: ../../DE0_LT24_SOPC.sopcinfo
  *
- * Generated: Sat Mar 12 11:55:21 CET 2016
+ * Generated: Sat Mar 26 22:20:19 CET 2016
  */
 
 /*
@@ -50,16 +50,18 @@
 
 MEMORY
 {
+    snake_mem : ORIGIN = 0x10000, LENGTH = 760
     reset : ORIGIN = 0x2000000, LENGTH = 32
     SDRAM_Controler : ORIGIN = 0x2000020, LENGTH = 33554400
-    background_mem : ORIGIN = 0x4000000, LENGTH = 12800
-    pic_mem : ORIGIN = 0x4004000, LENGTH = 12800
+    background_mem : ORIGIN = 0x4000000, LENGTH = 9600
+    pic_mem : ORIGIN = 0x4006400, LENGTH = 400
 }
 
 /* Define symbols for each memory base-address */
+__alt_mem_snake_mem = 0x10000;
 __alt_mem_SDRAM_Controler = 0x2000000;
 __alt_mem_background_mem = 0x4000000;
-__alt_mem_pic_mem = 0x4004000;
+__alt_mem_pic_mem = 0x4006400;
 
 OUTPUT_FORMAT( "elf32-littlenios2",
                "elf32-littlenios2",
@@ -311,7 +313,24 @@ SECTIONS
      *
      */
 
-    .SDRAM_Controler LOADADDR (.bss) + SIZEOF (.bss) : AT ( LOADADDR (.bss) + SIZEOF (.bss) )
+    .snake_mem : AT ( LOADADDR (.bss) + SIZEOF (.bss) )
+    {
+        PROVIDE (_alt_partition_snake_mem_start = ABSOLUTE(.));
+        *(.snake_mem .snake_mem. snake_mem.*)
+        . = ALIGN(4);
+        PROVIDE (_alt_partition_snake_mem_end = ABSOLUTE(.));
+    } > snake_mem
+
+    PROVIDE (_alt_partition_snake_mem_load_addr = LOADADDR(.snake_mem));
+
+    /*
+     *
+     * This section's LMA is set to the .text region.
+     * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
+     *
+     */
+
+    .SDRAM_Controler LOADADDR (.snake_mem) + SIZEOF (.snake_mem) : AT ( LOADADDR (.snake_mem) + SIZEOF (.snake_mem) )
     {
         PROVIDE (_alt_partition_SDRAM_Controler_start = ABSOLUTE(.));
         *(.SDRAM_Controler .SDRAM_Controler. SDRAM_Controler.*)
