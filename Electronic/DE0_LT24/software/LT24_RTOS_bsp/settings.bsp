@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>ucosii</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Mar 21, 2016 12:09:44 AM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1458515384764</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Mar 27, 2016 9:39:44 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1459107584205</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24/software/LT24_RTOS_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../DE0_LT24_SOPC.sopcinfo</SopcDesignFile>
@@ -1727,10 +1727,10 @@
                 <Group xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
         </Setting>
         <MemoryMap>
-                <slaveDescriptor>timer_timestamp</slaveDescriptor>
-                <addressRange>0x00000000 - 0x0000001F</addressRange>
-                <addressSpan>32</addressSpan>
-                <attributes>timer</attributes>
+                <slaveDescriptor>snake_mem</slaveDescriptor>
+                <addressRange>0x00010000 - 0x000102F7</addressRange>
+                <addressSpan>760</addressSpan>
+                <attributes>memory</attributes>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>SDRAM_Controler</slaveDescriptor>
@@ -1745,112 +1745,118 @@
                 <attributes>memory</attributes>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>pic_mem</slaveDescriptor>
-                <addressRange>0x04004000 - 0x0400418F</addressRange>
-                <addressSpan>400</addressSpan>
-                <attributes>memory</attributes>
+                <slaveDescriptor>counter_0</slaveDescriptor>
+                <addressRange>0x04005000 - 0x040053FF</addressRange>
+                <addressSpan>1024</addressSpan>
+                <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>LT24_interface_irq_0</slaveDescriptor>
-                <addressRange>0x04009000 - 0x040093FF</addressRange>
+                <addressRange>0x04005400 - 0x040057FF</addressRange>
                 <addressSpan>1024</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>cycloneSPI</slaveDescriptor>
-                <addressRange>0x04009400 - 0x040097FF</addressRange>
+                <addressRange>0x04005800 - 0x04005BFF</addressRange>
                 <addressSpan>1024</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>LED_CTRL</slaveDescriptor>
-                <addressRange>0x04009800 - 0x04009BFF</addressRange>
+                <addressRange>0x04005C00 - 0x04005FFF</addressRange>
                 <addressSpan>1024</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
+                <slaveDescriptor>pic_mem</slaveDescriptor>
+                <addressRange>0x04006400 - 0x0400658F</addressRange>
+                <addressSpan>400</addressSpan>
+                <attributes>memory</attributes>
+        </MemoryMap>
+        <MemoryMap>
                 <slaveDescriptor>gsensor_spi</slaveDescriptor>
-                <addressRange>0x04009C00 - 0x04009C3F</addressRange>
+                <addressRange>0x04006600 - 0x0400663F</addressRange>
                 <addressSpan>64</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
-                <slaveDescriptor>sys_clk_timer</slaveDescriptor>
-                <addressRange>0x04009C40 - 0x04009C5F</addressRange>
-                <addressSpan>32</addressSpan>
-                <attributes>timer</attributes>
-        </MemoryMap>
-        <MemoryMap>
                 <slaveDescriptor>LT24_TOUCH_SPI</slaveDescriptor>
-                <addressRange>0x04009C60 - 0x04009C7F</addressRange>
+                <addressRange>0x04006640 - 0x0400665F</addressRange>
                 <addressSpan>32</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
+                <slaveDescriptor>timer_timestamp</slaveDescriptor>
+                <addressRange>0x04006660 - 0x0400667F</addressRange>
+                <addressSpan>32</addressSpan>
+                <attributes>timer</attributes>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>sys_clk_timer</slaveDescriptor>
+                <addressRange>0x04006680 - 0x0400669F</addressRange>
+                <addressSpan>32</addressSpan>
+                <attributes>timer</attributes>
+        </MemoryMap>
+        <MemoryMap>
                 <slaveDescriptor>TIMER</slaveDescriptor>
-                <addressRange>0x04009C80 - 0x04009C9F</addressRange>
+                <addressRange>0x040066A0 - 0x040066BF</addressRange>
                 <addressSpan>32</addressSpan>
                 <attributes>timer</attributes>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>gsensor_int</slaveDescriptor>
-                <addressRange>0x04009CA0 - 0x04009CAF</addressRange>
+                <addressRange>0x040066C0 - 0x040066CF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>LT24_buffer_flag</slaveDescriptor>
-                <addressRange>0x04009CB0 - 0x04009CBF</addressRange>
+                <addressRange>0x040066D0 - 0x040066DF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>LT24_TOUCH_BUSY</slaveDescriptor>
-                <addressRange>0x04009CC0 - 0x04009CCF</addressRange>
+                <addressRange>0x040066E0 - 0x040066EF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>LT24_TOUCH_PENIRQ_N</slaveDescriptor>
-                <addressRange>0x04009CD0 - 0x04009CDF</addressRange>
+                <addressRange>0x040066F0 - 0x040066FF</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>LT24_LCD_RSTN</slaveDescriptor>
-                <addressRange>0x04009CE0 - 0x04009CEF</addressRange>
+                <addressRange>0x04006700 - 0x0400670F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>KEY</slaveDescriptor>
-                <addressRange>0x04009CF0 - 0x04009CFF</addressRange>
+                <addressRange>0x04006710 - 0x0400671F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>ALT_PLL</slaveDescriptor>
-                <addressRange>0x04009D00 - 0x04009D0F</addressRange>
+                <addressRange>0x04006720 - 0x0400672F</addressRange>
                 <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>LT24_CTRL</slaveDescriptor>
-                <addressRange>0x04009D10 - 0x04009D17</addressRange>
+                <addressRange>0x04006730 - 0x04006737</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>JTAG_UART</slaveDescriptor>
-                <addressRange>0x04009D18 - 0x04009D1F</addressRange>
+                <addressRange>0x04006738 - 0x0400673F</addressRange>
                 <addressSpan>8</addressSpan>
                 <attributes>printable</attributes>
-        </MemoryMap>
-        <MemoryMap>
-                <slaveDescriptor>counter_0</slaveDescriptor>
-                <addressRange>0x04010000 - 0x040103FF</addressRange>
-                <addressSpan>1024</addressSpan>
-                <attributes/>
         </MemoryMap>
         <LinkerSection>
                 <sectionName>.text</sectionName>

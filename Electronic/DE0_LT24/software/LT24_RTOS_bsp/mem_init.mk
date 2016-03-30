@@ -221,8 +221,8 @@ DAT_FILES += $(HDL_SIM_DIR)/$(MEM_2).dat
 HDL_SIM_INSTALL_FILES += $(HDL_SIM_INSTALL_DIR)/$(MEM_2).dat
 SYM_FILES += $(HDL_SIM_DIR)/$(MEM_2).sym
 HDL_SIM_INSTALL_FILES += $(HDL_SIM_INSTALL_DIR)/$(MEM_2).sym
-$(MEM_2)_START := 0x04004000
-$(MEM_2)_END := 0x0400418f
+$(MEM_2)_START := 0x04006400
+$(MEM_2)_END := 0x0400658f
 $(MEM_2)_SPAN := 0x00000190
 $(MEM_2)_HIERARCHICAL_PATH := pic_mem
 $(MEM_2)_WIDTH := 16
@@ -232,6 +232,28 @@ $(MEM_2)_CREATE_LANES := 0
 
 .PHONY: pic_mem
 pic_mem: check_elf_exists $(MEM_INIT_DIR)/$(MEM_2).hex $(HDL_SIM_DIR)/$(MEM_2).dat $(HDL_SIM_DIR)/$(MEM_2).sym
+
+# Memory: snake_mem
+MEM_3 := snake_mem
+$(MEM_3)_NAME := snake_mem
+$(MEM_3)_MEM_INIT_FILE_PARAM_NAME := INIT_FILE
+HEX_FILES += $(MEM_INIT_DIR)/$(MEM_3).hex
+MEM_INIT_INSTALL_FILES += $(MEM_INIT_INSTALL_DIR)/$(MEM_3).hex
+DAT_FILES += $(HDL_SIM_DIR)/$(MEM_3).dat
+HDL_SIM_INSTALL_FILES += $(HDL_SIM_INSTALL_DIR)/$(MEM_3).dat
+SYM_FILES += $(HDL_SIM_DIR)/$(MEM_3).sym
+HDL_SIM_INSTALL_FILES += $(HDL_SIM_INSTALL_DIR)/$(MEM_3).sym
+$(MEM_3)_START := 0x00010000
+$(MEM_3)_END := 0x000102f7
+$(MEM_3)_SPAN := 0x000002f8
+$(MEM_3)_HIERARCHICAL_PATH := snake_mem
+$(MEM_3)_WIDTH := 8
+$(MEM_3)_HEX_DATA_WIDTH := 8
+$(MEM_3)_ENDIANNESS := --little-endian-mem
+$(MEM_3)_CREATE_LANES := 0
+
+.PHONY: snake_mem
+snake_mem: check_elf_exists $(MEM_INIT_DIR)/$(MEM_3).hex $(HDL_SIM_DIR)/$(MEM_3).dat $(HDL_SIM_DIR)/$(MEM_3).sym
 
 
 #END OF BSP SPECIFIC

@@ -67,6 +67,12 @@
 			sdram_controler_wire_dqm                    : out   std_logic_vector(1 downto 0);                     -- dqm
 			sdram_controler_wire_ras_n                  : out   std_logic;                                        -- ras_n
 			sdram_controler_wire_we_n                   : out   std_logic;                                        -- we_n
+			snake_mem_address                           : in    std_logic_vector(9 downto 0)  := (others => 'X'); -- address
+			snake_mem_chipselect                        : in    std_logic                     := 'X';             -- chipselect
+			snake_mem_clken                             : in    std_logic                     := 'X';             -- clken
+			snake_mem_write                             : in    std_logic                     := 'X';             -- write
+			snake_mem_readdata                          : out   std_logic_vector(7 downto 0);                     -- readdata
+			snake_mem_writedata                         : in    std_logic_vector(7 downto 0)  := (others => 'X'); -- writedata
 			to_led_export                               : out   std_logic_vector(7 downto 0)                      -- export
 		);
 	end component DE0_LT24_SOPC;
@@ -140,6 +146,12 @@
 			sdram_controler_wire_dqm                    => CONNECTED_TO_sdram_controler_wire_dqm,                    --                                     .dqm
 			sdram_controler_wire_ras_n                  => CONNECTED_TO_sdram_controler_wire_ras_n,                  --                                     .ras_n
 			sdram_controler_wire_we_n                   => CONNECTED_TO_sdram_controler_wire_we_n,                   --                                     .we_n
+			snake_mem_address                           => CONNECTED_TO_snake_mem_address,                           --                            snake_mem.address
+			snake_mem_chipselect                        => CONNECTED_TO_snake_mem_chipselect,                        --                                     .chipselect
+			snake_mem_clken                             => CONNECTED_TO_snake_mem_clken,                             --                                     .clken
+			snake_mem_write                             => CONNECTED_TO_snake_mem_write,                             --                                     .write
+			snake_mem_readdata                          => CONNECTED_TO_snake_mem_readdata,                          --                                     .readdata
+			snake_mem_writedata                         => CONNECTED_TO_snake_mem_writedata,                         --                                     .writedata
 			to_led_export                               => CONNECTED_TO_to_led_export                                --                               to_led.export
 		);
 

@@ -66,6 +66,12 @@
 		.sdram_controler_wire_dqm                    (<connected-to-sdram_controler_wire_dqm>),                    //                                     .dqm
 		.sdram_controler_wire_ras_n                  (<connected-to-sdram_controler_wire_ras_n>),                  //                                     .ras_n
 		.sdram_controler_wire_we_n                   (<connected-to-sdram_controler_wire_we_n>),                   //                                     .we_n
+		.snake_mem_address                           (<connected-to-snake_mem_address>),                           //                            snake_mem.address
+		.snake_mem_chipselect                        (<connected-to-snake_mem_chipselect>),                        //                                     .chipselect
+		.snake_mem_clken                             (<connected-to-snake_mem_clken>),                             //                                     .clken
+		.snake_mem_write                             (<connected-to-snake_mem_write>),                             //                                     .write
+		.snake_mem_readdata                          (<connected-to-snake_mem_readdata>),                          //                                     .readdata
+		.snake_mem_writedata                         (<connected-to-snake_mem_writedata>),                         //                                     .writedata
 		.to_led_export                               (<connected-to-to_led_export>)                                //                               to_led.export
 	);
 

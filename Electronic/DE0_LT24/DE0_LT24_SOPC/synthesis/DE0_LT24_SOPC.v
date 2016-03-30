@@ -71,6 +71,12 @@ module DE0_LT24_SOPC (
 		output wire [1:0]  sdram_controler_wire_dqm,                    //                                     .dqm
 		output wire        sdram_controler_wire_ras_n,                  //                                     .ras_n
 		output wire        sdram_controler_wire_we_n,                   //                                     .we_n
+		input  wire [9:0]  snake_mem_address,                           //                            snake_mem.address
+		input  wire        snake_mem_chipselect,                        //                                     .chipselect
+		input  wire        snake_mem_clken,                             //                                     .clken
+		input  wire        snake_mem_write,                             //                                     .write
+		output wire [7:0]  snake_mem_readdata,                          //                                     .readdata
+		input  wire [7:0]  snake_mem_writedata,                         //                                     .writedata
 		output wire [7:0]  to_led_export                                //                               to_led.export
 	);
 
@@ -196,6 +202,12 @@ module DE0_LT24_SOPC (
 	wire   [2:0] mm_interconnect_0_timer_timestamp_s1_address;                 // mm_interconnect_0:timer_timestamp_s1_address -> timer_timestamp:address
 	wire         mm_interconnect_0_timer_timestamp_s1_write;                   // mm_interconnect_0:timer_timestamp_s1_write -> timer_timestamp:write_n
 	wire  [15:0] mm_interconnect_0_timer_timestamp_s1_writedata;               // mm_interconnect_0:timer_timestamp_s1_writedata -> timer_timestamp:writedata
+	wire         mm_interconnect_0_snake_mem_s1_chipselect;                    // mm_interconnect_0:snake_mem_s1_chipselect -> snake_mem:chipselect
+	wire   [7:0] mm_interconnect_0_snake_mem_s1_readdata;                      // snake_mem:readdata -> mm_interconnect_0:snake_mem_s1_readdata
+	wire   [9:0] mm_interconnect_0_snake_mem_s1_address;                       // mm_interconnect_0:snake_mem_s1_address -> snake_mem:address
+	wire         mm_interconnect_0_snake_mem_s1_write;                         // mm_interconnect_0:snake_mem_s1_write -> snake_mem:write
+	wire   [7:0] mm_interconnect_0_snake_mem_s1_writedata;                     // mm_interconnect_0:snake_mem_s1_writedata -> snake_mem:writedata
+	wire         mm_interconnect_0_snake_mem_s1_clken;                         // mm_interconnect_0:snake_mem_s1_clken -> snake_mem:clken
 	wire         mm_interconnect_0_gsensor_spi_slave_chipselect;               // mm_interconnect_0:gsensor_spi_slave_chipselect -> gsensor_spi:s_chipselect
 	wire   [7:0] mm_interconnect_0_gsensor_spi_slave_readdata;                 // gsensor_spi:s_readdata -> mm_interconnect_0:gsensor_spi_slave_readdata
 	wire   [3:0] mm_interconnect_0_gsensor_spi_slave_address;                  // mm_interconnect_0:gsensor_spi_slave_address -> gsensor_spi:s_address
@@ -228,7 +240,8 @@ module DE0_LT24_SOPC (
 	wire         rst_controller_001_reset_out_reset;                           // rst_controller_001:reset_out -> [CPU:reset_n, JTAG_UART:rst_n, LT24_CTRL:reset_n, LT24_LCD_RSTN:reset_n, LT24_TOUCH_BUSY:reset_n, LT24_TOUCH_PENIRQ_N:reset_n, LT24_TOUCH_SPI:reset_n, SDRAM_Controler:reset_n, irq_mapper:reset, irq_synchronizer:sender_reset, irq_synchronizer_001:sender_reset, irq_synchronizer_002:sender_reset, irq_synchronizer_003:sender_reset, irq_synchronizer_004:sender_reset, mm_interconnect_0:CPU_reset_n_reset_bridge_in_reset_reset, rst_translator_001:in_reset]
 	wire         rst_controller_001_reset_out_reset_req;                       // rst_controller_001:reset_req -> [CPU:reset_req, rst_translator_001:reset_req_in]
 	wire         rst_controller_002_reset_out_reset;                           // rst_controller_002:reset_out -> [KEY:reset_n, LED_CTRL:RST, TIMER:reset_n, irq_synchronizer_002:receiver_reset, mm_interconnect_0:LED_CTRL_reset_sink_reset_bridge_in_reset_reset]
-	wire         rst_controller_003_reset_out_reset;                           // rst_controller_003:reset_out -> [LT24_buffer_flag:reset_n, LT24_interface_irq_0:reset_reset, counter_0:reset_reset, gsensor_int:reset_n, gsensor_spi:reset_n, irq_synchronizer:receiver_reset, irq_synchronizer_001:receiver_reset, irq_synchronizer_003:receiver_reset, irq_synchronizer_004:receiver_reset, mm_interconnect_0:LT24_interface_irq_0_reset_reset_bridge_in_reset_reset, mm_interconnect_0:cycloneSPI_reset_sink_reset_bridge_in_reset_reset, sys_clk_timer:reset_n, timer_timestamp:reset_n]
+	wire         rst_controller_003_reset_out_reset;                           // rst_controller_003:reset_out -> [LT24_buffer_flag:reset_n, LT24_interface_irq_0:reset_reset, counter_0:reset_reset, gsensor_int:reset_n, gsensor_spi:reset_n, irq_synchronizer:receiver_reset, irq_synchronizer_001:receiver_reset, irq_synchronizer_003:receiver_reset, irq_synchronizer_004:receiver_reset, mm_interconnect_0:LT24_interface_irq_0_reset_reset_bridge_in_reset_reset, mm_interconnect_0:cycloneSPI_reset_sink_reset_bridge_in_reset_reset, rst_translator_002:in_reset, snake_mem:reset, snake_mem:reset2, sys_clk_timer:reset_n, timer_timestamp:reset_n]
+	wire         rst_controller_003_reset_out_reset_req;                       // rst_controller_003:reset_req -> [rst_translator_002:reset_req_in, snake_mem:reset_req, snake_mem:reset_req2]
 
 	DE0_LT24_SOPC_ALT_PLL alt_pll (
 		.clk       (clk_clk),                                       //       inclk_interface.clk
@@ -539,6 +552,27 @@ module DE0_LT24_SOPC (
 		.reset_req2  (rst_controller_reset_out_reset_req)       //       .reset_req
 	);
 
+	DE0_LT24_SOPC_snake_mem snake_mem (
+		.clk         (clk_clk),                                   //   clk1.clk
+		.address     (mm_interconnect_0_snake_mem_s1_address),    //     s1.address
+		.clken       (mm_interconnect_0_snake_mem_s1_clken),      //       .clken
+		.chipselect  (mm_interconnect_0_snake_mem_s1_chipselect), //       .chipselect
+		.write       (mm_interconnect_0_snake_mem_s1_write),      //       .write
+		.readdata    (mm_interconnect_0_snake_mem_s1_readdata),   //       .readdata
+		.writedata   (mm_interconnect_0_snake_mem_s1_writedata),  //       .writedata
+		.reset       (rst_controller_003_reset_out_reset),        // reset1.reset
+		.reset_req   (rst_controller_003_reset_out_reset_req),    //       .reset_req
+		.address2    (snake_mem_address),                         //     s2.address
+		.chipselect2 (snake_mem_chipselect),                      //       .chipselect
+		.clken2      (snake_mem_clken),                           //       .clken
+		.write2      (snake_mem_write),                           //       .write
+		.readdata2   (snake_mem_readdata),                        //       .readdata
+		.writedata2  (snake_mem_writedata),                       //       .writedata
+		.clk2        (clk_clk),                                   //   clk2.clk
+		.reset2      (rst_controller_003_reset_out_reset),        // reset2.reset
+		.reset_req2  (rst_controller_003_reset_out_reset_req)     //       .reset_req
+	);
+
 	DE0_LT24_SOPC_sys_clk_timer sys_clk_timer (
 		.clk        (clk_clk),                                       //   clk.clk
 		.reset_n    (~rst_controller_003_reset_out_reset),           // reset.reset_n
@@ -687,6 +721,12 @@ module DE0_LT24_SOPC (
 		.SDRAM_Controler_s1_readdatavalid                          (mm_interconnect_0_sdram_controler_s1_readdatavalid),           //                                                    .readdatavalid
 		.SDRAM_Controler_s1_waitrequest                            (mm_interconnect_0_sdram_controler_s1_waitrequest),             //                                                    .waitrequest
 		.SDRAM_Controler_s1_chipselect                             (mm_interconnect_0_sdram_controler_s1_chipselect),              //                                                    .chipselect
+		.snake_mem_s1_address                                      (mm_interconnect_0_snake_mem_s1_address),                       //                                        snake_mem_s1.address
+		.snake_mem_s1_write                                        (mm_interconnect_0_snake_mem_s1_write),                         //                                                    .write
+		.snake_mem_s1_readdata                                     (mm_interconnect_0_snake_mem_s1_readdata),                      //                                                    .readdata
+		.snake_mem_s1_writedata                                    (mm_interconnect_0_snake_mem_s1_writedata),                     //                                                    .writedata
+		.snake_mem_s1_chipselect                                   (mm_interconnect_0_snake_mem_s1_chipselect),                    //                                                    .chipselect
+		.snake_mem_s1_clken                                        (mm_interconnect_0_snake_mem_s1_clken),                         //                                                    .clken
 		.sys_clk_timer_s1_address                                  (mm_interconnect_0_sys_clk_timer_s1_address),                   //                                    sys_clk_timer_s1.address
 		.sys_clk_timer_s1_write                                    (mm_interconnect_0_sys_clk_timer_s1_write),                     //                                                    .write
 		.sys_clk_timer_s1_readdata                                 (mm_interconnect_0_sys_clk_timer_s1_readdata),                  //                                                    .readdata
@@ -966,7 +1006,7 @@ module DE0_LT24_SOPC (
 		.NUM_RESET_INPUTS          (1),
 		.OUTPUT_RESET_SYNC_EDGES   ("deassert"),
 		.SYNC_DEPTH                (2),
-		.RESET_REQUEST_PRESENT     (0),
+		.RESET_REQUEST_PRESENT     (1),
 		.RESET_REQ_WAIT_TIME       (1),
 		.MIN_RST_ASSERTION_TIME    (3),
 		.RESET_REQ_EARLY_DSRT_TIME (1),
@@ -988,41 +1028,41 @@ module DE0_LT24_SOPC (
 		.USE_RESET_REQUEST_IN15    (0),
 		.ADAPT_RESET_REQUEST       (0)
 	) rst_controller_003 (
-		.reset_in0      (~reset_reset_n),                     // reset_in0.reset
-		.clk            (clk_clk),                            //       clk.clk
-		.reset_out      (rst_controller_003_reset_out_reset), // reset_out.reset
-		.reset_req      (),                                   // (terminated)
-		.reset_req_in0  (1'b0),                               // (terminated)
-		.reset_in1      (1'b0),                               // (terminated)
-		.reset_req_in1  (1'b0),                               // (terminated)
-		.reset_in2      (1'b0),                               // (terminated)
-		.reset_req_in2  (1'b0),                               // (terminated)
-		.reset_in3      (1'b0),                               // (terminated)
-		.reset_req_in3  (1'b0),                               // (terminated)
-		.reset_in4      (1'b0),                               // (terminated)
-		.reset_req_in4  (1'b0),                               // (terminated)
-		.reset_in5      (1'b0),                               // (terminated)
-		.reset_req_in5  (1'b0),                               // (terminated)
-		.reset_in6      (1'b0),                               // (terminated)
-		.reset_req_in6  (1'b0),                               // (terminated)
-		.reset_in7      (1'b0),                               // (terminated)
-		.reset_req_in7  (1'b0),                               // (terminated)
-		.reset_in8      (1'b0),                               // (terminated)
-		.reset_req_in8  (1'b0),                               // (terminated)
-		.reset_in9      (1'b0),                               // (terminated)
-		.reset_req_in9  (1'b0),                               // (terminated)
-		.reset_in10     (1'b0),                               // (terminated)
-		.reset_req_in10 (1'b0),                               // (terminated)
-		.reset_in11     (1'b0),                               // (terminated)
-		.reset_req_in11 (1'b0),                               // (terminated)
-		.reset_in12     (1'b0),                               // (terminated)
-		.reset_req_in12 (1'b0),                               // (terminated)
-		.reset_in13     (1'b0),                               // (terminated)
-		.reset_req_in13 (1'b0),                               // (terminated)
-		.reset_in14     (1'b0),                               // (terminated)
-		.reset_req_in14 (1'b0),                               // (terminated)
-		.reset_in15     (1'b0),                               // (terminated)
-		.reset_req_in15 (1'b0)                                // (terminated)
+		.reset_in0      (~reset_reset_n),                         // reset_in0.reset
+		.clk            (clk_clk),                                //       clk.clk
+		.reset_out      (rst_controller_003_reset_out_reset),     // reset_out.reset
+		.reset_req      (rst_controller_003_reset_out_reset_req), //          .reset_req
+		.reset_req_in0  (1'b0),                                   // (terminated)
+		.reset_in1      (1'b0),                                   // (terminated)
+		.reset_req_in1  (1'b0),                                   // (terminated)
+		.reset_in2      (1'b0),                                   // (terminated)
+		.reset_req_in2  (1'b0),                                   // (terminated)
+		.reset_in3      (1'b0),                                   // (terminated)
+		.reset_req_in3  (1'b0),                                   // (terminated)
+		.reset_in4      (1'b0),                                   // (terminated)
+		.reset_req_in4  (1'b0),                                   // (terminated)
+		.reset_in5      (1'b0),                                   // (terminated)
+		.reset_req_in5  (1'b0),                                   // (terminated)
+		.reset_in6      (1'b0),                                   // (terminated)
+		.reset_req_in6  (1'b0),                                   // (terminated)
+		.reset_in7      (1'b0),                                   // (terminated)
+		.reset_req_in7  (1'b0),                                   // (terminated)
+		.reset_in8      (1'b0),                                   // (terminated)
+		.reset_req_in8  (1'b0),                                   // (terminated)
+		.reset_in9      (1'b0),                                   // (terminated)
+		.reset_req_in9  (1'b0),                                   // (terminated)
+		.reset_in10     (1'b0),                                   // (terminated)
+		.reset_req_in10 (1'b0),                                   // (terminated)
+		.reset_in11     (1'b0),                                   // (terminated)
+		.reset_req_in11 (1'b0),                                   // (terminated)
+		.reset_in12     (1'b0),                                   // (terminated)
+		.reset_req_in12 (1'b0),                                   // (terminated)
+		.reset_in13     (1'b0),                                   // (terminated)
+		.reset_req_in13 (1'b0),                                   // (terminated)
+		.reset_in14     (1'b0),                                   // (terminated)
+		.reset_req_in14 (1'b0),                                   // (terminated)
+		.reset_in15     (1'b0),                                   // (terminated)
+		.reset_req_in15 (1'b0)                                    // (terminated)
 	);
 
 endmodule

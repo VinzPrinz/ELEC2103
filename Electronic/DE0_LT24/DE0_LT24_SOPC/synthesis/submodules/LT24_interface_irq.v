@@ -102,7 +102,19 @@ module LT24_interface_irq (
 			lt24_coin_vx0_addr:  lt24_coin_vx0_reg <= avs_s0_writedata;
 			lt24_coin_vy0_addr:  lt24_coin_vy0_reg <= avs_s0_writedata;			
 		endcase
-			
+	/*else
+		begin
+			avs_s0_readdata_reg <= avs_s0_readdata_reg;
+			lt24_coin_x0_reg <= lt24_coin_x0_reg;
+			lt24_coin_y0_reg <= lt24_coin_y0_reg;
+			lt24_coin_vx0_reg <= lt24_coin_vx0_reg;
+			lt24_coin_vy0_reg <= lt24_coin_vy0_reg;
+			vx_reg <= vx_reg;
+			vy_reg <= vy_reg;
+			pattern_reg <= pattern_reg;
+		end*/
+		
+		
 	always @ (posedge clock_clk)
 		if(reset_reset || ~finish_flag)
 			irq_flag <= 1'b1;

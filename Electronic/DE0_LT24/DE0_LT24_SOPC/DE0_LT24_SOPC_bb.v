@@ -67,6 +67,12 @@ module DE0_LT24_SOPC (
 	sdram_controler_wire_dqm,
 	sdram_controler_wire_ras_n,
 	sdram_controler_wire_we_n,
+	snake_mem_address,
+	snake_mem_chipselect,
+	snake_mem_clken,
+	snake_mem_write,
+	snake_mem_readdata,
+	snake_mem_writedata,
 	to_led_export);	
 
 	input		alt_pll_areset_conduit_export;
@@ -136,5 +142,11 @@ module DE0_LT24_SOPC (
 	output	[1:0]	sdram_controler_wire_dqm;
 	output		sdram_controler_wire_ras_n;
 	output		sdram_controler_wire_we_n;
+	input	[9:0]	snake_mem_address;
+	input		snake_mem_chipselect;
+	input		snake_mem_clken;
+	input		snake_mem_write;
+	output	[7:0]	snake_mem_readdata;
+	input	[7:0]	snake_mem_writedata;
 	output	[7:0]	to_led_export;
 endmodule

@@ -96,7 +96,7 @@ module MyCycloneSPI (
 					PosY		: IO_PosY_reg		<= avs_s0_writedata[7:0];
 				endcase
 			end
-		else if(avs_s0_read)
+		else
 			case(avs_s0_address[6:0])
 				Counter 	: avs_s0_readdata_reg <= IO_Counter;
 				PosX		: avs_s0_readdata_reg <= IO_PosX;

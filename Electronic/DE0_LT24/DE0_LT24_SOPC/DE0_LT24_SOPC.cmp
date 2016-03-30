@@ -67,6 +67,12 @@
 			sdram_controler_wire_dqm                    : out   std_logic_vector(1 downto 0);                     -- dqm
 			sdram_controler_wire_ras_n                  : out   std_logic;                                        -- ras_n
 			sdram_controler_wire_we_n                   : out   std_logic;                                        -- we_n
+			snake_mem_address                           : in    std_logic_vector(9 downto 0)  := (others => 'X'); -- address
+			snake_mem_chipselect                        : in    std_logic                     := 'X';             -- chipselect
+			snake_mem_clken                             : in    std_logic                     := 'X';             -- clken
+			snake_mem_write                             : in    std_logic                     := 'X';             -- write
+			snake_mem_readdata                          : out   std_logic_vector(7 downto 0);                     -- readdata
+			snake_mem_writedata                         : in    std_logic_vector(7 downto 0)  := (others => 'X'); -- writedata
 			to_led_export                               : out   std_logic_vector(7 downto 0)                      -- export
 		);
 	end component DE0_LT24_SOPC;

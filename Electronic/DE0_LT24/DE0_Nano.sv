@@ -172,6 +172,14 @@ wire [15:0] background_mem_s2_readdata;
 wire [15:0] background_mem_s2_writedata;                
 wire [1:0]  background_mem_s2_byteenable; 
 
+wire [9:0] snake_mem_address;                   
+wire        snake_mem_chipselect;               
+wire        snake_mem_clken;                     
+wire        snake_mem_write;                    
+wire [7:0] snake_mem_readdata;                 
+wire [7:0] snake_mem_writedata;                
+wire [1:0]  snake_mem_byteenable; 
+
 wire 			lt24_buffer_flag;           
 
 wire			LT24_finish;
@@ -179,7 +187,9 @@ wire [31:0]	LT24_counter , LT24_coin_x , LT24_coin_x0 , LT24_coin_y , LT24_coin_
 wire [11:0] LT24_pattern;
 wire [31:0] VX , VY;
 
-assign LED = LT24_coin_vx0[7:0];
+assign LED = 8'd42;
+
+//assign LED[6:0] = snake_mem_address[6:0];
 //=======================================================
 //  REG/WIRE declarations
 //=======================================================
@@ -350,7 +360,15 @@ DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		.sdram_controler_wire_dq                     (DRAM_DQ),                     //                                     .dq
 		.sdram_controler_wire_dqm                    (DRAM_DQM),                    //                                     .dqm
 		.sdram_controler_wire_ras_n                  (DRAM_RAS_N),                  //                                     .ras_n
-		.sdram_controler_wire_we_n                   (DRAM_WE_N)
+		.sdram_controler_wire_we_n                   (DRAM_WE_N),
+		
+		.snake_mem_address                           (snake_mem_address),                           //                            snake_mem.address
+		.snake_mem_chipselect                        (snake_mem_chpselect),                        //                                     .chipselect
+		.snake_mem_clken                             (snake_mem_clken),                             //                                     .clken
+		.snake_mem_write                             (snake_mem_write),                             //                                     .write
+		.snake_mem_readdata                          (snake_mem_readdata),                          //                                     .readdata
+		.snake_mem_writedata                         (snake_mem_writedata)                          //                                     .writedata
+
 	);
 	
 	
@@ -400,6 +418,14 @@ DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		.background_mem_s2_readdata(background_mem_s2_readdata),                  
 		.background_mem_s2_writedata(background_mem_s2_writedata),                 
 		.background_mem_s2_byteenable(background_mem_s2_byteenable),
+				
+		.snake_mem_address                           (snake_mem_address),                           //                            snake_mem.address
+		.snake_mem_chipselect                        (snake_mem_chipselect),                        //                                     .chipselect
+		.snake_mem_clken                             (snake_mem_clken),                             //                                     .clken
+		.snake_mem_write                             (snake_mem_write),                             //                                     .write
+		.snake_mem_readdata                          (snake_mem_readdata),                          //                                     .readdata
+		.snake_mem_writedata                         (snake_mem_writedata),                          //                                     .writedata
+
 		
 		.lt24_finish(LT24_finish),
 		.lt24_pattern(LT24_pattern),

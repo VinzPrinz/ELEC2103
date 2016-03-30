@@ -18,6 +18,13 @@
 #define myCyclone_Start_Coin     3
 #define myCyclone_End_Coin       4
 #define myCyclone_Wait			 5
+#define myCyclone_Snake_Right       9
+#define myCyclone_Snake_Left        10
+#define myCyclone_Snake_Up          11
+#define myCyclone_Snake_Down        12
+#define myCyclone_Start_Snake 		13
+#define myCyclone_End_Snake 		14
+
 
 
 
@@ -64,8 +71,17 @@ int coins=0;
 int myOp;
 bool restartcoin =0;
 
+char Snake [32][24];
+char Snake1I = 0;
+char Snake1J = 0;
+char Snake2I = 10;
+char Snake2J = 10;
+
 alt_video_display Display;
 TOUCH_HANDLE *pTouch;
+void sendSnake();
+void clearSnake();
+void updateSnake();
 
 void LT24_ISR(void *context){
 	IOWR(LT24_INTERFACE_IRQ_0_BASE + (4*7),0 , 321);
@@ -148,6 +164,8 @@ int init(){
 int main(void)
 {
 	init();
+	clearSnake();
+
 
 	OSTaskCreateExt(task_send_data,
 			NULL,
@@ -158,7 +176,6 @@ int main(void)
 			TASK_STACKSIZE,
 			NULL,
 			0);
-
 
 	OSTaskCreateExt(task_game1,
 			NULL,
@@ -222,6 +239,7 @@ void task_send_data(void* pdata)
 	Clr_BUFFER_FLAG();
 	int previousOp = 1;
 	int newOp = 0;
+	int dir = 255;
 
 	while(1){
 		if(Touch_GetXY(pTouch, &X, &Y)){
@@ -237,9 +255,8 @@ void task_send_data(void* pdata)
 		previousOp = newOp;
 		newOp = IORD(CYCLONESPI_BASE+(4*0x12),0); // read the op asked by pic32
 		int *opIrq = (int *)OSMboxAccept(Flag2);
-		// printf("in newOp %d Op %d \n" , newOp , Operation);
 
-		if (newOp != Operation && newOp != previousOp && newOp !=0 && (Operation==myCyclone_Wait|| Operation == myCyclone_End_Fight || Operation == myCyclone_End_Coin || Operation == myCyclone_Start_Coin)){
+		if (newOp != Operation && newOp != previousOp && newOp !=0 && (Operation==myCyclone_Wait|| Operation == myCyclone_End_Fight || Operation == myCyclone_End_Coin || Operation == myCyclone_Start_Coin || Operation == myCyclone_End_Snake )){
 			printf("in newOp %d \n" , newOp);
 			switch(newOp){
 				case myCyclone_Start_Fight: OSSemPost(Game2); game_on = 0;
@@ -254,6 +271,8 @@ void task_send_data(void* pdata)
 										 IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
 										 coins =0;
 										 break;
+				case myCyclone_Start_Snake:	clearSnake();
+											break;
 				default:OSSemPost(Game1); game_on = 1;
 						break;
 			}
@@ -262,7 +281,7 @@ void task_send_data(void* pdata)
 			if(opIrq != NULL)
 				newOp = *opIrq;
 
-			if(Operation == myCyclone_Wait || Operation == myCyclone_End_Coin || newOp == myCyclone_Start_Fight || newOp == myCyclone_Start_Coin){
+			if(Operation == myCyclone_Wait || Operation == myCyclone_End_Coin || newOp == myCyclone_Start_Fight || newOp == myCyclone_Start_Coin || newOp == myCyclone_Start_Snake){
 				OSMboxPost(GameOverBox , (void *)&Operation);
 				printf("poster to gameover \n");
 			}
@@ -279,7 +298,7 @@ void task_send_data(void* pdata)
 
 		}else if(opIrq !=NULL){
 			OSMboxPost(Flag1 , (void*) opIrq);
-			if(Operation == myCyclone_End_Fight || Operation == myCyclone_Start_Fight)
+			if(Operation == myCyclone_End_Fight || Operation == myCyclone_Start_Fight || Operation == myCyclone_Start_Snake || Operation == myCyclone_End_Snake)
 				OSMboxPost(GameOverBox , (void *)&Operation);
 
 			Operation = *opIrq;
@@ -297,6 +316,7 @@ void task_game1(void* pdata)
 	unsigned int *X, *Y;
     int  *op;
     int acctualOp = myCyclone_Wait ;
+    int dir;
 
 
 	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*9),0 , 0); // set default speed to 1
@@ -315,12 +335,47 @@ void task_game1(void* pdata)
     	printf("Started Game1\n");
 		Set_BUFFER_FLAG();
 
-    	while(op==NULL || *op == myCyclone_Start_Coin || *op == myCyclone_Start_Fight || *op == myCyclone_End_Fight){
+    	while(op==NULL || *op == myCyclone_Start_Coin || *op == myCyclone_Start_Fight || *op == myCyclone_End_Fight || *op == myCyclone_Start_Snake || *op == myCyclone_End_Snake){
 
 			int vx = IORD(LT24_INTERFACE_IRQ_0_BASE+(4*5),0);
 			int vy = IORD(LT24_INTERFACE_IRQ_0_BASE+(4*6),0);
 
-    		if(acctualOp == myCyclone_Start_Coin || acctualOp == myCyclone_End_Fight){
+			if(op != NULL && *op == myCyclone_Start_Coin ){
+			    			int vx = rand()%3 -1;
+			    			int vy = rand()%3 -1;
+			    			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*9),0 , vx);
+			    			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*10),0 , vy);
+			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 1);
+			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*7),0 , rand() % 220);
+			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*8),0 , rand() % 300);
+			    			Clr_BUFFER_FLAG();
+			    			Set_BUFFER_FLAG();
+			    			acctualOp = *op;
+			    		}
+			    		else if (op!=NULL && *op==myCyclone_Start_Fight){
+			    			printf("init the fight \n");
+			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0);
+			    	    	IOWR(COUNTER_0_BASE+8, 0 , 0);
+			    	    	int cnt = IORD(COUNTER_0_BASE,0);
+			    	    	int i = 0;
+			    	    	i ++;
+			    	    	int cnt2 = IORD(COUNTER_0_BASE,0);
+			    	    	printf("|||||||||||||||||||||||||cnt just after %d cnt2 %d|||||||||||||||||\n" ,cnt , cnt2);
+			    	    	Clr_BUFFER_FLAG();
+			    	    	Set_BUFFER_FLAG();
+			    			X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
+			    			Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
+
+			    			acctualOp = *op;
+			    		}
+			    		else if (op != NULL && *op == myCyclone_Start_Snake){
+			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 2);
+			    	    	clearSnake();
+			    	    	Snake1J = 6 + rand() % 20;
+			    	    	Snake1I = 4+ rand() % 16;
+			    	    	printf(" ||||||||||||| clear Snake %d %d %d %d\n" , Snake1J , Snake1I);
+			    		}
+    		if(acctualOp == myCyclone_Start_Coin || acctualOp == myCyclone_End_Fight || acctualOp == myCyclone_End_Snake){
     			szXYZ = (alt_16 *) OSMboxPend(Accel , 0 , &err);
     			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/50);
     			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/50);
@@ -334,39 +389,13 @@ void task_game1(void* pdata)
     				LCD_WR_REG(*X);
     			}
     		}
+    		else if(acctualOp == myCyclone_Start_Snake){
+    			updateSnake();
+    		}
 
     		OSTimeDly(DELAY);
 
-    		if(op != NULL && *op == myCyclone_Start_Coin ){
-    			int vx = rand()%3 -1;
-    			int vy = rand()%3 -1;
-    			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*9),0 , vx);
-    			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*10),0 , vy);
-    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 1);
-    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*7),0 , rand() % 220);
-    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*8),0 , rand() % 300);
-    			Clr_BUFFER_FLAG();
-    			Set_BUFFER_FLAG();
-    			acctualOp = *op;
-    		}
-    		else if (op!=NULL && *op==myCyclone_Start_Fight){
-    			printf("init the fight \n");
-    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0);
-    	    	IOWR(COUNTER_0_BASE+8, 0 , 0);
-    	    	    			int cnt = IORD(COUNTER_0_BASE,0);
-    	    	    			int i = 0;
-    	    	    			i ++;
-    	    	    			int cnt2 = IORD(COUNTER_0_BASE,0);
-    	    	    			printf("|||||||||||||||||||||||||cnt just after %d cnt2 %d|||||||||||||||||\n" ,cnt , cnt2);
-    	    	 Clr_BUFFER_FLAG();
-    	    	Set_BUFFER_FLAG();
-    			X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
-    			Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
-    			//LCD_WR_DATA(*Y);
-    			//LCD_WR_REG(*X);
 
-    			acctualOp = *op;
-    		}
 
     		op = (int *)OSMboxAccept(Flag1);
     		if(op != NULL){
@@ -380,3 +409,108 @@ void task_game1(void* pdata)
 		printf("release game \n");
 	}
 }
+
+void checkSnake(int j , int i){
+	if(Snake[j][i]!=0)
+		OSMboxPost(Flag2, (void*)&myOp);
+}
+
+void boarderSnake(int j , int i  ,int dir){
+
+	if(dir == myCyclone_Snake_Right && i == 23)
+		OSMboxPost(Flag2, (void*)&myOp);
+
+	if(dir == myCyclone_Snake_Left && i == 0)
+		OSMboxPost(Flag2, (void*)&myOp);
+
+	if(dir == myCyclone_Snake_Down && j == 31)
+		OSMboxPost(Flag2, (void*)&myOp);
+
+	if(dir == myCyclone_Snake_Up && j == 0)
+		OSMboxPost(Flag2, (void*)&myOp);
+}
+
+void updateSnake(){
+	int dir;
+	OSTimeDlyHMSM(0, 0, 0, 400);
+	dir = IORD(CYCLONESPI_BASE+(4*0x14),0); // read the op asked by pic32
+
+	printf("LOL0 Snake1J %d Snake1I %d \n"  , Snake1J , Snake1I);
+
+	boarderSnake(Snake1J , Snake1I , dir);
+
+
+	printf("LOL1 Snake1J %d Snake1I %d \n"  , Snake1J , Snake1I);
+	if(Snake1I+1 < 24 && dir == myCyclone_Snake_Right){
+		checkSnake(Snake1J , Snake1I+1);
+		Snake1I++;
+	}
+	else if(Snake1I-1 >= 0 && dir == myCyclone_Snake_Left){
+		checkSnake(Snake1J , Snake1I-1);
+		Snake1I--;
+	}
+	printf("LOL2 Snake1J %d Snake1I %d \n"  , Snake1J , Snake1I);
+
+
+	if(Snake1J+1 < 32 && dir == myCyclone_Snake_Down){
+		checkSnake(Snake1J+1 , Snake1I);
+		Snake1J++;
+	}
+	else if (Snake1J-1 >=0 && dir == myCyclone_Snake_Up){
+		checkSnake(Snake1J-1 , Snake1I );
+		Snake1J--;
+	}
+	printf("LOL2 Snake1J %d Snake1I %d \n"  , Snake1J , Snake1I);
+
+
+	if(Snake2I+1 < 24)
+		Snake2I++;
+
+	Snake[Snake1J][Snake1I] = 1;
+	Snake[Snake2J][Snake2I] = 2;
+	sendSnake();
+
+}
+
+
+void clearSnake(){
+	int i = 0;
+	int j = 0;
+	for( j =0 ; j<32 ; j++){
+		for(i = 0; i <24; i++){
+			Snake[j][i] = 0;
+			IOWR(SNAKE_MEM_BASE, i + j*24 , 0x00000000);
+		}
+	}
+}
+
+void sendSnake(){
+	int i = 0;
+	int j = 0;
+	int data;
+	for(j =0 ; j<32 ; j++){
+
+		data = 0;
+		for(i = 0; i <16; i++){
+			data += (Snake[j][i]==1) << i*2;
+		}
+		for(i = 0; i <16; i++){
+			data += (Snake[j][i]==2) << i*2 +1;
+		}
+		IOWR(SNAKE_MEM_BASE, j*2  , data);
+
+		data = 0;
+		for(i = 16;i<24 ; i++){
+			data += (Snake[j][i]==1) << (i%16)*2;
+		}
+		for(i = 16;i<24 ; i++){
+			data += (Snake[j][i]==2) << (i%16)*2+1 ;
+		}
+
+		IOWR(SNAKE_MEM_BASE, j*2 +1 , data);
+
+	}
+}
+
+
+

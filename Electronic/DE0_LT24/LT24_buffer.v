@@ -1,4 +1,4 @@
-`timescale 1 ps / 1 ps
+//`timescale 1 ps / 1 ps
 module LT24_buffer(
 	clk,
 	rst_n,
@@ -46,6 +46,14 @@ module LT24_buffer(
 	background_mem_s2_readdata,                 
 	background_mem_s2_writedata,                
 	background_mem_s2_byteenable, 
+	
+	snake_mem_address,                   
+	snake_mem_chipselect,               
+	snake_mem_clken,                     
+	snake_mem_write,                    
+	snake_mem_readdata,                 
+	snake_mem_writedata,                
+	snake_mem_byteenable, 
 	
 	lt24_finish,
 	lt24_pattern,
@@ -106,6 +114,15 @@ output  wire        background_mem_s2_write;
 input   wire [15:0] background_mem_s2_readdata;                 
 output  wire [15:0] background_mem_s2_writedata;                
 output  wire [1:0]  background_mem_s2_byteenable; 
+
+output  wire [9:0] snake_mem_address;                   
+output  wire        snake_mem_chipselect;               
+output  wire        snake_mem_clken;                     
+output  wire        snake_mem_write;                    
+input   wire [7:0]  snake_mem_readdata;                 
+output  wire [7:0]  snake_mem_writedata;                
+output  wire [1:0]  snake_mem_byteenable; 
+
 
 input 	wire				lt24_buffer_flag;
 output 	wire				lt24_finish;
@@ -243,7 +260,7 @@ end
 
 
 wire [10:0]  limLowX, limLowY, limHighX, limHighY, characPosX, characPosY;
-reg 	[10:0] posX, posY, pointerX, pointerY;
+reg  [10:0] posX, posY, pointerX, pointerY;
 
 
 // Used for the fight game
@@ -468,7 +485,7 @@ always @ (posedge clk)
 		posX <= posX;
 		posY <= posY;
 
-		lt24_finish_reg <=  (!lt24_pattern[0] && Case_Reg == 12'b0) || (lt24_pattern[0]==1'b1 && col_wire==1'b1);
+		lt24_finish_reg <=  (!lt24_pattern[0] && Case_Reg == 12'b0) || (lt24_pattern[0] && col_wire==1'b1);
 		if(posX == pointerX && posY == pointerY)
 			Case_Reg[11] <= 1'b0;
 		end
@@ -578,9 +595,37 @@ always @ (posedge clk)
 reg [15:0] Game1_Color;
 wire [15:0] Game1_Color_wire;
 assign Game1_Color_wire = Game1_Color;
+reg [7:0] snake1 , snake2;
 
 always
-		if(lt24_pattern[0])
+		if(snakeX % 4 == 0 && snake_mem_readdata[1]==1'b1)
+			snake1 <= 8'h0f;
+		else if(snakeX % 4 == 1 && snake_mem_readdata[3] == 1'b1)
+			snake1 <= 8'h0f;
+		else if(snakeX % 6'd4 == 6'd2 && snake_mem_readdata[5] == 1'b1)
+			snake1 <= 8'h0f;
+		else if(snakeX % 6'd4 == 6'd3 && snake_mem_readdata[7] == 1'b1)
+			snake1 <= 8'h0f;
+		else 
+			snake1 <= 8'hff;
+			
+always
+		if(snakeX % 4 == 0 && snake_mem_readdata[0]==1'b1)
+			snake2 <= 8'h0f;
+		else if(snakeX % 4 == 1 && snake_mem_readdata[2] == 1'b1)
+			snake2 <= 8'h0f;
+		else if(snakeX % 6'd4 == 6'd2 && snake_mem_readdata[4] == 1'b1)
+			snake2 <= 8'h0f;
+		else if(snakeX % 6'd4 == 6'd3 && snake_mem_readdata[6] == 1'b1)
+			snake2 <= 8'h0f;
+		else 
+			snake2 <= 8'hff;
+			
+			
+	always 	@ (posedge clk)	
+		if(lt24_pattern[1:0] == 2'b10)
+				Game1_Color <= {snake2   ,snake1};
+		else if(lt24_pattern[0])
 			case({displayCharact , displayCoin})
 				2'b11: Game1_Color <= 16'h0000;
 				2'b10: Game1_Color <= 16'hf0ff;
@@ -596,29 +641,32 @@ always
 			endcase
 		else
 			Game1_Color <= 16'haa00;
-
-// lt24_counter
-
-/*always @(posedge clk)
-	case({rst , lt24_finish})
-		2'b1x:lt24_counter_reg <= 32'b0;
-		2'b01:lt24_counter_reg <= lt24_counter;
-		2'b00:lt24_counter_reg <= lt24_counter + 32'd1;
-	endcase*/
+			
 	parameter ZERO = 32'd0;
 	parameter ONE = 32'd1;
+
 	
-/*	always @ (posedge clk)
-		if(rst)
-			lt24_counter_reg <= 0 ;
-		//else if( bufferFlag_wire == 1'b0)
-		//	lt24_counter_reg <= 0;
-		else if(lt24_finish)
-			lt24_counter_reg <= lt24_counter_wire;
-		else
-//			lt24_counter_reg <= lt24_counter_wire + 1;
+	
+////////////////////////////// SNAKE GAME ///////////////////////////
+assign snake_mem_address = (snakeX)/4 + (snakeY)*9'd8;                 
+assign snake_mem_chipselect = background_mem_s2_chipselect;           
+assign snake_mem_clken  = snake_mem_chipselect;                     
+assign snake_mem_write = 1'b0;//(snakeX == 10 && snakeY == 10);// && newCaseSnake;                                     
+
+assign snake_mem_writedata = 8'h0;
+assign snake_mem_byteenable = 2'b11; 
+
+reg [7:0] snake_mem_writedata_reg;
+reg [31:0] snakeCnt;
+wire [5:0] snakeX , snakeY;
+wire newCaseSnake;
+
+assign snakeX = posX / 11'd10;
+assign snakeY = posY / 11'd10;
+
+assign newCaseSnake = (posX %  11'd10 == 0 && posY % 11'd10 ==0);
+	
+	
 			
-		//	lt24_counter_reg <= lt24_counter_reg;*/
-	
 	
 endmodule
