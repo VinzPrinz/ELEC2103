@@ -161,7 +161,7 @@ assign LT24_ADC_PENIRQ_N_bus = LT24_ADC_PENIRQ_N_screen;
 
 // assign interface LT24
 wire [31:0] lt24_counter_wire;
-assign lt24_finish = (lt24_finish_reg);
+assign lt24_finish = (lt24_finish_reg) || (lt24_pattern[1:0]==2'b11 && pattern_moving == Case_Reg) ;
 assign lt24_counter = (lt24_counter_reg);
 assign lt24_counter_wire = lt24_counter_reg;
 //flag that says if the bus is controlled by LT24_buffer or by the CPU
@@ -428,7 +428,7 @@ always @ (posedge clk)
 		Counter_X_Reg <= 8'b0;
 		Counter_Y_Reg <= 8'b0;
 		Counter_Case_Reg <= 4'b0;
-		
+		pattern_moving <= 12'hff0;
 		if(rst)
 		begin
 			Case_Reg <= 12'hfff;
@@ -436,6 +436,7 @@ always @ (posedge clk)
 		end else if(bufferFlag == 1'b0)
 			Case_Reg[11:0] <= 12'hfff;
 		end
+		
 	//new pixel on the next line 
 	else if(posX >= 11'd239 && (LT24_CS_N_loc==1'b0))
 		begin
@@ -450,6 +451,8 @@ always @ (posedge clk)
 				Counter_Case_Reg <= Counter_Case_Wire +4'd1;
 				Case_Reg[11:1] <= Case_Wire[10:0];
 				Case_Reg[0]	<= Case_Wire[11];
+				pattern_moving[11:1]<=pattern_moving[10:0];
+				pattern_moving[0] <= pattern_moving[11];
 			end
 		else if (Counter_X_Wire == 79)
 			begin
@@ -459,6 +462,8 @@ always @ (posedge clk)
 				Counter_Case_Reg <= Counter_Case_Wire - 12'd2;
 				Case_Reg[11:10] <= Case_Wire[1:0];
 				Case_Reg[9:0]	<= Case_Wire[11:2];
+				pattern_moving[11:10] <= pattern_moving[1:0];
+				pattern_moving[9:0] <= pattern_moving[11:2];
 			end
 		else
 			Counter_Y_Reg <= Counter_Y_Wire + 8'd1;
@@ -473,6 +478,8 @@ always @ (posedge clk)
 				Counter_X_Reg <= 8'd0;
 				Case_Reg[11:1] <= Case_Wire[10:0];
 				Case_Reg[0]	<= Case_Wire[11];
+				pattern_moving[11:1] <= pattern_moving[10:0];
+				pattern_moving[0] <= pattern_moving[11];
 				Counter_Case_Reg <= Counter_Case_Wire + 2'd1;
 			end
 		else
@@ -525,7 +532,9 @@ always @ (posedge clk)
 	
 	wire [31:0] Yflag; 
 	assign Yflag = VY + 32'd1;
-// FSM to choose the position of jean-didier
+	
+	
+// FSM to choose the position of jean-didier and the coins
 	always @ (posedge clk)
 		if(rst)
 			Y1 <= 10;
@@ -597,6 +606,7 @@ wire [15:0] Game1_Color_wire;
 assign Game1_Color_wire = Game1_Color;
 reg [7:0] snake1 , snake2;
 
+////////////////////////////////// What to shown during the snake /////////////:
 always
 		if(snakeX % 4 == 0 && snake_mem_readdata[1]==1'b1)
 			snake1 <= 8'h0f;
@@ -622,9 +632,32 @@ always
 			snake2 <= 8'hff;
 			
 			
+			
+//// Choosing what we set on the screen 
 	always 	@ (posedge clk)	
 		if(lt24_pattern[1:0] == 2'b10)
 				Game1_Color <= {snake2   ,snake1};
+		else if(lt24_pattern[1:0] == 2'b11)
+				if(pattern_state)
+					if(Case_Wire[11])
+						case(Counter_Wire)
+							2'b00: Game1_Color <= background_mem_s2_readdata;
+							2'b01: Game1_Color <= background_mem_s2_readdata;
+							2'b11: Game1_Color <= 16'h00aa;
+							2'b10: Game1_Color <= 16'h00aa;
+						endcase
+					else
+						Game1_Color <= 16'haa00;
+				else
+					if(pattern_moving[11])
+						case(Counter_Wire)
+							2'b00: Game1_Color <= background_mem_s2_readdata;
+							2'b01: Game1_Color <= background_mem_s2_readdata;
+							2'b11: Game1_Color <= 16'h00aa;
+							2'b10: Game1_Color <= 16'h00aa;
+						endcase
+					else
+						Game1_Color <= 16'haa00;
 		else if(lt24_pattern[0])
 			case({displayCharact , displayCoin})
 				2'b11: Game1_Color <= 16'h0000;
@@ -644,14 +677,13 @@ always
 			
 	parameter ZERO = 32'd0;
 	parameter ONE = 32'd1;
-
 	
 	
 ////////////////////////////// SNAKE GAME ///////////////////////////
 assign snake_mem_address = (snakeX)/4 + (snakeY)*9'd8;                 
 assign snake_mem_chipselect = background_mem_s2_chipselect;           
 assign snake_mem_clken  = snake_mem_chipselect;                     
-assign snake_mem_write = 1'b0;//(snakeX == 10 && snakeY == 10);// && newCaseSnake;                                     
+assign snake_mem_write = 1'b0;                                 
 
 assign snake_mem_writedata = 8'h0;
 assign snake_mem_byteenable = 2'b11; 
@@ -665,8 +697,32 @@ assign snakeX = posX / 11'd10;
 assign snakeY = posY / 11'd10;
 
 assign newCaseSnake = (posX %  11'd10 == 0 && posY % 11'd10 ==0);
-	
-	
-			
-	
+
+///////////////////////// FSM FOR Pattern Game ////////////////////
+
+parameter pattern_0 = 12'hff0;
+
+reg pattern_state;
+reg [31:0] pattern_cnt;
+reg [11:0] pattern_moving;
+
+wire pattern_rst;
+assign pattern_rst = (posX == pointerX && posY == pointerY && pattern_moving[11]);
+
+always @(posedge clk)
+		if(rst )//|| pattern_rst )
+			begin
+				pattern_state <= 1'b0;
+				pattern_cnt <= 32'd0;
+			end
+		else if(pattern_cnt == 32'h03ffffff)
+			begin
+				pattern_state <= (lt24_pattern[1:0]==2'b11);
+				pattern_cnt <= 32'd0;
+			end
+		else if(!pattern_state)
+			pattern_cnt <= pattern_cnt + 32'd1;
+		else
+			pattern_cnt <= pattern_cnt;
+		
 endmodule
