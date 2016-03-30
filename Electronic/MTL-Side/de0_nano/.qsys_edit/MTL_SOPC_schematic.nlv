@@ -3,26 +3,28 @@
 preplace inst MTL_SOPC.TOUCHDATA -pg 1 -lvl 2 -y 550
 preplace inst MTL_SOPC -pg 1 -lvl 1 -y 40 -regy -20
 preplace inst MTL_SOPC.JTAG_UART -pg 1 -lvl 2 -y 330
-preplace inst MTL_SOPC.mem -pg 1 -lvl 2 -y 650
+preplace inst MTL_SOPC.mem -pg 1 -lvl 2 -y 770
 preplace inst MTL_SOPC.mtl_interface_irq_0 -pg 1 -lvl 2 -y 430
 preplace inst MTL_SOPC.KEY -pg 1 -lvl 2 -y 230
 preplace inst MTL_SOPC.CPU -pg 1 -lvl 1 -y 70
-preplace inst MTL_SOPC.TESTLED -pg 1 -lvl 2 -y 730
-preplace inst MTL_SOPC.TURN -pg 1 -lvl 2 -y 830
+preplace inst MTL_SOPC.TESTLED -pg 1 -lvl 2 -y 850
+preplace inst MTL_SOPC.cycloneSPI_0 -pg 1 -lvl 2 -y 650
+preplace inst MTL_SOPC.TURN -pg 1 -lvl 2 -y 950
 preplace inst MTL_SOPC.mapTransfer -pg 1 -lvl 2 -y 30
 preplace inst MTL_SOPC.CLK_50 -pg 1 -lvl 1 -y 770
 preplace inst MTL_SOPC.TIMER -pg 1 -lvl 2 -y 130
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)TESTLED.external_connection,(SLAVE)MTL_SOPC.testled_external_connection) 1 0 2 NJ 760 NJ
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)mapTransfer.map,(SLAVE)MTL_SOPC.maptransfer_map) 1 0 2 NJ 220 NJ
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)KEY.external_connection,(SLAVE)MTL_SOPC.from_key) 1 0 2 NJ 280 NJ
-preplace netloc FAN_OUT<net_container>MTL_SOPC</net_container>(SLAVE)KEY.clk,(SLAVE)mem.clk1,(SLAVE)JTAG_UART.clk,(SLAVE)mtl_interface_irq_0.clock,(SLAVE)CPU.clk,(MASTER)CLK_50.clk,(SLAVE)TURN.clk,(SLAVE)TESTLED.clk,(SLAVE)TOUCHDATA.clk,(SLAVE)mapTransfer.clock,(SLAVE)TIMER.clk) 1 0 2 250 200 600
 preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)mtl_interface_irq_0.mtl_intreface,(SLAVE)MTL_SOPC.mtl_interface_irq_0_mtl_intreface) 1 0 2 NJ 500 NJ
 preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.touchdata_ext,(SLAVE)TOUCHDATA.external_connection) 1 0 2 NJ 580 NJ
-preplace netloc INTERCONNECT<net_container>MTL_SOPC</net_container>(SLAVE)TOUCHDATA.reset,(SLAVE)mapTransfer.reset,(MASTER)CLK_50.clk_reset,(SLAVE)mem.reset1,(SLAVE)JTAG_UART.reset,(SLAVE)TESTLED.reset,(SLAVE)KEY.reset,(SLAVE)TIMER.reset,(SLAVE)TURN.reset,(SLAVE)mtl_interface_irq_0.reset,(SLAVE)CPU.reset_n,(MASTER)CPU.jtag_debug_module_reset) 1 0 2 270 240 580
-preplace netloc FAN_OUT<net_container>MTL_SOPC</net_container>(MASTER)CPU.d_irq,(SLAVE)TIMER.irq,(SLAVE)JTAG_UART.irq,(SLAVE)mtl_interface_irq_0.ins_irq0) 1 1 1 560
-preplace netloc INTERCONNECT<net_container>MTL_SOPC</net_container>(SLAVE)TESTLED.s1,(MASTER)CPU.data_master,(SLAVE)KEY.s1,(SLAVE)CPU.jtag_debug_module,(SLAVE)mem.s1,(SLAVE)TIMER.s1,(SLAVE)mapTransfer.avalon_slave,(SLAVE)mtl_interface_irq_0.avs_s0,(SLAVE)JTAG_UART.avalon_jtag_slave,(SLAVE)TOUCHDATA.s1,(MASTER)CPU.instruction_master,(SLAVE)TURN.s1) 1 0 2 230 260 520
+preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.maptransfer_map,(SLAVE)mapTransfer.map) 1 0 2 NJ 200 NJ
+preplace netloc INTERCONNECT<net_container>MTL_SOPC</net_container>(SLAVE)cycloneSPI_0.avs_s0,(SLAVE)mapTransfer.avalon_slave,(SLAVE)KEY.s1,(SLAVE)JTAG_UART.avalon_jtag_slave,(MASTER)CPU.instruction_master,(SLAVE)CPU.jtag_debug_module,(SLAVE)mem.s1,(SLAVE)TIMER.s1,(SLAVE)TOUCHDATA.s1,(MASTER)CPU.data_master,(SLAVE)TESTLED.s1,(SLAVE)TURN.s1,(SLAVE)mtl_interface_irq_0.avs_s0) 1 0 2 230 720 540
+preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)TURN.external_connection,(SLAVE)MTL_SOPC.turn_ext) 1 0 2 NJ 980 NJ
+preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.testled_external_connection,(SLAVE)TESTLED.external_connection) 1 0 2 NJ 880 NJ
+preplace netloc FAN_OUT<net_container>MTL_SOPC</net_container>(SLAVE)TIMER.clk,(SLAVE)CPU.clk,(SLAVE)JTAG_UART.clk,(SLAVE)TOUCHDATA.clk,(SLAVE)TESTLED.clk,(SLAVE)KEY.clk,(SLAVE)TURN.clk,(SLAVE)mem.clk1,(SLAVE)cycloneSPI_0.clock,(SLAVE)mapTransfer.clock,(MASTER)CLK_50.clk,(SLAVE)mtl_interface_irq_0.clock) 1 0 2 250 680 600
+preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.from_key,(SLAVE)KEY.external_connection) 1 0 2 NJ 260 NJ
 preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.clk,(SLAVE)CLK_50.clk_in) 1 0 1 NJ
-preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.turn_ext,(SLAVE)TURN.external_connection) 1 0 2 NJ 860 NJ
 preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.reset,(SLAVE)CLK_50.clk_in_reset) 1 0 1 NJ
+preplace netloc EXPORT<net_container>MTL_SOPC</net_container>(SLAVE)MTL_SOPC.cyclonespi_0_spi_interface,(SLAVE)cycloneSPI_0.SPI_interface) 1 0 2 NJ 660 NJ
+preplace netloc INTERCONNECT<net_container>MTL_SOPC</net_container>(SLAVE)CPU.reset_n,(SLAVE)TURN.reset,(SLAVE)mapTransfer.reset,(SLAVE)JTAG_UART.reset,(SLAVE)mtl_interface_irq_0.reset,(SLAVE)mem.reset1,(MASTER)CLK_50.clk_reset,(SLAVE)KEY.reset,(SLAVE)cycloneSPI_0.reset,(SLAVE)TOUCHDATA.reset,(MASTER)CPU.jtag_debug_module_reset,(SLAVE)TESTLED.reset,(SLAVE)TIMER.reset) 1 0 2 270 700 580
+preplace netloc FAN_OUT<net_container>MTL_SOPC</net_container>(MASTER)CPU.d_irq,(SLAVE)cycloneSPI_0.ins_irq0,(SLAVE)TIMER.irq,(SLAVE)mtl_interface_irq_0.ins_irq0,(SLAVE)JTAG_UART.irq) 1 1 1 560
 levelinfo -pg 1 0 200 830
 levelinfo -hier MTL_SOPC 210 300 670 820

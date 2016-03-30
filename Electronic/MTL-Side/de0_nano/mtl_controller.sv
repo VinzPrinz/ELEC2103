@@ -452,8 +452,6 @@ parameter Ylength = 160;
 			else 
 				counter <= counter + 32'd1;
 				
-	
-						
 endmodule
 
 

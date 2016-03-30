@@ -2,15 +2,9 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-<<<<<<< HEAD
-        <BspGeneratedTimeStamp>21-mars-2016 15:37:42</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1458571062639</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>23-mars-2016 23:47:39</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1458773259399</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>D:\ELEC\2103-Project\Electronique\IMPORTANT\de0_nano\software\MTL_bsp</BspGeneratedLocation>
-=======
-        <BspGeneratedTimeStamp>Mar 17, 2016 6:14:53 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1458234893622</BspGeneratedUnixTimeStamp>
-        <BspGeneratedLocation>/home/obronchain/git_projects/ELEC2103/Electronic/MTL-Side/de0_nano/software/mtl_bsp</BspGeneratedLocation>
->>>>>>> addd119a196e0f16961ae63bce1fbb921569d96d
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\MTL_SOPC.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
@@ -902,6 +896,12 @@
                 <slaveDescriptor>TURN</slaveDescriptor>
                 <addressRange>0x00000020 - 0x0000002F</addressRange>
                 <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>counter_0</slaveDescriptor>
+                <addressRange>0x00000400 - 0x000007FF</addressRange>
+                <addressSpan>1024</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>

@@ -56,5 +56,5 @@ module mtl_interface_irq (
 			case(avs_s0_address[1:0])
 				mtl_counter_addr: avs_s0_readdata_reg <= mtl_counter;
 			endcase
-	 
+	
 endmodule
