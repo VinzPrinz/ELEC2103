@@ -1,10 +1,6 @@
 <sld_project_info>
   <project>
-<<<<<<< HEAD
-    <hash md5_digest_80b="1869c38262811e374f45"/>
-=======
-    <hash md5_digest_80b="68dcf30e01646336ec54"/>
->>>>>>> addd119a196e0f16961ae63bce1fbb921569d96d
+    <hash md5_digest_80b="49c08653fe1d0d4e4bdb"/>
   </project>
   <file_info>
     <file device="EP4CE22F17C6" path="DE0_NANO_time_limited.sof" usercode="0xFFFFFFFF"/>
@@ -164,11 +160,7 @@
     </sld_info>
     <sld_info hpath="MTL_SOPC:u0" name="u0">
       <assignment_values>
-<<<<<<< HEAD
-        <assignment_value text="QSYS_NAME MTL_SOPC HAS_SOPCINFO 1 GENERATION_ID 1458569940"/>
-=======
-        <assignment_value text="QSYS_NAME MTL_SOPC HAS_SOPCINFO 1 GENERATION_ID 1458234357"/>
->>>>>>> addd119a196e0f16961ae63bce1fbb921569d96d
+        <assignment_value text="QSYS_NAME MTL_SOPC HAS_SOPCINFO 1 GENERATION_ID 1458768722"/>
       </assignment_values>
       <parameters/>
     </sld_info>

@@ -1,6 +1,14 @@
 
 module MTL_SOPC (
 	clk_clk,
+	cyclonespi_0_spi_interface_Config,
+	cyclonespi_0_spi_interface_SPI_CS,
+	cyclonespi_0_spi_interface_SPI_SDI,
+	cyclonespi_0_spi_interface_SPI_SDO,
+	cyclonespi_0_spi_interface_SPI_clk,
+	cyclonespi_0_spi_interface_data_out,
+	cyclonespi_0_spi_interface_data_out_enable,
+	cyclonespi_0_spi_interface_spi_irq,
 	from_key_export,
 	maptransfer_map_map_line0,
 	maptransfer_map_map_line1,
@@ -17,17 +25,17 @@ module MTL_SOPC (
 	reset_reset_n,
 	testled_external_connection_export,
 	touchdata_ext_export,
-	turn_ext_export,
-	cyclonespi_0_spi_interface_Config,
-	cyclonespi_0_spi_interface_SPI_CS,
-	cyclonespi_0_spi_interface_SPI_SDI,
-	cyclonespi_0_spi_interface_SPI_SDO,
-	cyclonespi_0_spi_interface_SPI_clk,
-	cyclonespi_0_spi_interface_data_out,
-	cyclonespi_0_spi_interface_data_out_enable,
-	cyclonespi_0_spi_interface_spi_irq);	
+	turn_ext_export);	
 
 	input		clk_clk;
+	output	[7:0]	cyclonespi_0_spi_interface_Config;
+	input		cyclonespi_0_spi_interface_SPI_CS;
+	input		cyclonespi_0_spi_interface_SPI_SDI;
+	output		cyclonespi_0_spi_interface_SPI_SDO;
+	input		cyclonespi_0_spi_interface_SPI_clk;
+	output	[7:0]	cyclonespi_0_spi_interface_data_out;
+	output		cyclonespi_0_spi_interface_data_out_enable;
+	output		cyclonespi_0_spi_interface_spi_irq;
 	input		from_key_export;
 	output	[31:0]	maptransfer_map_map_line0;
 	output	[31:0]	maptransfer_map_map_line1;
@@ -45,12 +53,4 @@ module MTL_SOPC (
 	output	[3:0]	testled_external_connection_export;
 	input	[19:0]	touchdata_ext_export;
 	output		turn_ext_export;
-	output	[7:0]	cyclonespi_0_spi_interface_Config;
-	input		cyclonespi_0_spi_interface_SPI_CS;
-	input		cyclonespi_0_spi_interface_SPI_SDI;
-	output		cyclonespi_0_spi_interface_SPI_SDO;
-	input		cyclonespi_0_spi_interface_SPI_clk;
-	output	[7:0]	cyclonespi_0_spi_interface_data_out;
-	output		cyclonespi_0_spi_interface_data_out_enable;
-	output		cyclonespi_0_spi_interface_spi_irq;
 endmodule

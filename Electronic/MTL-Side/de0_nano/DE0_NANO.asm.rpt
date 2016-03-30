@@ -1,11 +1,6 @@
 Assembler report for DE0_NANO
-<<<<<<< HEAD
-Mon Mar 21 17:00:10 2016
+Wed Mar 30 15:17:09 2016
 Quartus II 64-Bit Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
-=======
-Thu Mar 17 18:57:04 2016
-Quartus Prime Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition
->>>>>>> addd119a196e0f16961ae63bce1fbb921569d96d
 
 
 ---------------------
@@ -44,11 +39,7 @@ agreement for further details.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-<<<<<<< HEAD
-; Assembler Status      ; Successful - Mon Mar 21 17:00:10 2016 ;
-=======
-; Assembler Status      ; Successful - Thu Mar 17 18:57:04 2016 ;
->>>>>>> addd119a196e0f16961ae63bce1fbb921569d96d
+; Assembler Status      ; Successful - Wed Mar 30 15:17:09 2016 ;
 ; Revision Name         ; DE0_NANO                              ;
 ; Top-level Entity Name ; DE0_NANO                              ;
 ; Family                ; Cyclone IV E                          ;
@@ -83,60 +74,35 @@ agreement for further details.
 +--------------------------------------------------------------------------------+
 
 
-<<<<<<< HEAD
 +----------------------------------------------------------------------------------------------------------+
 ; Assembler Device Options: D:/ELEC/2103-Project/Electronique/IMPORTANT/de0_nano/DE0_NANO_time_limited.sof ;
 +----------------+-----------------------------------------------------------------------------------------+
 ; Option         ; Setting                                                                                 ;
 +----------------+-----------------------------------------------------------------------------------------+
 ; Device         ; EP4CE22F17C6                                                                            ;
-; JTAG usercode  ; 0x007335D4                                                                              ;
-; Checksum       ; 0x007335D4                                                                              ;
+; JTAG usercode  ; 0x0073B0ED                                                                              ;
+; Checksum       ; 0x0073B0ED                                                                              ;
 +----------------+-----------------------------------------------------------------------------------------+
-=======
-+----------------------------------------+
-; Assembler Device Options: DE0_NANO.sof ;
-+----------------+-----------------------+
-; Option         ; Setting               ;
-+----------------+-----------------------+
-; Device         ; EP4CE22F17C6          ;
-; JTAG usercode  ; 0x005C7EEB            ;
-; Checksum       ; 0x005C7EEB            ;
-+----------------+-----------------------+
->>>>>>> addd119a196e0f16961ae63bce1fbb921569d96d
 
 
 +--------------------+
 ; Assembler Messages ;
 +--------------------+
 Info: *******************************************************************
-<<<<<<< HEAD
 Info: Running Quartus II 64-Bit Assembler
     Info: Version 15.0.0 Build 145 04/22/2015 SJ Web Edition
-    Info: Processing started: Mon Mar 21 17:00:07 2016
-=======
-Info: Running Quartus Prime Assembler
-    Info: Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition
-    Info: Processing started: Thu Mar 17 18:57:02 2016
->>>>>>> addd119a196e0f16961ae63bce1fbb921569d96d
+    Info: Processing started: Wed Mar 30 15:17:05 2016
 Info: Command: quartus_asm --read_settings_files=off --write_settings_files=off DE0_NANO -c DE0_NANO
 Warning (125092): Tcl Script File sdram_control/Sdram_RD_RAM.qip not found
     Info (125063): set_global_assignment -name QIP_FILE sdram_control/Sdram_RD_RAM.qip
 Info (115031): Writing out detailed assembly data for power analysis
 Info (115030): Assembler is generating device programming files
-<<<<<<< HEAD
 Info (115017): Design contains a time-limited core -- only a single, time-limited programming file can be generated
 Warning (210042): Can't convert time-limited SOF into POF, HEX File, TTF, or RBF
 Info: Quartus II 64-Bit Assembler was successful. 0 errors, 2 warnings
-    Info: Peak virtual memory: 641 megabytes
-    Info: Processing ended: Mon Mar 21 17:00:10 2016
-    Info: Elapsed time: 00:00:03
-=======
-Info: Quartus Prime Assembler was successful. 0 errors, 1 warning
-    Info: Peak virtual memory: 1068 megabytes
-    Info: Processing ended: Thu Mar 17 18:57:04 2016
-    Info: Elapsed time: 00:00:02
->>>>>>> addd119a196e0f16961ae63bce1fbb921569d96d
+    Info: Peak virtual memory: 640 megabytes
+    Info: Processing ended: Wed Mar 30 15:17:10 2016
+    Info: Elapsed time: 00:00:05
     Info: Total CPU time (on all processors): 00:00:03
 
 
