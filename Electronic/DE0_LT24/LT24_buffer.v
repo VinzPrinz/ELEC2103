@@ -260,8 +260,7 @@ end
 
 
 wire [10:0]  limLowX, limLowY, limHighX, limHighY, characPosX, characPosY;
-reg  [10:0] posX, posY, pointerX, pointerY;
-
+reg  [10:0] posX, posY, pointerX, pointerY , old_pointerX , old_pointerY;
 
 // Used for the fight game
 reg [1:0]	Counter_Reg;
@@ -428,13 +427,15 @@ always @ (posedge clk)
 		Counter_X_Reg <= 8'b0;
 		Counter_Y_Reg <= 8'b0;
 		Counter_Case_Reg <= 4'b0;
-		pattern_moving <= 12'hff0;
+		pattern_moving <= 12'h2f0;
+		pattern_err <= 1'b0;
 		if(rst)
 		begin
 			Case_Reg <= 12'hfff;
 			lt24_finish_reg <= 1'b0;
 		end else if(bufferFlag == 1'b0)
 			Case_Reg[11:0] <= 12'hfff;
+			
 		end
 		
 	//new pixel on the next line 
@@ -493,8 +494,25 @@ always @ (posedge clk)
 		posY <= posY;
 
 		lt24_finish_reg <=  (!lt24_pattern[0] && Case_Reg == 12'b0) || (lt24_pattern[0] && col_wire==1'b1);
-		if(posX == pointerX && posY == pointerY)
-			Case_Reg[11] <= 1'b0;
+		
+		if(posX == pointerX && posY == pointerY )//&& (!(pointerX==old_pointerX) || !(pointerY==old_pointerY)))
+			begin
+			/*Case_Reg[11] <= 1'b0;
+			pattern_err <= pattern_moving_wire[11];
+			if(pattern_moving_wire[11])
+				Case*/
+			//old_pointerX <= pointerX;
+			//old_pointerY <= pointerY;
+			pattern_err <= pattern_moving_wire[11];
+			if(pattern_moving_wire[11])
+				Case_Reg <= 12'hfff;
+			else
+				Case_Reg[11] <= 1'b0; 
+					
+			end
+		else
+			pattern_err <= 1'b0;
+			
 		end
 	end
 
@@ -502,7 +520,7 @@ always @ (posedge clk)
 always @ (posedge clk)
 	begin
 	// if reset or if the CPU controls the screen
-	if(rst || ~LT24_RESET_N_bus || (bufferFlag == 1'b0))
+	if(rst || ~LT24_RESET_N_bus || (bufferFlag == 1'b0) || (!pattern_state && lt24_pattern[1:0] == 2'b11))
 		begin
 		pointerX <= 11'd1024;
 		pointerY <= 11'd1024;
@@ -657,7 +675,7 @@ always
 							2'b10: Game1_Color <= 16'h00aa;
 						endcase
 					else
-						Game1_Color <= 16'haa00;
+						Game1_Color <= 16'hf0ff;
 		else if(lt24_pattern[0])
 			case({displayCharact , displayCoin})
 				2'b11: Game1_Color <= 16'h0000;
@@ -705,12 +723,17 @@ parameter pattern_0 = 12'hff0;
 reg pattern_state;
 reg [31:0] pattern_cnt;
 reg [11:0] pattern_moving;
+wire [11:0] pattern_moving_wire;
 
+assign pattern_moving_wire = pattern_moving;
 wire pattern_rst;
-assign pattern_rst = (posX == pointerX && posY == pointerY && pattern_moving[11]);
+reg pattern_err;
+assign pattern_rst = pattern_err;
 
+// state 0 -> showing the pattern
+// state 1 -> getting data
 always @(posedge clk)
-		if(rst )//|| pattern_rst )
+		if(rst ||!(lt24_pattern == 2'b11)|| (pattern_rst && pattern_state))
 			begin
 				pattern_state <= 1'b0;
 				pattern_cnt <= 32'd0;
