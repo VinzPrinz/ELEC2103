@@ -89,20 +89,55 @@ void MyConsole_Task(void)
         MyConsole_SendMsg("MyTest ok lol\n>");
     } else if (strcmp(theCmd, "SendImage")==0){
         MyMDDFS_Send_Image(theCmd);
+    }else if (strcmp(theCmd, "Right")==0){
+        int i = 0;
+        MyCyclone_Write(0x14,myCyclone_Snake_Right);
+    }
+    else if (strcmp(theCmd, "Left")==0){
+        int i = 0;
+        MyCyclone_Write(0x14,myCyclone_Snake_Left);
+    }
+    else if (strcmp(theCmd, "Up")==0){
+        int i = 0;
+        MyCyclone_Write(0x14,myCyclone_Snake_Up);
+    }
+    else if (strcmp(theCmd, "Down")==0){
+        int i = 0;
+        MyCyclone_Write(0x14,myCyclone_Snake_Down);
     }else if (strcmp(theCmd, "StartFight")==0){
         int i = 0;
-        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_fight,1); 
-    } 
+        MyCyclone_Write(0x12,myCyclone_Start_Fight_lt24);
+    } else if (strcmp(theCmd, "EndFight")==0){
+        int i = 0;
+        MyCyclone_Write(0x12,myCyclone_End_Fight_lt24);
+    }else if (strcmp(theCmd, "newround")==0){
+        //if(cnt !=0)
+        int i = 0;
+        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_End_coin,1);                      
+        currentPlayer = currentPlayer +1 %2;
+        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
+    }
+    else if (strcmp(theCmd, "StartFightMIWI")==0){
+        int i = 0;
+        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_fight,1);
+    }
     else if (strcmp(theCmd, "StartCoin")==0){
         int i = 0;
-        MyCyclone_Write(0x12,myCyclone_Start_Coin);
+        MyCyclone_Write(0x12,myCyclone_Start_Coin_lt24);
     }
     else if (strcmp(theCmd, "EndCoin")==0){
         int i = 0;
-        MyCyclone_Write(0x12,myCyclone_End_Coin);
+        MyCyclone_Write(0x12,myCyclone_End_Coin_lt24);
+    }else if (strcmp(theCmd, "StartSnake")==0){
+        int i = 0;
+        MyCyclone_Write(0x12,myCyclone_Start_Snake_lt24);
     }
-    
+    else if (strcmp(theCmd, "EndSnake")==0){
+        int i = 0;
+        MyCyclone_Write(0x12,myCyclone_End_Snake_lt24);
+    }
     else if (strcmp(theCmd, "StartCoinMIWI")==0){
+        currentPlayer = currentPlayer +1 %2;
         int i = 0;
         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
     }

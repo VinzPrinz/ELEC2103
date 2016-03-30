@@ -88,9 +88,9 @@ int main(void)
  //   MyConsole_SendMsg("MyFlash_Init() passed\n");
     MyTemperature_Init();
  //   MyConsole_SendMsg("MyTemperature_Init() passed\n");
-    MyMIWI_Init();
+ //   MyMIWI_Init();
 //    MyConsole_SendMsg("MyMIWI_Init() passed\n");
- //   MyWIFI_Init();
+  MyWIFI_Init();
 //    MyConsole_SendMsg("MyWIFI_Init() passed\n");
     MyMDDFS_Init();
     
@@ -104,7 +104,7 @@ int main(void)
     MyConsole_SendMsg(startMsg);
 
     // Start Wireless and Camera connections
-    MyMIWI_Start();
+//    MyMIWI_Start();
     MyWIFI_Start();
     //MyCamera_Start();
    
@@ -115,7 +115,8 @@ int main(void)
     Player2.soldiers =0;
     timer_round = 240;
     
-    
+    currentPlayer = 0;
+    changePlayer = 0;
     // Execute forever
     while (1)
     {
@@ -125,7 +126,7 @@ int main(void)
      //   MyConsole_SendMsg("MyConsole_Task Passed \n");
         MyCAN_Task();
    //     MyConsole_SendMsg("MyCAN_Task Passed \n");
-       MyMIWI_Task();
+ //      MyMIWI_Task();
  //       MyConsole_SendMsg("MyMIWI_Task Passed \n");
         MyWIFI_Task();
  //       MyConsole_SendMsg("MyWIFI_Task Passed \n");

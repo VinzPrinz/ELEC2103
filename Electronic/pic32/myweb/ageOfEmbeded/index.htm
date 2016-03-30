@@ -19,6 +19,7 @@ SUPPORT
 E-mail: bootshape.com@gmail.com
 Contact: http://www.bootshape.com/contact.php
 -->
+<meta charset="UTF-8"> 
 <html>
   <head>
      <title>Age of Embedded</title>
@@ -99,7 +100,7 @@ Contact: http://www.bootshape.com/contact.php
     </div><!-- End Slide gallery -->
 
     <h3 class="text-center">Players  &amp; Resources</h3>
-    <!-- Thumbnails -->
+    <!-- Thumbnails --><center>
     <div class="container thumbs">
       <div class="col-sm-4 col-md-4">
         <div class="thumbnail">
@@ -127,14 +128,47 @@ Contact: http://www.bootshape.com/contact.php
           </div>
         </div>
       </div>
-    </div><!-- End Thumbnails -->
+    </div></center><!-- End Thumbnails -->
 
+    <!-- Shop -->
+    <div class="container">
+      <h3> Here is the shop</h3>
+      <form method="get" action="index.htm">
+      <div class="CSSTableGenerator">
+            <table>
+                    <tr>
+                        <td> Product</td>
+                        <td> Description </td>
+                        <td> Buy </td>
+                    </tr>
+                    <tr>
+                        <td> Soldier </td>
+                        <td> The most simple unit. There are able to fight with
+                            direct neighboor. </td>
+                        <td> 5 Gold <select name="Sol"><option value="0">0</option><option value="1">1</option></select>
+                            </td>
+                    </tr>
+                    <tr>
+                        <td> EPL </td>
+                        <td> Increadible guys able to build or repare embedded
+                            systems </td>
+                        <td> 10 Gold  <select name="EPL"><option value="0">0</option><option value="1">1</option></select> 
+                        </td>
+                    </tr>
+            </table>
+      </div>
+      <input type="submit" value="Save" style="margin-top:5px;">
+      </form>
+    </div><!-- End Shop -->
 
+ 
     <!-- Content -->
     <div class="container">
       <h3>Project Description</h3>
       <p> Age of Embedded is a game develloped at EPL for LELEC2103 course </p>
     </div><!-- End Content -->
+
+    
     <!-- Footer -->
     <div class="footer text-center">
         <p>&copy; 2015-2016 , Ecole Polytechnique de Louvain  <a class="green"
@@ -191,12 +225,6 @@ function updateStatus(xmlData) {
 }
 
 setTimeout("newAJAXCommand('status.xml', updateStatus, true)",500);
-//-->
-</script>
-
-<script type="text/javascript">
-<!--
-document.getElementById('hello').innerHTML = "~hellomsg~";
 //-->
 </script>
 

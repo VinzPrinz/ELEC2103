@@ -155,36 +155,10 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
 	BYTE *ptr;
 	BYTE filename[20];
 	
+    MyConsole_SendMsg("In Get\n");
 	// Load the file name
 	// Make sure BYTE filename[] above is large enough for your longest name
 	MPFSGetFilename(curHTTP.file, filename, 20);
-	
-	// If its the forms.htm page
-	if(!memcmppgm2ram(filename, "forms.htm", 9))
-	{
-		// Seek out each of the four LED strings, and if it exists set the LED states
-		ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"led4");
-		if(ptr){
-			LED4_IO = (*ptr == '1');
-            MyConsole_SendMsg("Received butLed4\n");
-        }
-
-		ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"led3");
-		if(ptr)
-			LED3_IO = (*ptr == '1');
-
-		ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"led2");
-		if(ptr)
-			LED2_IO = (*ptr == '1');
-
-		ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"led1");
-		if(ptr)
-			LED1_IO = (*ptr == '1');
-        
-        
-        
-	}
-    
     	// If its the forms.htm page
 	if(!memcmppgm2ram(filename, "index.htm", 9))
 	{
@@ -232,16 +206,32 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
             }else if(*ptr=='b'){
                 image.color_b = 255;
             }
-            
+
             MyConsole_SendMsg(ptr);
             MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast, (void *) &image_info , myMIWI_Image_Info , sizeof(struct Image_Info));
             MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast, (void *) &image , myMIWI_Image , sizeof(struct Image));
+	
+        }
+       
+        MyConsole_SendMsg("Receive a forms\n");
+        ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"Sol");
+		if(ptr){
+			MyConsole_SendMsg(ptr);
+            if(currentPlayer)
+                Player1.soldiers = Player1.soldiers+atoi(ptr);
+            else
+                Player2.soldiers = Player2.soldiers+atoi(ptr);
 
-		}
-	}
+            MyConsole_SendMsg("Match Sol \n");
+        }
+
+        ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"EPL");
+		if(ptr)
+			MyConsole_SendMsg(ptr);
+    }
 	
 	
-	// If it's the LED updater file
+/*	// If it's the LED updater file
 	else if(!memcmppgm2ram(filename, "cookies.htm", 11))
 	{
 		// This is very simple.  The names and values we want are already in
@@ -284,7 +274,7 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
 				break;
 		}
 		
-	}
+	}*/
 	
 	return HTTP_IO_DONE;
 }
@@ -294,6 +284,21 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
   Section:
 	POST Form Handlers
   ***************************************************************************/
+void  HTTPPostShop(void)
+{
+	static BYTE *ptrDDNS;
+    int ptr = curHTTP.smPost;
+    char lol[42];
+    sprintf(lol , "This is the ptr %d \n" , ptr);
+			MyConsole_SendMsg(ptr);
+            if(currentPlayer)
+                Player1.soldiers = Player1.soldiers+atoi(ptr);
+            else
+                Player2.soldiers = Player2.soldiers+atoi(ptr);
+
+            MyConsole_SendMsg("Match Sol \n");
+}
+
 #if defined(HTTP_USE_POST)
 
 /*****************************************************************************
@@ -307,7 +312,7 @@ HTTP_IO_RESULT HTTPExecutePost(void)
 {
 	// Resolve which function to use and pass along
 	BYTE filename[20];
-	
+	BYTE *ptr;
 	// Load the file name
 	// Make sure BYTE filename[] above is large enough for your longest name
 	MPFSGetFilename(curHTTP.file, filename, sizeof(filename));
@@ -340,6 +345,11 @@ HTTP_IO_RESULT HTTPExecutePost(void)
 	if(!strcmppgm2ram((char*)filename, "dyndns/index.htm"))
 		return HTTPPostDDNSConfig();
 #endif
+    MyConsole_SendMsg("in post \n");
+	if(!memcmppgm2ram(filename, "index.htm", 9))
+	{   
+        HTTPPostShop();
+    }
 
 	return HTTP_IO_DONE;
 }
@@ -1926,7 +1936,7 @@ void HTTPPrint_P1sol(void){
 
 void HTTPPrint_P2gold(void){
     BYTE str[64];
-    sprintf(str , "%d", 42);
+    sprintf(str , "%d", Player2.gold);
     TCPPutString(sktHTTP ,str);  
 }
 
@@ -1939,6 +1949,6 @@ void HTTPPrint_P2sol(void){
 
 void HTTPPrint_timer_round(void){
     BYTE str[64];
-    sprintf(str , "%d:%d" , timer_round/4 , timer_round/2 % 60);
+    sprintf(str , "On LT24 , Player %d , On MTL Player %d", currentPlayer , !currentPlayer);
     TCPPutString(sktHTTP , str);
 }

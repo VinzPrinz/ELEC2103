@@ -44,6 +44,15 @@ void MyCyclone_Init(void)
 /*******************************************************************************
 *	Interrupt handler functions for INT1 and INT2
 *******************************************************************************/
+   int cnt= 0 ;
+    void delayLol(){
+        int i = 0;
+        while(i<3000000){
+            i = i+2;
+            i--;
+        }
+            
+    }
 
 void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler(void)
 {
@@ -53,19 +62,51 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
     char str[64];
     int addr = MyCyclone_Read(0x01);
     int data = MyCyclone_Read(addr);
-    sprintf(str, "This is readed from spi addr:%d -> %d \n" , addr , data);
     
+    MyCyclone_Write(0x13,0x00);
+    delayLol();
+    MyCyclone_Write(0x13,0x00);
+    sprintf(str, "This is readed from spi addr:%d -> %d \n" , addr , data);
+    int i;
     switch(addr){
-        case 0x02: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_fight,1);
+        case 0x02: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_fight, 4); // the counter
+                   MyCyclone_Write(0x12,myCyclone_End_Fight_lt24); 
                    break;
         case 0x03: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_coin_reply,1);
                     printf("End coin reply");
                    break;
+                   
+        case 0x04: 
+                   break;
+        case 0x05: if(data == 0){
+                        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_fight,1);
+                        printf("Start Fight \n");
+                    }
+                   else if (data==2){
+                        if(cnt !=0)
+                            MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_End_coin,1);
+                        delayLol();
+                        changePlayer= (cnt!=0);
+                        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
+                        printf("New Round, changing player 2 data: %d \n" , data);
+                   }
+                   else if (data == 3){
+                       if(cnt != 0)
+                            MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_End_coin,1);
+                       delayLol();
+                       changePlayer = (cnt !=0);
+                        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
+                        printf("New Round, changing player 1 data: %d \n" , data);
+                   }
+                   break;
     }
 
+    cnt ++;
+    
         
     MyConsole_SendMsg(str);
 }
+
 
 void __ISR(_EXTERNAL_2_VECTOR, My_INT_EXTERNAL_2_IPL) _External2InterruptHandler(void)
 {
