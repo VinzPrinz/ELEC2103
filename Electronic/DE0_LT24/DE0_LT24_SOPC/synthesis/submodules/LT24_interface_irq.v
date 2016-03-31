@@ -107,7 +107,7 @@ module LT24_interface_irq (
 				vx_addr: vx_reg <= avs_s0_writedata;
 				vy_addr: vy_reg <= avs_s0_writedata;
 				lt24_coin_x0_addr: lt24_coin_x0_reg <= avs_s0_writedata;
-				lt24_coin_y0_addr: lt24_coin_y0_reg <= avs_s0_writedata;
+				lt24_coin_y0_addr: lt24_coin_y0_reg <= avs_s0_writedata; 
 				lt24_coin_vx0_addr: lt24_coin_vx0_reg <= avs_s0_writedata;
 				lt24_coin_vy0_addr: lt24_coin_vy0_reg <= avs_s0_writedata;
 				lt24_pattern_0_addr: lt24_pattern_0_reg <= avs_s0_writedata[11:0];
@@ -118,8 +118,8 @@ module LT24_interface_irq (
 		begin
 			avs_s0_readdata_reg <= 32'b0;
 		end
-	
-	/*always @(clock_clk)
+	 
+	/*always @(clock_clk) 
 	if(reset_reset)
 		begin
 			pattern_reg <= 12'b0;
@@ -185,5 +185,5 @@ module LT24_interface_irq (
 			finish_flag_delay <= 1'b0;
 		else
 			finish_flag_delay <= finish_flag;
-			
+			 
 endmodule

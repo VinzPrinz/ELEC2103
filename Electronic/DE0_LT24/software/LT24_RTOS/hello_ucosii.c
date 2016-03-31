@@ -29,6 +29,7 @@
 
 
 
+
 /* Definition of Task Stacks*/
 #define   TASK_STACKSIZE       2048
 OS_STK    task_send_data_stk[TASK_STACKSIZE];
@@ -73,10 +74,10 @@ int myOp;
 bool restartcoin =0;
 
 char Snake [32][24];
-char Snake1I = 0;
-char Snake1J = 0;
-char Snake2I = 10;
-char Snake2J = 10;
+int Snake1I = 0;
+int Snake1J = 0;
+int Snake2I = 10;
+int Snake2J = 10;
 
 alt_video_display Display;
 TOUCH_HANDLE *pTouch;
@@ -398,8 +399,10 @@ void task_game1(void* pdata)
 			    		else if (op != NULL && *op == myCyclone_Start_Snake){
 			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 2);
 			    	    	clearSnake();
-			    	    	Snake1J = 6 + rand() % 20;
-			    	    	Snake1I = 4+ rand() % 16;
+			    	    	Snake1J = rand() % 32;
+			    	    	Snake1I = rand() % 24;
+			    	    	Snake2J = rand() % 32;
+			    	    	Snake2I = rand() % 24;
 			    	    	printf(" ||||||||||||| clear Snake %d %d %d %d\n" , Snake1J , Snake1I);
 			    		}
     		if(acctualOp == myCyclone_Start_Coin || acctualOp == myCyclone_End_Fight || acctualOp == myCyclone_End_Snake){
@@ -437,38 +440,115 @@ void task_game1(void* pdata)
 	}
 }
 
-void checkSnake(int j , int i){
-	if(Snake[j][i]!=0)
+void checkSnake(int j , int i , int snake){
+	if(Snake[j][i]!=0){
 		OSMboxPost(Flag2, (void*)&myOp);
+		IOWR(CYCLONESPI_BASE+(4*0x04) , 0 ,snake);
+	}
 }
 
-void boarderSnake(int j , int i  ,int dir){
+void boarderSnake(int j , int i  ,int dir, int snake){
 
-	if(dir == myCyclone_Snake_Right && i == 23)
+	if(dir == myCyclone_Snake_Right && i == 23){
 		OSMboxPost(Flag2, (void*)&myOp);
+		IOWR(CYCLONESPI_BASE+(4*0x04) , 0 ,snake);
+	}
 
-	if(dir == myCyclone_Snake_Left && i == 0)
+	if(dir == myCyclone_Snake_Left && i == 0){
 		OSMboxPost(Flag2, (void*)&myOp);
+		IOWR(CYCLONESPI_BASE+(4*0x04) , 0 , snake);
+	}
 
-	if(dir == myCyclone_Snake_Down && j == 31)
+	if(dir == myCyclone_Snake_Down && j == 31){
 		OSMboxPost(Flag2, (void*)&myOp);
+		IOWR(CYCLONESPI_BASE+(4*0x04) , 0 , snake);
+	}
 
-	if(dir == myCyclone_Snake_Up && j == 0)
+
+	if(dir == myCyclone_Snake_Up && j == 0){
 		OSMboxPost(Flag2, (void*)&myOp);
+		IOWR(CYCLONESPI_BASE+(4*0x04) , 0 , snake);
+	}
 }
+
+/*void checkMovSnake(int *SnakeJ , int *SnakeI , int dir , int snake){
+	int Snake1I = *SnakeI;
+	int Snake1J = *SnakeJ;
+	printf("Snake1 %d   , Snake1J  %d ,  %d , snake: %d \n" , Snake1I , Snake1J, dir , snake);
+	if(Snake1I+1 < 24 && dir == myCyclone_Snake_Right){
+		checkSnake(Snake1J , Snake1I+1);
+		*SnakeI++;
+	}
+	else if(Snake1I-1 >= 0 && dir == myCyclone_Snake_Left){
+		checkSnake(Snake1J , Snake1I-1);
+		*SnakeI--;
+	}
+
+	if(Snake1J+1 < 32 && dir == myCyclone_Snake_Down){
+		checkSnake(Snake1J+1 , Snake1I);
+		*SnakeJ++;
+	}
+	else if (Snake1J-1 >=0 && dir == myCyclone_Snake_Up){
+		checkSnake(Snake1J-1 , Snake1I );
+		*SnakeJ--;
+	}
+	printf("LOOOOL: SnakeI %d  , SnakeJ  %d , %d  ,snake %d \n" , *SnakeI , *SnakeJ , dir , snake);
+
+}*/
 
 void updateSnake(){
-	int dir;
+	int dir1 , dir2;
 	OSTimeDlyHMSM(0, 0, 0, 400);
-	dir = IORD(CYCLONESPI_BASE+(4*0x14),0); // read the op asked by pic32
 
-	printf("LOL0 Snake1J %d Snake1I %d \n"  , Snake1J , Snake1I);
+	dir1 = IORD(CYCLONESPI_BASE+(4*0x13),0); // read the op asked by pic32
+	dir2 = IORD(CYCLONESPI_BASE+(4*0x14),0); // read the op asked by pic32
 
-	boarderSnake(Snake1J , Snake1I , dir);
+	boarderSnake(Snake1J , Snake1I , dir1 , 1);
+	boarderSnake(Snake2J , Snake2I , dir2 , 2);
 
 
-	printf("LOL1 Snake1J %d Snake1I %d \n"  , Snake1J , Snake1I);
-	if(Snake1I+1 < 24 && dir == myCyclone_Snake_Right){
+	if(Snake1I+1 < 24 && dir1 == myCyclone_Snake_Right){
+		checkSnake(Snake1J , Snake1I+1 , 1);
+		Snake1I++;
+	}
+	else if(Snake1I-1 >= 0 && dir1 == myCyclone_Snake_Left){
+		checkSnake(Snake1J , Snake1I-1 , 1);
+		Snake1I--;
+	}
+
+	if(Snake1J+1 < 32 && dir1 == myCyclone_Snake_Down){
+		checkSnake(Snake1J+1 , Snake1I , 1);
+		Snake1J++;
+	}
+	else if (Snake1J-1 >=0 && dir1 == myCyclone_Snake_Up){
+		checkSnake(Snake1J-1 , Snake1I  , 1);
+		Snake1J--;
+	}
+
+	if(Snake2I+1 < 24 && dir2 == myCyclone_Snake_Right){
+		checkSnake(Snake2J , Snake2I+1 , 2);
+		Snake2I++;
+	}
+	else if(Snake2I-1 >= 0 && dir2 == myCyclone_Snake_Left){
+		checkSnake(Snake2J , Snake2I-1 , 2);
+		Snake2I--;
+	}
+
+	if(Snake2J+1 < 32 && dir2 == myCyclone_Snake_Down){
+		checkSnake(Snake2J+1 , Snake2I , 2);
+		Snake2J++;
+	}
+	else if (Snake2J-1 >=0 && dir2 == myCyclone_Snake_Up){
+		checkSnake(Snake2J-1 , Snake2I , 2 );
+		Snake2J--;
+	}
+
+	Snake[Snake1J][Snake1I] = 1;
+	Snake[Snake2J][Snake2I] = 2;
+	sendSnake();
+
+}
+/*	if(Snake1I+1 < 24 && dir == myCyclone_Snake_Right){
 		checkSnake(Snake1J , Snake1I+1);
 		Snake1I++;
 	}
@@ -476,28 +556,15 @@ void updateSnake(){
 		checkSnake(Snake1J , Snake1I-1);
 		Snake1I--;
 	}
-	printf("LOL2 Snake1J %d Snake1I %d \n"  , Snake1J , Snake1I);
-
 
 	if(Snake1J+1 < 32 && dir == myCyclone_Snake_Down){
-		checkSnake(Snake1J+1 , Snake1I);
+		checkSnake(Snake1J+1 , Snakée1I);
 		Snake1J++;
 	}
 	else if (Snake1J-1 >=0 && dir == myCyclone_Snake_Up){
 		checkSnake(Snake1J-1 , Snake1I );
 		Snake1J--;
-	}
-	printf("LOL2 Snake1J %d Snake1I %d \n"  , Snake1J , Snake1I);
-
-
-	if(Snake2I+1 < 24)
-		Snake2I++;
-
-	Snake[Snake1J][Snake1I] = 1;
-	Snake[Snake2J][Snake2I] = 2;
-	sendSnake();
-
-}
+	}*/
 
 
 void clearSnake(){
