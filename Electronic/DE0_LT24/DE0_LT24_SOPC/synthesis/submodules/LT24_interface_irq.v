@@ -1,13 +1,3 @@
-// LT24_interface_irq.v
-
-// This file was auto-generated as a prototype implementation of a module
-// created in component editor.  It ties off all outputs to ground and
-// ignores all inputs.  It needs to be edited to make it do something
-// useful.
-// 
-// This file will not be automatically regenerated.  You should check it in
-// to your version control system if you want to keep it.
-
 `timescale 1 ps / 1 ps
 module LT24_interface_irq (
 		input  wire [7:0]  avs_s0_address,     //      avs_s0.address
@@ -159,7 +149,6 @@ module LT24_interface_irq (
 			lt24_coin_x_addr: avs_s0_readdata_reg <= lt24_coin_x;
 			lt24_coin_y_addr: avs_s0_readdata_reg <= lt24_coin_y;
 		endcase
-
 	/*else
 		begin
 			avs_s0_readdata_reg <= avs_s0_readdata_reg;
@@ -197,6 +186,4 @@ module LT24_interface_irq (
 		else
 			finish_flag_delay <= finish_flag;
 			
-	
-
 endmodule

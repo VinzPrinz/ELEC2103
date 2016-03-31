@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>ucosii</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Mar 31, 2016 1:16:10 AM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1459379770615</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Mar 31, 2016 4:43:26 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1459435406907</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24/software/LT24_RTOS_bsp</BspGeneratedLocation>
         <BspSettingsFile>settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../DE0_LT24_SOPC.sopcinfo</SopcDesignFile>

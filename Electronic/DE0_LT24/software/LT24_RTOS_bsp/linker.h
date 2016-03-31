@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'DE0_LT24_SOPC'
  * SOPC Builder design path: ../../DE0_LT24_SOPC.sopcinfo
  *
- * Generated: Sat Mar 26 22:20:19 CET 2016
+ * Generated: Thu Mar 31 16:43:28 CEST 2016
  */
 
 /*

@@ -402,7 +402,7 @@ DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		.LT24_RESET_N_screen(LT24_RESET_N),
 		.LT24_RS_screen(LT24_RS),
 		
-		.pic_mem_s2_address(pic_mem_s2_address),             //                pic_mem_s2.address
+		.pic_mem_s2_address(pic_mem_s2_address),             //                pic_mem_s2.address 
 		.pic_mem_s2_chipselect(pic_mem_s2_chipselect),       //                .chipselect
 		.pic_mem_s2_clken(pic_mem_s2_clken),                 //                .clken
 		.pic_mem_s2_write(pic_mem_s2_write),                 //                          .write

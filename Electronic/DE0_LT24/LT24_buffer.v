@@ -499,20 +499,15 @@ always @ (posedge clk)
 
 		lt24_finish_reg <=  (!lt24_pattern[0] && Case_Reg == 12'b0) || (lt24_pattern[0] && col_wire==1'b1);
 		
-		if(posX == pointerX && posY == pointerY )//&& (!(pointerX==old_pointerX) || !(pointerY==old_pointerY)))
+		if(posX == pointerX && posY == pointerY)
 			begin
-			/*Case_Reg[11] <= 1'b0;
 			pattern_err <= pattern_moving_wire[11];
-			if(pattern_moving_wire[11])
-				Case*/
-			//old_pointerX <= pointerX;
-			//old_pointerY <= pointerY;
-			pattern_err <= pattern_moving_wire[11];
-			if(pattern_moving_wire[11])
+			
+			if(pattern_moving_wire[11] && pattern_state)
 				Case_Reg <= 12'hfff;
 			else
 				Case_Reg[11] <= 1'b0; 
-					
+				
 			end
 		else
 			pattern_err <= 1'b0;
@@ -524,7 +519,7 @@ always @ (posedge clk)
 always @ (posedge clk)
 	begin
 	// if reset or if the CPU controls the screen
-	if(rst || ~LT24_RESET_N_bus || (bufferFlag == 1'b0) || (!pattern_state && lt24_pattern[1:0] == 2'b11))
+	if(rst || ~LT24_RESET_N_bus || (bufferFlag == 1'b0) || (!pattern_state && (lt24_pattern[1:0] == 2'b11)))
 		begin
 		pointerX <= 11'd1024;
 		pointerY <= 11'd1024;
@@ -737,7 +732,7 @@ assign pattern_rst = pattern_err;
 // state 0 -> showing the pattern
 // state 1 -> getting data
 always @(posedge clk)
-		if(rst ||!(lt24_pattern == 2'b11)|| (pattern_rst && pattern_state))
+		if(rst ||!(lt24_pattern[1:0] == 2'b11)|| (pattern_rst && pattern_state))
 			begin
 				pattern_state <= 1'b0;
 				pattern_cnt <= 32'd0;
