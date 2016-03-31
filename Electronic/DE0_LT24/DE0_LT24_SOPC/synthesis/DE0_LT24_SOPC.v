@@ -36,17 +36,18 @@ module DE0_LT24_SOPC (
 		output wire        lt24_conduit_rd,                             //                                     .rd
 		output wire        lt24_conduit_wr,                             //                                     .wr
 		output wire [15:0] lt24_conduit_data,                           //                                     .data
-		input  wire        lt24_conduit_0_finish_flag,                  //                       lt24_conduit_0.finish_flag
-		input  wire [31:0] lt24_conduit_0_counter,                      //                                     .counter
-		output wire [11:0] lt24_conduit_0_pattern,                      //                                     .pattern
-		output wire [31:0] lt24_conduit_0_vx,                           //                                     .vx
-		output wire [31:0] lt24_conduit_0_vy,                           //                                     .vy
-		output wire [31:0] lt24_conduit_0_lt24_coin_x0,                 //                                     .lt24_coin_x0
-		output wire [31:0] lt24_conduit_0_lt42_coin_y0,                 //                                     .lt42_coin_y0
-		input  wire [31:0] lt24_conduit_0_lt24_coinx,                   //                                     .lt24_coinx
-		input  wire [31:0] lt24_conduit_0_lt24_coin_y,                  //                                     .lt24_coin_y
-		output wire [31:0] lt24_conduit_0_lt24_coin_vx0,                //                                     .lt24_coin_vx0
-		output wire [31:0] lt24_conduit_0_lt24_coin_vy0,                //                                     .lt24_coin_vy0
+		input  wire        lt24_conduit_1_finish_flag,                  //                       lt24_conduit_1.finish_flag
+		input  wire [31:0] lt24_conduit_1_counter,                      //                                     .counter
+		output wire [11:0] lt24_conduit_1_pattern,                      //                                     .pattern
+		output wire [31:0] lt24_conduit_1_vx,                           //                                     .vx
+		output wire [31:0] lt24_conduit_1_vy,                           //                                     .vy
+		output wire [31:0] lt24_conduit_1_lt24_coin_x0,                 //                                     .lt24_coin_x0
+		output wire [31:0] lt24_conduit_1_lt42_coin_y0,                 //                                     .lt42_coin_y0
+		input  wire [31:0] lt24_conduit_1_lt24_coinx,                   //                                     .lt24_coinx
+		input  wire [31:0] lt24_conduit_1_lt24_coin_y,                  //                                     .lt24_coin_y
+		output wire [31:0] lt24_conduit_1_lt24_coin_vx0,                //                                     .lt24_coin_vx0
+		output wire [31:0] lt24_conduit_1_lt24_coin_vy0,                //                                     .lt24_coin_vy0
+		output wire [11:0] lt24_conduit_1_lt24_pattern_0,               //                                     .lt24_pattern_0
 		output wire        lt24_lcd_rstn_export,                        //                        lt24_lcd_rstn.export
 		input  wire        lt24_touch_busy_export,                      //                      lt24_touch_busy.export
 		input  wire        lt24_touch_penirq_n_export,                  //                  lt24_touch_penirq_n.export
@@ -406,17 +407,18 @@ module DE0_LT24_SOPC (
 		.clock_clk          (clk_clk),                                                   //       clock.clk
 		.reset_reset        (rst_controller_003_reset_out_reset),                        //       reset.reset
 		.ins_irq0_irq       (irq_synchronizer_001_receiver_irq),                         //    ins_irq0.irq
-		.finish_flag        (lt24_conduit_0_finish_flag),                                // conduit_end.finish_flag
-		.counter            (lt24_conduit_0_counter),                                    //            .counter
-		.pattern            (lt24_conduit_0_pattern),                                    //            .pattern
-		.vx                 (lt24_conduit_0_vx),                                         //            .vx
-		.vy                 (lt24_conduit_0_vy),                                         //            .vy
-		.lt24_coin_x0       (lt24_conduit_0_lt24_coin_x0),                               //            .lt24_coin_x0
-		.lt24_coin_y0       (lt24_conduit_0_lt42_coin_y0),                               //            .lt42_coin_y0
-		.lt24_coin_x        (lt24_conduit_0_lt24_coinx),                                 //            .lt24_coinx
-		.lt24_coin_y        (lt24_conduit_0_lt24_coin_y),                                //            .lt24_coin_y
-		.lt24_coin_vx0      (lt24_conduit_0_lt24_coin_vx0),                              //            .lt24_coin_vx0
-		.lt24_coin_vy0      (lt24_conduit_0_lt24_coin_vy0)                               //            .lt24_coin_vy0
+		.finish_flag        (lt24_conduit_1_finish_flag),                                // conduit_end.finish_flag
+		.counter            (lt24_conduit_1_counter),                                    //            .counter
+		.pattern            (lt24_conduit_1_pattern),                                    //            .pattern
+		.vx                 (lt24_conduit_1_vx),                                         //            .vx
+		.vy                 (lt24_conduit_1_vy),                                         //            .vy
+		.lt24_coin_x0       (lt24_conduit_1_lt24_coin_x0),                               //            .lt24_coin_x0
+		.lt24_coin_y0       (lt24_conduit_1_lt42_coin_y0),                               //            .lt42_coin_y0
+		.lt24_coin_x        (lt24_conduit_1_lt24_coinx),                                 //            .lt24_coinx
+		.lt24_coin_y        (lt24_conduit_1_lt24_coin_y),                                //            .lt24_coin_y
+		.lt24_coin_vx0      (lt24_conduit_1_lt24_coin_vx0),                              //            .lt24_coin_vx0
+		.lt24_coin_vy0      (lt24_conduit_1_lt24_coin_vy0),                              //            .lt24_coin_vy0
+		.lt24_pattern_0     (lt24_conduit_1_lt24_pattern_0)                              //            .lt24_pattern_0
 	);
 
 	DE0_LT24_SOPC_SDRAM_Controler sdram_controler (

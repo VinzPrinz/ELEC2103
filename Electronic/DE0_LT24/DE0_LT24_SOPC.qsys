@@ -97,6 +97,22 @@
          type = "String";
       }
    }
+   element DE0_LT24_SOPC
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone IV E";
+         type = "String";
+      }
+   }
+   element DE0_LT24_SOPC
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone IV E";
+         type = "String";
+      }
+   }
    element JTAG_UART
    {
       datum _sortIndex
@@ -526,7 +542,7 @@
    type="conduit"
    dir="end" />
  <interface
-   name="lt24_conduit_0"
+   name="lt24_conduit_1"
    internal="LT24_interface_irq_0.conduit_end"
    type="conduit"
    dir="end" />

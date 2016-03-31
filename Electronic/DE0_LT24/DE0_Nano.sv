@@ -184,12 +184,12 @@ wire 			lt24_buffer_flag;
 
 wire			LT24_finish;
 wire [31:0]	LT24_counter , LT24_coin_x , LT24_coin_x0 , LT24_coin_y , LT24_coin_y0 , LT24_coin_vx0 , LT24_coin_vy0;
-wire [11:0] LT24_pattern;
+wire [11:0] LT24_pattern , LT24_pattern_0;
 wire [31:0] VX , VY;
 
-assign LED = 8'd42;
+assign LED[7] = LT24_finish;
 
-//assign LED[6:0] = snake_mem_address[6:0];
+assign LED[6:0] = 7'd42;
 //=======================================================
 //  REG/WIRE declarations
 //=======================================================
@@ -334,17 +334,18 @@ DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		.cyclonespi_spi_interface_config(Config),
 		.cyclonespi_spi_interface_spi_irq(GPIO_2[4]),
 		
-		.lt24_conduit_0_finish_flag           (LT24_finish),           //         lt24_interface_0_conduit_end.done
-		.lt24_conduit_0_pattern              (LT24_pattern),              //                                     .a
-		.lt24_conduit_0_counter         (LT24_counter),          //                                     .result
-		.lt24_conduit_0_vx     (VX),                           //                                     .vx
-		.lt24_conduit_0_vy	(VY),
-		.lt24_conduit_0_lt24_coin_x0                 (LT24_coin_x0),                 //                                     .lt24_coin_x0
-		.lt24_conduit_0_lt42_coin_y0                 (LT24_coin_y0),                 //                                     .lt42_coin_y0
-		.lt24_conduit_0_lt24_coinx                   (LT24_coin_x),                   //                                     .lt24_coinx
-		.lt24_conduit_0_lt24_coin_y                  (LT24_coin_y),                  //                                     .lt24_coin_y
-		.lt24_conduit_0_lt24_coin_vx0                (LT24_coin_vx0),                //                                     .lt24_coin_vx0
-		.lt24_conduit_0_lt24_coin_vy0                (LT24_coin_vy0),                //                                     .lt24_coin_vy0
+		.lt24_conduit_1_finish_flag           (LT24_finish),           //         lt24_interface_0_conduit_end.done
+		.lt24_conduit_1_pattern              (LT24_pattern),              //                                     .a
+		.lt24_conduit_1_counter         (LT24_counter),          //                                     .result
+		.lt24_conduit_1_vx     (VX),                           //                                     .vx
+		.lt24_conduit_1_vy	(VY),
+		.lt24_conduit_1_lt24_coin_x0                 (LT24_coin_x0),                 //                                     .lt24_coin_x0
+		.lt24_conduit_1_lt42_coin_y0                 (LT24_coin_y0),                 //                                     .lt42_coin_y0
+		.lt24_conduit_1_lt24_coinx                   (LT24_coin_x),                   //                                     .lt24_coinx
+		.lt24_conduit_1_lt24_coin_y                  (LT24_coin_y),                  //                                     .lt24_coin_y
+		.lt24_conduit_1_lt24_coin_vx0                (LT24_coin_vx0),                //                                     .lt24_coin_vx0
+		.lt24_conduit_1_lt24_coin_vy0                (LT24_coin_vy0),                //                                     .lt24_coin_vy0
+		.lt24_conduit_1_lt24_pattern_0               (LT24_pattern_0),               //                                     .lt24_pattern_0
 
 
 		.gsensor_int_external_connection_export (G_SENSOR_INT), // gsensor_init_external_connection.export
@@ -437,7 +438,8 @@ DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		.lt24_coin_x0(LT24_coin_x0),
 		.lt24_coin_y0(LT24_coin_y0),
 		.lt24_coin_vx0(LT24_coin_vx0),
-		.lt24_coin_vy0(LT24_coin_vy0)
+		.lt24_coin_vy0(LT24_coin_vy0),
+		.lt24_pattern_0(LT24_pattern_0)
 	);
 	
 				 

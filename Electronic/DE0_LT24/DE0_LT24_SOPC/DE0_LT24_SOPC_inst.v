@@ -31,17 +31,18 @@
 		.lt24_conduit_rd                             (<connected-to-lt24_conduit_rd>),                             //                                     .rd
 		.lt24_conduit_wr                             (<connected-to-lt24_conduit_wr>),                             //                                     .wr
 		.lt24_conduit_data                           (<connected-to-lt24_conduit_data>),                           //                                     .data
-		.lt24_conduit_0_finish_flag                  (<connected-to-lt24_conduit_0_finish_flag>),                  //                       lt24_conduit_0.finish_flag
-		.lt24_conduit_0_counter                      (<connected-to-lt24_conduit_0_counter>),                      //                                     .counter
-		.lt24_conduit_0_pattern                      (<connected-to-lt24_conduit_0_pattern>),                      //                                     .pattern
-		.lt24_conduit_0_vx                           (<connected-to-lt24_conduit_0_vx>),                           //                                     .vx
-		.lt24_conduit_0_vy                           (<connected-to-lt24_conduit_0_vy>),                           //                                     .vy
-		.lt24_conduit_0_lt24_coin_x0                 (<connected-to-lt24_conduit_0_lt24_coin_x0>),                 //                                     .lt24_coin_x0
-		.lt24_conduit_0_lt42_coin_y0                 (<connected-to-lt24_conduit_0_lt42_coin_y0>),                 //                                     .lt42_coin_y0
-		.lt24_conduit_0_lt24_coinx                   (<connected-to-lt24_conduit_0_lt24_coinx>),                   //                                     .lt24_coinx
-		.lt24_conduit_0_lt24_coin_y                  (<connected-to-lt24_conduit_0_lt24_coin_y>),                  //                                     .lt24_coin_y
-		.lt24_conduit_0_lt24_coin_vx0                (<connected-to-lt24_conduit_0_lt24_coin_vx0>),                //                                     .lt24_coin_vx0
-		.lt24_conduit_0_lt24_coin_vy0                (<connected-to-lt24_conduit_0_lt24_coin_vy0>),                //                                     .lt24_coin_vy0
+		.lt24_conduit_1_finish_flag                  (<connected-to-lt24_conduit_1_finish_flag>),                  //                       lt24_conduit_1.finish_flag
+		.lt24_conduit_1_counter                      (<connected-to-lt24_conduit_1_counter>),                      //                                     .counter
+		.lt24_conduit_1_pattern                      (<connected-to-lt24_conduit_1_pattern>),                      //                                     .pattern
+		.lt24_conduit_1_vx                           (<connected-to-lt24_conduit_1_vx>),                           //                                     .vx
+		.lt24_conduit_1_vy                           (<connected-to-lt24_conduit_1_vy>),                           //                                     .vy
+		.lt24_conduit_1_lt24_coin_x0                 (<connected-to-lt24_conduit_1_lt24_coin_x0>),                 //                                     .lt24_coin_x0
+		.lt24_conduit_1_lt42_coin_y0                 (<connected-to-lt24_conduit_1_lt42_coin_y0>),                 //                                     .lt42_coin_y0
+		.lt24_conduit_1_lt24_coinx                   (<connected-to-lt24_conduit_1_lt24_coinx>),                   //                                     .lt24_coinx
+		.lt24_conduit_1_lt24_coin_y                  (<connected-to-lt24_conduit_1_lt24_coin_y>),                  //                                     .lt24_coin_y
+		.lt24_conduit_1_lt24_coin_vx0                (<connected-to-lt24_conduit_1_lt24_coin_vx0>),                //                                     .lt24_coin_vx0
+		.lt24_conduit_1_lt24_coin_vy0                (<connected-to-lt24_conduit_1_lt24_coin_vy0>),                //                                     .lt24_coin_vy0
+		.lt24_conduit_1_lt24_pattern_0               (<connected-to-lt24_conduit_1_lt24_pattern_0>),               //                                     .lt24_pattern_0
 		.lt24_lcd_rstn_export                        (<connected-to-lt24_lcd_rstn_export>),                        //                        lt24_lcd_rstn.export
 		.lt24_touch_busy_export                      (<connected-to-lt24_touch_busy_export>),                      //                      lt24_touch_busy.export
 		.lt24_touch_penirq_n_export                  (<connected-to-lt24_touch_penirq_n_export>),                  //                  lt24_touch_penirq_n.export

@@ -32,17 +32,18 @@ module DE0_LT24_SOPC (
 	lt24_conduit_rd,
 	lt24_conduit_wr,
 	lt24_conduit_data,
-	lt24_conduit_0_finish_flag,
-	lt24_conduit_0_counter,
-	lt24_conduit_0_pattern,
-	lt24_conduit_0_vx,
-	lt24_conduit_0_vy,
-	lt24_conduit_0_lt24_coin_x0,
-	lt24_conduit_0_lt42_coin_y0,
-	lt24_conduit_0_lt24_coinx,
-	lt24_conduit_0_lt24_coin_y,
-	lt24_conduit_0_lt24_coin_vx0,
-	lt24_conduit_0_lt24_coin_vy0,
+	lt24_conduit_1_finish_flag,
+	lt24_conduit_1_counter,
+	lt24_conduit_1_pattern,
+	lt24_conduit_1_vx,
+	lt24_conduit_1_vy,
+	lt24_conduit_1_lt24_coin_x0,
+	lt24_conduit_1_lt42_coin_y0,
+	lt24_conduit_1_lt24_coinx,
+	lt24_conduit_1_lt24_coin_y,
+	lt24_conduit_1_lt24_coin_vx0,
+	lt24_conduit_1_lt24_coin_vy0,
+	lt24_conduit_1_lt24_pattern_0,
 	lt24_lcd_rstn_export,
 	lt24_touch_busy_export,
 	lt24_touch_penirq_n_export,
@@ -107,17 +108,18 @@ module DE0_LT24_SOPC (
 	output		lt24_conduit_rd;
 	output		lt24_conduit_wr;
 	output	[15:0]	lt24_conduit_data;
-	input		lt24_conduit_0_finish_flag;
-	input	[31:0]	lt24_conduit_0_counter;
-	output	[11:0]	lt24_conduit_0_pattern;
-	output	[31:0]	lt24_conduit_0_vx;
-	output	[31:0]	lt24_conduit_0_vy;
-	output	[31:0]	lt24_conduit_0_lt24_coin_x0;
-	output	[31:0]	lt24_conduit_0_lt42_coin_y0;
-	input	[31:0]	lt24_conduit_0_lt24_coinx;
-	input	[31:0]	lt24_conduit_0_lt24_coin_y;
-	output	[31:0]	lt24_conduit_0_lt24_coin_vx0;
-	output	[31:0]	lt24_conduit_0_lt24_coin_vy0;
+	input		lt24_conduit_1_finish_flag;
+	input	[31:0]	lt24_conduit_1_counter;
+	output	[11:0]	lt24_conduit_1_pattern;
+	output	[31:0]	lt24_conduit_1_vx;
+	output	[31:0]	lt24_conduit_1_vy;
+	output	[31:0]	lt24_conduit_1_lt24_coin_x0;
+	output	[31:0]	lt24_conduit_1_lt42_coin_y0;
+	input	[31:0]	lt24_conduit_1_lt24_coinx;
+	input	[31:0]	lt24_conduit_1_lt24_coin_y;
+	output	[31:0]	lt24_conduit_1_lt24_coin_vx0;
+	output	[31:0]	lt24_conduit_1_lt24_coin_vy0;
+	output	[11:0]	lt24_conduit_1_lt24_pattern_0;
 	output		lt24_lcd_rstn_export;
 	input		lt24_touch_busy_export;
 	input		lt24_touch_penirq_n_export;

@@ -65,7 +65,8 @@ module LT24_buffer(
 	lt24_coin_x0,
 	lt24_coin_y0,
 	lt24_coin_vx0,
-	lt24_coin_vy0
+	lt24_coin_vy0,
+	lt24_pattern_0
 );
 
 input clk;
@@ -136,6 +137,7 @@ input wire [31:0] lt24_coin_x0;
 input wire [31:0] lt24_coin_y0;
 input wire [31:0] lt24_coin_vx0;
 input wire [31:0] lt24_coin_vy0;
+input wire [11:0] lt24_pattern_0;
 
 assign lt24_coin_x = X1;
 assign lt24_coin_y = Y1;
@@ -161,9 +163,11 @@ assign LT24_ADC_PENIRQ_N_bus = LT24_ADC_PENIRQ_N_screen;
 
 // assign interface LT24
 wire [31:0] lt24_counter_wire;
-assign lt24_finish = (lt24_finish_reg) || (lt24_pattern[1:0]==2'b11 && pattern_moving == Case_Reg) ;
+assign lt24_finish = (lt24_finish_reg && (lt24_pattern[1:0]==2'b01 || lt24_pattern[1:0]==2'b00)) || (lt24_pattern[1:0]==2'b11 && pattern_moving == Case_Reg);
 assign lt24_counter = (lt24_counter_reg);
 assign lt24_counter_wire = lt24_counter_reg;
+
+
 //flag that says if the bus is controlled by LT24_buffer or by the CPU
 reg bufferFlag;
 wire bufferFlag_wire;
@@ -427,7 +431,7 @@ always @ (posedge clk)
 		Counter_X_Reg <= 8'b0;
 		Counter_Y_Reg <= 8'b0;
 		Counter_Case_Reg <= 4'b0;
-		pattern_moving <= 12'h2f0;
+		pattern_moving <= lt24_pattern_0;
 		pattern_err <= 1'b0;
 		if(rst)
 		begin

@@ -1,5 +1,5 @@
 Flow report for DE0_Nano
-Tue Mar 29 23:35:49 2016
+Thu Mar 31 01:57:32 2016
 Quartus Prime Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition
 
 
@@ -41,17 +41,17 @@ agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Tue Mar 29 23:35:23 2016       ;
+; Flow Status                        ; Successful - Thu Mar 31 01:57:08 2016       ;
 ; Quartus Prime Version              ; 15.1.0 Build 185 10/21/2015 SJ Lite Edition ;
 ; Revision Name                      ; DE0_Nano                                    ;
 ; Top-level Entity Name              ; DE0_Nano                                    ;
 ; Family                             ; Cyclone IV E                                ;
 ; Device                             ; EP4CE22F17C6                                ;
 ; Timing Models                      ; Final                                       ;
-; Total logic elements               ; 10,242 / 22,320 ( 46 % )                    ;
-;     Total combinational functions  ; 8,159 / 22,320 ( 37 % )                     ;
-;     Dedicated logic registers      ; 6,509 / 22,320 ( 29 % )                     ;
-; Total registers                    ; 6578                                        ;
+; Total logic elements               ; 10,408 / 22,320 ( 47 % )                    ;
+;     Total combinational functions  ; 8,392 / 22,320 ( 38 % )                     ;
+;     Dedicated logic registers      ; 6,363 / 22,320 ( 29 % )                     ;
+; Total registers                    ; 6432                                        ;
 ; Total pins                         ; 146 / 154 ( 95 % )                          ;
 ; Total virtual pins                 ; 0                                           ;
 ; Total memory bits                  ; 151,616 / 608,256 ( 25 % )                  ;
@@ -65,7 +65,7 @@ agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 03/29/2016 23:31:32 ;
+; Start date & time ; 03/31/2016 01:53:54 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; DE0_Nano            ;
 +-------------------+---------------------+
@@ -76,7 +76,7 @@ agreement for further details.
 +--------------------------------------+-----------------------------------------------------------------+---------------+---------------+------------------+
 ; Assignment Name                      ; Value                                                           ; Default Value ; Entity Name   ; Section Id       ;
 +--------------------------------------+-----------------------------------------------------------------+---------------+---------------+------------------+
-; COMPILER_SIGNATURE_ID                ; 93383149948224.145928709225483                                  ; --            ; --            ; --               ;
+; COMPILER_SIGNATURE_ID                ; 93383149948224.145938203414033                                  ; --            ; --            ; --               ;
 ; EDA_DESIGN_INSTANCE_NAME             ; NA                                                              ; --            ; --            ; testbench        ;
 ; EDA_NATIVELINK_SIMULATION_TEST_BENCH ; testbench                                                       ; --            ; --            ; eda_simulation   ;
 ; EDA_OUTPUT_DATA_FORMAT               ; None                                                            ; --            ; --            ; eda_simulation   ;
@@ -106,7 +106,7 @@ agreement for further details.
 ; SLD_FILE                             ; DE0_LT24_SOPC/synthesis/DE0_LT24_SOPC.regmap                    ; --            ; --            ; --               ;
 ; SLD_FILE                             ; DE0_LT24_SOPC/synthesis/DE0_LT24_SOPC.debuginfo                 ; --            ; --            ; --               ;
 ; SLD_FILE                             ; db/stp1_auto_stripped.stp                                       ; --            ; --            ; --               ;
-; SLD_INFO                             ; QSYS_NAME DE0_LT24_SOPC HAS_SOPCINFO 1 GENERATION_ID 1459034561 ; --            ; DE0_LT24_SOPC ; --               ;
+; SLD_INFO                             ; QSYS_NAME DE0_LT24_SOPC HAS_SOPCINFO 1 GENERATION_ID 1459379257 ; --            ; DE0_LT24_SOPC ; --               ;
 ; SLD_NODE_CREATOR_ID                  ; 110                                                             ; --            ; --            ; auto_signaltap_0 ;
 ; SLD_NODE_ENTITY_NAME                 ; sld_signaltap                                                   ; --            ; --            ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT        ; SLD_RAM_BLOCK_TYPE=AUTO                                         ; --            ; --            ; auto_signaltap_0 ;
@@ -142,24 +142,24 @@ agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:01:16     ; 1.0                     ; 1584 MB             ; 00:01:51                           ;
-; Fitter                    ; 00:01:38     ; 1.1                     ; 1578 MB             ; 00:02:09                           ;
-; Assembler                 ; 00:00:03     ; 1.0                     ; 1088 MB             ; 00:00:03                           ;
-; TimeQuest Timing Analyzer ; 00:00:09     ; 1.2                     ; 1231 MB             ; 00:00:11                           ;
-; Total                     ; 00:03:06     ; --                      ; --                  ; 00:04:14                           ;
+; Analysis & Synthesis      ; 00:01:10     ; 1.0                     ; 1574 MB             ; 00:01:45                           ;
+; Fitter                    ; 00:01:24     ; 1.1                     ; 1581 MB             ; 00:01:52                           ;
+; Assembler                 ; 00:00:03     ; 1.0                     ; 1089 MB             ; 00:00:03                           ;
+; TimeQuest Timing Analyzer ; 00:00:10     ; 1.1                     ; 1237 MB             ; 00:00:12                           ;
+; Total                     ; 00:02:47     ; --                      ; --                  ; 00:03:52                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
-+-----------------------------------------------------------------------------------------+
-; Flow OS Summary                                                                         ;
-+---------------------------+------------------+------------+------------+----------------+
-; Module Name               ; Machine Hostname ; OS Name    ; OS Version ; Processor type ;
-+---------------------------+------------------+------------+------------+----------------+
-; Analysis & Synthesis      ; localhost        ; Arch Linux ; Arch Linux ; x86_64         ;
-; Fitter                    ; localhost        ; Arch Linux ; Arch Linux ; x86_64         ;
-; Assembler                 ; localhost        ; Arch Linux ; Arch Linux ; x86_64         ;
-; TimeQuest Timing Analyzer ; localhost        ; Arch Linux ; Arch Linux ; x86_64         ;
-+---------------------------+------------------+------------+------------+----------------+
++--------------------------------------------------------------------------------------------------------+
+; Flow OS Summary                                                                                        ;
++---------------------------+---------------------------------+------------+------------+----------------+
+; Module Name               ; Machine Hostname                ; OS Name    ; OS Version ; Processor type ;
++---------------------------+---------------------------------+------------+------------+----------------+
+; Analysis & Synthesis      ; wifi-student2-363.sri.ucl.ac.be ; Arch Linux ; Arch Linux ; x86_64         ;
+; Fitter                    ; wifi-student2-363.sri.ucl.ac.be ; Arch Linux ; Arch Linux ; x86_64         ;
+; Assembler                 ; wifi-student2-363.sri.ucl.ac.be ; Arch Linux ; Arch Linux ; x86_64         ;
+; TimeQuest Timing Analyzer ; wifi-student2-363.sri.ucl.ac.be ; Arch Linux ; Arch Linux ; x86_64         ;
++---------------------------+---------------------------------+------------+------------+----------------+
 
 
 ------------

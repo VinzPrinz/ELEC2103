@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="DE0_LT24_SOPC" kind="DE0_LT24_SOPC" version="1.0" fabric="QSYS">
  <!-- Format version 15.1 185 (Future versions may contain additional information.) -->
- <!-- 2016.03.27.00:22:41 -->
+ <!-- 2016.03.31.01:07:38 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1459034561</value>
+  <value>1459379257</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -13059,6 +13059,12 @@ parameters are a RESULT of the module parameters. -->
     <direction>Output</direction>
     <width>32</width>
     <role>lt24_coin_vy0</role>
+   </port>
+   <port>
+    <name>lt24_pattern_0</name>
+    <direction>Output</direction>
+    <width>12</width>
+    <role>lt24_pattern_0</role>
    </port>
   </interface>
  </module>

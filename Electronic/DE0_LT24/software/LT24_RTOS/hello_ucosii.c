@@ -104,6 +104,7 @@ void LT24_ISR(void *context){
 	}
 
 	OSMboxPost(Flag2, (void*)&myOp);
+	Clr_BUFFER_FLAG();
 
 }
 
@@ -354,7 +355,9 @@ void task_game1(void* pdata)
 			    		}
 			    		else if (op!=NULL && *op==myCyclone_Start_Fight){
 			    			printf("init the fight \n");
-			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0);
+			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 3); /// PATTERN  3
+			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*11),0, rand()%4000 + 500 ); /// PATTERN  3
+
 			    	    	IOWR(COUNTER_0_BASE+8, 0 , 0);
 			    	    	int cnt = IORD(COUNTER_0_BASE,0);
 			    	    	int i = 0;

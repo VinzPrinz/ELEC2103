@@ -32,17 +32,18 @@
 			lt24_conduit_rd                             : out   std_logic;                                        -- rd
 			lt24_conduit_wr                             : out   std_logic;                                        -- wr
 			lt24_conduit_data                           : out   std_logic_vector(15 downto 0);                    -- data
-			lt24_conduit_0_finish_flag                  : in    std_logic                     := 'X';             -- finish_flag
-			lt24_conduit_0_counter                      : in    std_logic_vector(31 downto 0) := (others => 'X'); -- counter
-			lt24_conduit_0_pattern                      : out   std_logic_vector(11 downto 0);                    -- pattern
-			lt24_conduit_0_vx                           : out   std_logic_vector(31 downto 0);                    -- vx
-			lt24_conduit_0_vy                           : out   std_logic_vector(31 downto 0);                    -- vy
-			lt24_conduit_0_lt24_coin_x0                 : out   std_logic_vector(31 downto 0);                    -- lt24_coin_x0
-			lt24_conduit_0_lt42_coin_y0                 : out   std_logic_vector(31 downto 0);                    -- lt42_coin_y0
-			lt24_conduit_0_lt24_coinx                   : in    std_logic_vector(31 downto 0) := (others => 'X'); -- lt24_coinx
-			lt24_conduit_0_lt24_coin_y                  : in    std_logic_vector(31 downto 0) := (others => 'X'); -- lt24_coin_y
-			lt24_conduit_0_lt24_coin_vx0                : out   std_logic_vector(31 downto 0);                    -- lt24_coin_vx0
-			lt24_conduit_0_lt24_coin_vy0                : out   std_logic_vector(31 downto 0);                    -- lt24_coin_vy0
+			lt24_conduit_1_finish_flag                  : in    std_logic                     := 'X';             -- finish_flag
+			lt24_conduit_1_counter                      : in    std_logic_vector(31 downto 0) := (others => 'X'); -- counter
+			lt24_conduit_1_pattern                      : out   std_logic_vector(11 downto 0);                    -- pattern
+			lt24_conduit_1_vx                           : out   std_logic_vector(31 downto 0);                    -- vx
+			lt24_conduit_1_vy                           : out   std_logic_vector(31 downto 0);                    -- vy
+			lt24_conduit_1_lt24_coin_x0                 : out   std_logic_vector(31 downto 0);                    -- lt24_coin_x0
+			lt24_conduit_1_lt42_coin_y0                 : out   std_logic_vector(31 downto 0);                    -- lt42_coin_y0
+			lt24_conduit_1_lt24_coinx                   : in    std_logic_vector(31 downto 0) := (others => 'X'); -- lt24_coinx
+			lt24_conduit_1_lt24_coin_y                  : in    std_logic_vector(31 downto 0) := (others => 'X'); -- lt24_coin_y
+			lt24_conduit_1_lt24_coin_vx0                : out   std_logic_vector(31 downto 0);                    -- lt24_coin_vx0
+			lt24_conduit_1_lt24_coin_vy0                : out   std_logic_vector(31 downto 0);                    -- lt24_coin_vy0
+			lt24_conduit_1_lt24_pattern_0               : out   std_logic_vector(11 downto 0);                    -- lt24_pattern_0
 			lt24_lcd_rstn_export                        : out   std_logic;                                        -- export
 			lt24_touch_busy_export                      : in    std_logic                     := 'X';             -- export
 			lt24_touch_penirq_n_export                  : in    std_logic                     := 'X';             -- export
@@ -111,17 +112,18 @@
 			lt24_conduit_rd                             => CONNECTED_TO_lt24_conduit_rd,                             --                                     .rd
 			lt24_conduit_wr                             => CONNECTED_TO_lt24_conduit_wr,                             --                                     .wr
 			lt24_conduit_data                           => CONNECTED_TO_lt24_conduit_data,                           --                                     .data
-			lt24_conduit_0_finish_flag                  => CONNECTED_TO_lt24_conduit_0_finish_flag,                  --                       lt24_conduit_0.finish_flag
-			lt24_conduit_0_counter                      => CONNECTED_TO_lt24_conduit_0_counter,                      --                                     .counter
-			lt24_conduit_0_pattern                      => CONNECTED_TO_lt24_conduit_0_pattern,                      --                                     .pattern
-			lt24_conduit_0_vx                           => CONNECTED_TO_lt24_conduit_0_vx,                           --                                     .vx
-			lt24_conduit_0_vy                           => CONNECTED_TO_lt24_conduit_0_vy,                           --                                     .vy
-			lt24_conduit_0_lt24_coin_x0                 => CONNECTED_TO_lt24_conduit_0_lt24_coin_x0,                 --                                     .lt24_coin_x0
-			lt24_conduit_0_lt42_coin_y0                 => CONNECTED_TO_lt24_conduit_0_lt42_coin_y0,                 --                                     .lt42_coin_y0
-			lt24_conduit_0_lt24_coinx                   => CONNECTED_TO_lt24_conduit_0_lt24_coinx,                   --                                     .lt24_coinx
-			lt24_conduit_0_lt24_coin_y                  => CONNECTED_TO_lt24_conduit_0_lt24_coin_y,                  --                                     .lt24_coin_y
-			lt24_conduit_0_lt24_coin_vx0                => CONNECTED_TO_lt24_conduit_0_lt24_coin_vx0,                --                                     .lt24_coin_vx0
-			lt24_conduit_0_lt24_coin_vy0                => CONNECTED_TO_lt24_conduit_0_lt24_coin_vy0,                --                                     .lt24_coin_vy0
+			lt24_conduit_1_finish_flag                  => CONNECTED_TO_lt24_conduit_1_finish_flag,                  --                       lt24_conduit_1.finish_flag
+			lt24_conduit_1_counter                      => CONNECTED_TO_lt24_conduit_1_counter,                      --                                     .counter
+			lt24_conduit_1_pattern                      => CONNECTED_TO_lt24_conduit_1_pattern,                      --                                     .pattern
+			lt24_conduit_1_vx                           => CONNECTED_TO_lt24_conduit_1_vx,                           --                                     .vx
+			lt24_conduit_1_vy                           => CONNECTED_TO_lt24_conduit_1_vy,                           --                                     .vy
+			lt24_conduit_1_lt24_coin_x0                 => CONNECTED_TO_lt24_conduit_1_lt24_coin_x0,                 --                                     .lt24_coin_x0
+			lt24_conduit_1_lt42_coin_y0                 => CONNECTED_TO_lt24_conduit_1_lt42_coin_y0,                 --                                     .lt42_coin_y0
+			lt24_conduit_1_lt24_coinx                   => CONNECTED_TO_lt24_conduit_1_lt24_coinx,                   --                                     .lt24_coinx
+			lt24_conduit_1_lt24_coin_y                  => CONNECTED_TO_lt24_conduit_1_lt24_coin_y,                  --                                     .lt24_coin_y
+			lt24_conduit_1_lt24_coin_vx0                => CONNECTED_TO_lt24_conduit_1_lt24_coin_vx0,                --                                     .lt24_coin_vx0
+			lt24_conduit_1_lt24_coin_vy0                => CONNECTED_TO_lt24_conduit_1_lt24_coin_vy0,                --                                     .lt24_coin_vy0
+			lt24_conduit_1_lt24_pattern_0               => CONNECTED_TO_lt24_conduit_1_lt24_pattern_0,               --                                     .lt24_pattern_0
 			lt24_lcd_rstn_export                        => CONNECTED_TO_lt24_lcd_rstn_export,                        --                        lt24_lcd_rstn.export
 			lt24_touch_busy_export                      => CONNECTED_TO_lt24_touch_busy_export,                      --                      lt24_touch_busy.export
 			lt24_touch_penirq_n_export                  => CONNECTED_TO_lt24_touch_penirq_n_export,                  --                  lt24_touch_penirq_n.export
