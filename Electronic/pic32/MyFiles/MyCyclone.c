@@ -72,11 +72,12 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
         case 0x02: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_fight, 4); // the counter
                    MyCyclone_Write(0x12,myCyclone_End_Fight_lt24); 
                    break;
-        case 0x03: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_coin_reply,1);
-                    printf("End coin reply");
+        case 0x03: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_coin_reply,1); // the number of coinces
+                    printf("End coin reply"); 
                    break;
                    
-        case 0x04: 
+        case 0x04: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_Snake, 4); // the counter
+                   MyCyclone_Write(0x12,myCyclone_End_Snake_lt24); 
                    break;
         case 0x05: if(data == 0){
                         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_fight,1);

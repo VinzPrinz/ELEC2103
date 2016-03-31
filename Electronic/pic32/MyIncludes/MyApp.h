@@ -26,6 +26,7 @@
 #include "MyMiniProjet.h"
 #include "MyFIFO.h"
 
+
 /*******************************************************************************
 * Constants                                                                    *
 *******************************************************************************/
@@ -97,6 +98,8 @@
 #define My_INT_EXTERNAL_4_SUB_PRIORITY  INT_SUB_PRIORITY_LEVEL_0
 #define My_INT_EXTERNAL_4_IPL           ipl7
 
+
+
 /*******************************************************************************
 * Global Variables                                                             *
 *******************************************************************************/
@@ -109,6 +112,7 @@
 #define  MyAPP_INIT
 #endif
 
+
 MyAPP_EXT  int      MyTime;
 MyAPP_EXT  int      pbClk;
 MyAPP_EXT  int      MyPing_Flag MyAPP_INIT;
@@ -118,6 +122,22 @@ MyAPP_EXT  int      MyCyclone_LED;
 MyAPP_EXT  int      MyCyclone_Switch;
 
 MyAPP_EXT  char     MyWebMessage[64];
+
+MyAPP_EXT int currentPlayer;
+
+struct Player{
+    int gold;
+    int soldiers;
+};
+
+MyAPP_EXT  struct   Player   Player1;
+MyAPP_EXT  struct   Player   Player2;
+MyAPP_EXT  int      timer_round;
+MyAPP_EXT  int      changePlayer;
+
+
+
+
 
 /*******************************************************************************
 * System Macros                                                                *

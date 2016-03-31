@@ -57,7 +57,21 @@
 #define CYCLONE_ENABLE_CAN      0x40
 #define CYCLONE_RESERVED_3      0x80
 
-
+#define myCyclone_Start_Fight_lt24  1
+#define myCyclone_End_Fight_lt24    2
+#define myCyclone_Start_Coin_lt24   3
+#define myCyclone_End_Coin_lt24     4
+#define myCyclone_Start_Fight_mtl   5
+#define myCyclone_End_Fight_mtl     6
+#define myCyclone_Start_Coin_mtl    7
+#define myCyclone_End_Coin_mtl      8
+#define myCyclone_Snake_Right       9
+#define myCyclone_Snake_Left        10
+#define myCyclone_Snake_Up          11
+#define myCyclone_Snake_Down        12
+#define myCyclone_Start_Snake_lt24  13
+#define myCyclone_End_Snake_lt24    14
+#define myCyclone_Start_Fight2_lt24  15
 /*******************************************************************************
 * Functions Prototypes                                                         *
 *******************************************************************************/

@@ -89,24 +89,50 @@ void MyConsole_Task(void)
         MyConsole_SendMsg("MyTest ok lol\n>");
     } else if (strcmp(theCmd, "SendImage")==0){
         MyMDDFS_Send_Image(theCmd);
-    }else if (strcmp(theCmd, "Right")==0){
-        int i = 0;
-        MyCyclone_Write(0x14,myCyclone_Snake_Right);
+    }else if (strcmp(theCmd, "Right2")==0){
+        char data[2];
+        data[0] = 2;
+        data[1] = myCyclone_Snake_Right;
+        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*)data , myMIWI_Snake_dir,4);
     }
-    else if (strcmp(theCmd, "Left")==0){
-        int i = 0;
-        MyCyclone_Write(0x14,myCyclone_Snake_Left);
+    else if (strcmp(theCmd, "Left2")==0){
+        char data[2];
+        data[0] = 2;
+        data[1] = myCyclone_Snake_Left;
+        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*)data , myMIWI_Snake_dir,4);
     }
-    else if (strcmp(theCmd, "Up")==0){
-        int i = 0;
-        MyCyclone_Write(0x14,myCyclone_Snake_Up);
+    else if (strcmp(theCmd, "Up2")==0){
+        char data[2];
+        data[0] = 2;
+        data[1] = myCyclone_Snake_Up;
+        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*)data , myMIWI_Snake_dir,4);
     }
-    else if (strcmp(theCmd, "Down")==0){
+    else if (strcmp(theCmd, "Down2")==0){
+        char data[2];
+        data[0] = 2;
+        data[1] = myCyclone_Snake_Down;
+        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*)data , myMIWI_Snake_dir,4);
+    }else if (strcmp(theCmd, "Right1")==0){
         int i = 0;
-        MyCyclone_Write(0x14,myCyclone_Snake_Down);
+        MyCyclone_Write(0x13,myCyclone_Snake_Right);
+    }
+    else if (strcmp(theCmd, "Left1")==0){
+        int i = 0;
+        MyCyclone_Write(0x13,myCyclone_Snake_Left);
+    }
+    else if (strcmp(theCmd, "Up1")==0){
+        int i = 0;
+        MyCyclone_Write(0x13,myCyclone_Snake_Up);
+    }
+    else if (strcmp(theCmd, "Down1")==0){
+        int i = 0;
+        MyCyclone_Write(0x13,myCyclone_Snake_Down);
     }else if (strcmp(theCmd, "StartFight")==0){
         int i = 0;
         MyCyclone_Write(0x12,myCyclone_Start_Fight_lt24);
+    }else if (strcmp(theCmd, "StartFight2")==0){
+        int i = 0;
+        MyCyclone_Write(0x12,myCyclone_Start_Fight2_lt24);
     } else if (strcmp(theCmd, "EndFight")==0){
         int i = 0;
         MyCyclone_Write(0x12,myCyclone_End_Fight_lt24);
@@ -121,6 +147,10 @@ void MyConsole_Task(void)
         int i = 0;
         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_fight,1);
     }
+    else if (strcmp(theCmd, "StartSnakeMIWI")==0){
+        int i = 0;
+        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_Snake,1);
+    }
     else if (strcmp(theCmd, "StartCoin")==0){
         int i = 0;
         MyCyclone_Write(0x12,myCyclone_Start_Coin_lt24);
@@ -130,6 +160,8 @@ void MyConsole_Task(void)
         MyCyclone_Write(0x12,myCyclone_End_Coin_lt24);
     }else if (strcmp(theCmd, "StartSnake")==0){
         int i = 0;
+        MyCyclone_Write(0x14,0);
+        MyCyclone_Write(0x13,0);
         MyCyclone_Write(0x12,myCyclone_Start_Snake_lt24);
     }
     else if (strcmp(theCmd, "EndSnake")==0){

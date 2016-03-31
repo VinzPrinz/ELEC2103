@@ -21,6 +21,16 @@
 #define myMIWI_Image_Info           3
 #define myMIWI_Image                4
 #define myMIWI_Ack                  5
+#define myMIWI_Start_fight          6
+#define myMIWI_End_fight            7
+#define myMIWI_Start_coin           8
+#define myMIWI_End_coin             9
+#define myMIWI_End_coin_reply       10
+#define myMIWI_Start_Snake          11
+#define myMIWI_End_Snake            12
+#define myMIWI_Snake_dir            13
+
+
 
 #define myMIWI_Retransmit_Delay     200
 
