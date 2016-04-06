@@ -64,8 +64,9 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
     int data = MyCyclone_Read(addr);
     
     MyCyclone_Write(0x13,0x00);
-    delayLol();
+    //delayLol();
     MyCyclone_Write(0x13,0x00);
+    char send[2];
     sprintf(str, "This is readed from spi addr:%d -> %d \n" , addr , data);
     int i;
     switch(addr){
@@ -99,6 +100,16 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
                         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
                         printf("New Round, changing player 1 data: %d \n" , data);
                    }
+                   break;
+        case 0x07:  i = 1;
+                    if(data > 128){ /// the direction and the user;
+                        data = data- 128;
+                        i = 2;
+                    }
+                    send[0] = i;
+                    send[1] = data;
+                    MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*)send , myMIWI_Snake_dir,4);
+                   
                    break;
     }
 
