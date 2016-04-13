@@ -77,7 +77,7 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
                     printf("End coin reply"); 
                    break;
                    
-        case 0x04: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_Snake, 4); // the counter
+        case 0x04: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_Snake, 4); //
                    MyCyclone_Write(0x12,myCyclone_End_Snake_lt24); 
                    break;
         case 0x05: if(data == 0){
@@ -100,8 +100,15 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
                         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
                         printf("New Round, changing player 1 data: %d \n" , data);
                    }
+                   else if(data== 5){
+                        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_Snake,1);
+                   }
+                   else if(data==4){
+                        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_fight2,1);
+                        printf("Start Fight \n");
+                   }
                    break;
-        case 0x07:  i = 1;
+        case 0x07:  i = 1; //Use to send data to lt24 screen during the Snake game
                     if(data > 128){ /// the direction and the user;
                         data = data- 128;
                         i = 2;
@@ -111,6 +118,13 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
                     MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*)send , myMIWI_Snake_dir,4);
                    
                    break;
+        case 0x08: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_Snake_Winner,1); // Send The winner of the fight
+                    break;
+                    
+        case 0x06: // we send the number of soldiers
+                    Player1.soldiers = data%16;
+                    Player2.soldiers = data/16;
+                    break;
     }
 
     cnt ++;

@@ -29,6 +29,8 @@
 #define myMIWI_Start_Snake          11
 #define myMIWI_End_Snake            12
 #define myMIWI_Snake_dir            13
+#define myMIWI_Snake_Winner         14
+#define myMIWI_Start_fight2         15
 
 
 
