@@ -552,9 +552,30 @@ always @ (posedge clk)
 	
 	
 // FSM to choose the position of jean-didier and the coins
+
+	wire [31:0] negY1;
+	assign negY1 = Y1-(~VY+32'd1);
+	
 	always @ (posedge clk)
 		if(rst)
 			Y1 <= 10;
+		else if (negY1[31] && VY[31])
+			Y1 <= 0;
+		else if( Y1+VY >= (320-L1) && ~VY[31]) // VX positif
+			Y1 <= 320-L1;
+		else if ((Y1-(~VY +32'd1) >= 320-L1) && VY[31]) // VX neg
+			Y1 <= 320-L1;
+		else if( cnt == 32'h000ffffe && ~VY[31]) // VX positif
+			Y1 <= Y1+VY;
+		else if (cnt == 32'h000ffffe && VY[31]) // VX neg
+			Y1 <= Y1-(~VY + 32'd1);
+		else	
+			Y1 <= Y1;
+			
+/*		if(rst)
+			Y1 <= 10;
+		else if (negY1[31] && VY[31])
+			Y1 <= 0;
 		else if	(Y1+VY >= 320-L1 && VY[31])
 			Y1 <= 320-L1;
 		else if( Y1+VY >= (320-L1))
@@ -562,11 +583,16 @@ always @ (posedge clk)
 		else if( cnt == 32'h000ffffe)
 			Y1 <= Y1+VY;
 		else
-			Y1 <= Y1;
+			Y1 <= Y1;*/
+			
+	wire [31:0] negX1;
+	assign negX1 = (X1) -(~VX+32'd1);
 			
 	always @ (posedge clk)
-		if(rst || X1 + VX < 1)
+		if(rst)
 			X1 <= 10;
+		else if (negX1[31] && VX[31])
+			X1 <= 0;
 		else if( X1+VX >= (240-H1) && ~VX[31]) // VX positif
 			X1 <= 240-H1;
 		else if ((X1-(~VX +32'd1) >= 240-H1) && VX[31]) // VX neg
@@ -679,7 +705,7 @@ always
 			case({displayCharact , displayCoin})
 				2'b11: Game1_Color <= 16'h0000;
 				2'b10: Game1_Color <= 16'hf0ff;
-				2'b01: Game1_Color <= rompiece_q ? background_mem_s2_readdata : 16'h00aa;
+				2'b01: Game1_Color <= rompiece_q ? background_mem_s2_readdata: 16'h00aa;
 				default: Game1_Color <= background_mem_s2_readdata;
 			endcase 
 		else if(Case_Wire[11])
