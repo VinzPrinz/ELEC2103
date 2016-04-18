@@ -1025,7 +1025,7 @@
   <parameter name="casLatency" value="3" />
   <parameter name="clockRate" value="50000000" />
   <parameter name="columnWidth" value="9" />
-  <parameter name="componentName">$${FILENAME}_SDRAM_Controler</parameter>
+  <parameter name="componentName">DE0_LT24_SOPC_SDRAM_Controler</parameter>
   <parameter name="dataWidth" value="16" />
   <parameter name="generateSimulationModel" value="false" />
   <parameter name="initNOPDelay" value="0.0" />
@@ -1058,7 +1058,7 @@
    version="15.1"
    enabled="1">
   <parameter name="allowInSystemMemoryContentEditor" value="false" />
-  <parameter name="autoInitializationFileName">$${FILENAME}_background_mem</parameter>
+  <parameter name="autoInitializationFileName">DE0_LT24_SOPC_background_mem</parameter>
   <parameter name="blockType" value="AUTO" />
   <parameter name="copyInitFile" value="false" />
   <parameter name="dataWidth" value="16" />
@@ -1108,7 +1108,7 @@
    version="15.1"
    enabled="1">
   <parameter name="allowInSystemMemoryContentEditor" value="false" />
-  <parameter name="autoInitializationFileName">$${FILENAME}_pic_mem</parameter>
+  <parameter name="autoInitializationFileName">DE0_LT24_SOPC_pic_mem</parameter>
   <parameter name="blockType" value="AUTO" />
   <parameter name="copyInitFile" value="false" />
   <parameter name="dataWidth" value="16" />
@@ -1137,7 +1137,7 @@
    version="15.1"
    enabled="1">
   <parameter name="allowInSystemMemoryContentEditor" value="false" />
-  <parameter name="autoInitializationFileName">$${FILENAME}_snake_mem</parameter>
+  <parameter name="autoInitializationFileName">DE0_LT24_SOPC_snake_mem</parameter>
   <parameter name="blockType" value="AUTO" />
   <parameter name="copyInitFile" value="false" />
   <parameter name="dataWidth" value="8" />

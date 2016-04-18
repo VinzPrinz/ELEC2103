@@ -7,7 +7,7 @@ module MySPI (
 	output logic [8:0] Config,
 	input  logic [8:0] Status,
 	output logic [8:0] Led70,
-	input  logic [8:0] IO_Counter,IO_PosX , IO_PosY, ReadAddr,
+	input  logic [8:0] IO_Counter,IO_PosX , IO_PosY, ReadAddr, IO_Snake_Winner,
 	output logic [8:0] IO_ImagePixel_R_Out , IO_ImagePixel_G_Out , IO_ImagePixel_B_Out,
 	output logic		 irq
 );
@@ -23,8 +23,8 @@ parameter ImagePixel_R   		= 7'h12;
 parameter ImagePixel_G  		= 7'h13;
 parameter ImagePixel_B			= 7'h14;
 parameter A_Led70					= 7'h16;
-
-
+parameter Snake_Winner			= 7'h08;
+	
 //--- FSM States ----------------------------------------
 
 typedef enum logic [3:0] {
@@ -117,7 +117,8 @@ begin
 				ImagePixel_B		: SPI_data <= IO_ImagePixel_B_Out;
 				PosX					: SPI_data <= IO_PosX;
 				PosY					: SPI_data <= IO_PosY;
-				default: SPI_data <= 8'h0f;
+				Snake_Winner 		: SPI_data <= IO_Snake_Winner;
+				default: SPI_data <= 8'hff;
 			endcase
 		
 	if (theReset) Config <= 8'h00;

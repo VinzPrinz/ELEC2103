@@ -88,7 +88,7 @@ module LT24_interface_irq (
 		begin
 			case(avs_s0_address[3:0])
 				pattern_addr: avs_s0_readdata_reg <= {20'b0 , pattern_reg};
-				finish_flag_addr: avs_s0_readdata_reg <= {31'b0 , finish_flag};
+				finish_flag_addr: avs_s0_readdata_reg <= {31'b0 , finish_flag}; 
 				counter_addr: avs_s0_readdata_reg <= my_counter;
 				vx_addr: avs_s0_readdata_reg <= vx_reg;
 				vy_addr: avs_s0_readdata_reg <= vy_reg;

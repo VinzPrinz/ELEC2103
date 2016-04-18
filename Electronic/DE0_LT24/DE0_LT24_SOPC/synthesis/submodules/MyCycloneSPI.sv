@@ -44,13 +44,14 @@ module MyCycloneSPI (
 	.IO_ImagePixel_R_Out(IO_ImagePixel_R_Out), 
 	.IO_ImagePixel_G_Out(IO_ImagePixel_G_Out), 
 	.IO_ImagePixel_B_Out(IO_ImagePixel_B_Out),
-	.irq(ins_irq0_irq)
+	.irq(ins_irq0_irq),
+	.IO_Snake_Winner(IO_Snake_Winner)
 );
 
 
-	wire [7:0] IO_Counter , IO_PosX , IO_PosY, ReadAddr;
+	wire [7:0] IO_Counter , IO_PosX , IO_PosY, ReadAddr , IO_Snake_Winner;
 	wire [7:0] IO_ImagePixel_R_Out , IO_ImagePixel_G_Out , IO_ImagePixel_B_Out;
-	reg  [7:0] IO_Counter_reg , IO_PosX_reg , IO_PosY_reg, ReadAddr_reg;
+	reg  [7:0] IO_Counter_reg , IO_PosX_reg , IO_PosY_reg, ReadAddr_reg , IO_Snake_Winner_reg;
 	reg  [31:0] avs_s0_readdata_reg;
 	reg 		avs_s0_waitrequest_reg;
 	reg  [1:0] irq_count;
@@ -65,6 +66,7 @@ module MyCycloneSPI (
 	parameter ImagePixel_G  		= 7'h13;
 	parameter ImagePixel_B			= 7'h14;
 	parameter A_Led70					= 7'h16;
+	parameter Snake_Winner			= 7'h08;
 	
 	assign avs_s0_waitrequest = avs_s0_waitrequest_reg ;
 	assign avs_s0_readdata = avs_s0_readdata_reg;
@@ -74,6 +76,7 @@ module MyCycloneSPI (
 	assign IO_PosY = IO_PosY_reg;
 	assign ReadAddr = ReadAddr_reg;
 	assign spi_irq = avs_s0_write;
+	assign IO_Snake_Winner = IO_Snake_Winner_reg;
 	
 	always @(posedge clk)begin
 		if(reset)
@@ -85,6 +88,7 @@ module MyCycloneSPI (
 				ReadAddr_reg <= 8'b0;
 				theStatus <= 8'b0;
 				irq_count <= 2'b0;
+				IO_Snake_Winner_reg <= 8'b0;
 			end
 		else if(avs_s0_write & !avs_s0_waitrequest_reg)
 			begin
@@ -94,11 +98,13 @@ module MyCycloneSPI (
 					Counter 	: IO_Counter_reg 	<= avs_s0_writedata[7:0];
 					PosX	  	: IO_PosX_reg 		<= avs_s0_writedata[7:0];
 					PosY		: IO_PosY_reg		<= avs_s0_writedata[7:0];
+					Snake_Winner: IO_Snake_Winner_reg <= avs_s0_writedata[7:0];
 				endcase
 			end
 		else
 			case(avs_s0_address[6:0])
 				Counter 	: avs_s0_readdata_reg <= IO_Counter;
+				Snake_Winner: avs_s0_readdata_reg <= IO_Snake_Winner; 
 				PosX		: avs_s0_readdata_reg <= IO_PosX;
 				PosY		: avs_s0_readdata_reg <= IO_PosY;
 				ImagePixel_B : avs_s0_readdata_reg <= IO_ImagePixel_B_Out;

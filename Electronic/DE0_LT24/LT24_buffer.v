@@ -410,7 +410,7 @@ else if ((screenState>18'd6) && (screenState<18'd76806))//&& lt24_pattern[0]==1'
 else if (screenState>=18'd76806)
 	begin
 	LT24_RS_loc <= 1'b1;
-	LT24_D_loc <= pic_mem_s2_readdata;            
+	LT24_D_loc <= Game1_Color_wire;            
 	end
 //should never happen
 else
@@ -427,9 +427,9 @@ always @ (posedge clk)
 		begin
 		posX <= 11'd0;
 		posY <= 11'd0;
-		Counter_Reg <= 2'b0;
+		Counter_Reg <= 2'b00;
 		Counter_X_Reg <= 8'b0;
-		Counter_Y_Reg <= 8'b0;
+		Counter_Y_Reg <= 8'd0;
 		Counter_Case_Reg <= 4'b0;
 		pattern_moving <= lt24_pattern_0;
 		pattern_err <= 1'b0;
@@ -441,13 +441,12 @@ always @ (posedge clk)
 			Case_Reg[11:0] <= 12'hfff;
 			
 		end
-		
 	//new pixel on the next line 
 	else if(posX >= 11'd239 && (LT24_CS_N_loc==1'b0))
 		begin
 		posX <= 11'd0;
 		posY <= posY + 11'd1;
-		if(Counter_Y_Wire == 79)
+		if(Counter_Y_Wire == 8'd79)
 			begin
 				Counter_Reg[0] <= Counter_Wire[0] + 1'b1;
 				Counter_Reg[1] <= Counter_Wire[0] + 1'b1;
@@ -459,9 +458,10 @@ always @ (posedge clk)
 				pattern_moving[11:1]<=pattern_moving[10:0];
 				pattern_moving[0] <= pattern_moving[11];
 			end
-		else if (Counter_X_Wire == 79)
+		else if (Counter_X_Wire == 8'd79)
 			begin
 				Counter_Reg[1] <= Counter_Wire[0]+1'b1;
+				Counter_Reg[0] <= Counter_Wire[0];
 				Counter_X_Reg <= 8'd0;
 				Counter_Y_Reg <= Counter_Y_Wire + 8'd1;
 				Counter_Case_Reg <= Counter_Case_Wire - 12'd2;
@@ -477,7 +477,7 @@ always @ (posedge clk)
 	else if((LT24_CS_N_loc==1'b0))
 		begin
 		posX <= posX+11'd1;
-		if (Counter_X_Wire == 79)
+		if (Counter_X_Wire == 8'd79)
 			begin
 				Counter_Reg[1] <= Counter_Wire[1] + 1'b1;
 				Counter_X_Reg <= 8'd0;
@@ -629,9 +629,9 @@ always
 			snake1 <= 8'h0f;
 		else if(snakeX % 4 == 1 && snake_mem_readdata[3] == 1'b1)
 			snake1 <= 8'h0f;
-		else if(snakeX % 6'd4 == 6'd2 && snake_mem_readdata[5] == 1'b1)
+		else if(snakeX % 6'd4 == 2 && snake_mem_readdata[5] == 1'b1)
 			snake1 <= 8'h0f;
-		else if(snakeX % 6'd4 == 6'd3 && snake_mem_readdata[7] == 1'b1)
+		else if(snakeX % 6'd4 == 3 && snake_mem_readdata[7] == 1'b1)
 			snake1 <= 8'h0f;
 		else 
 			snake1 <= 8'hff;
@@ -641,9 +641,9 @@ always
 			snake2 <= 8'h0f;
 		else if(snakeX % 4 == 1 && snake_mem_readdata[2] == 1'b1)
 			snake2 <= 8'h0f;
-		else if(snakeX % 6'd4 == 6'd2 && snake_mem_readdata[4] == 1'b1)
+		else if(snakeX % 6'd4 == 2 && snake_mem_readdata[4] == 1'b1)
 			snake2 <= 8'h0f;
-		else if(snakeX % 6'd4 == 6'd3 && snake_mem_readdata[6] == 1'b1)
+		else if(snakeX % 6'd4 == 3 && snake_mem_readdata[6] == 1'b1)
 			snake2 <= 8'h0f;
 		else 
 			snake2 <= 8'hff;
@@ -658,8 +658,8 @@ always
 				if(pattern_state)
 					if(Case_Wire[11])
 						case(Counter_Wire)
-							2'b00: Game1_Color <= background_mem_s2_readdata;
-							2'b01: Game1_Color <= background_mem_s2_readdata;
+							2'b00: Game1_Color <= 16'h0f00;
+							2'b01: Game1_Color <= 16'h0f00;
 							2'b11: Game1_Color <= 16'h00aa;
 							2'b10: Game1_Color <= 16'h00aa;
 						endcase
@@ -668,8 +668,8 @@ always
 				else
 					if(pattern_moving[11])
 						case(Counter_Wire)
-							2'b00: Game1_Color <= background_mem_s2_readdata;
-							2'b01: Game1_Color <= background_mem_s2_readdata;
+							2'b00: Game1_Color <= 16'h0f00;
+							2'b01: Game1_Color <= 16'h0f00;
 							2'b11: Game1_Color <= 16'h00aa;
 							2'b10: Game1_Color <= 16'h00aa;
 						endcase
@@ -679,13 +679,13 @@ always
 			case({displayCharact , displayCoin})
 				2'b11: Game1_Color <= 16'h0000;
 				2'b10: Game1_Color <= 16'hf0ff;
-				2'b01: Game1_Color <= pic_mem_s2_readdata;
+				2'b01: Game1_Color <= rompiece_q ? background_mem_s2_readdata : 16'h00aa;
 				default: Game1_Color <= background_mem_s2_readdata;
 			endcase 
 		else if(Case_Wire[11])
 			case(Counter_Wire)
-				2'b00: Game1_Color <= background_mem_s2_readdata;
-				2'b01: Game1_Color <= background_mem_s2_readdata;
+				2'b00: Game1_Color <= 16'h0f00;
+				2'b01: Game1_Color <= 16'h0f00;
 				2'b11: Game1_Color <= 16'h00aa;
 				2'b10: Game1_Color <= 16'h00aa;
 			endcase
@@ -697,7 +697,7 @@ always
 	
 	
 ////////////////////////////// SNAKE GAME ///////////////////////////
-assign snake_mem_address = (snakeX)/4 + (snakeY)*9'd8;                 
+assign snake_mem_address = (posX +1)/40 + (snakeY)*9'd8;                 
 assign snake_mem_chipselect = background_mem_s2_chipselect;           
 assign snake_mem_clken  = snake_mem_chipselect;                     
 assign snake_mem_write = 1'b0;                                 
@@ -710,7 +710,7 @@ reg [31:0] snakeCnt;
 wire [5:0] snakeX , snakeY;
 wire newCaseSnake;
 
-assign snakeX = posX / 11'd10;
+assign snakeX = (posX) / 11'd10;
 assign snakeY = posY / 11'd10;
 
 assign newCaseSnake = (posX %  11'd10 == 0 && posY % 11'd10 ==0);
@@ -746,5 +746,12 @@ always @(posedge clk)
 			pattern_cnt <= pattern_cnt + 32'd1;
 		else
 			pattern_cnt <= pattern_cnt;
+		
+wire rompiece_q;
+rompiece (
+	pic_mem_s2_address,
+	clk,
+	rompiece_q);
+
 		
 endmodule

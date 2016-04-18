@@ -51,7 +51,7 @@
 			lt24_touch_spi_MOSI                         : out   std_logic;                                        -- MOSI
 			lt24_touch_spi_SCLK                         : out   std_logic;                                        -- SCLK
 			lt24_touch_spi_SS_n                         : out   std_logic;                                        -- SS_n
-			pic_mem_s2_address                          : in    std_logic_vector(8 downto 0)  := (others => 'X'); -- address
+			pic_mem_s2_address                          : in    std_logic_vector(7 downto 0)  := (others => 'X'); -- address
 			pic_mem_s2_chipselect                       : in    std_logic                     := 'X';             -- chipselect
 			pic_mem_s2_clken                            : in    std_logic                     := 'X';             -- clken
 			pic_mem_s2_write                            : in    std_logic                     := 'X';             -- write

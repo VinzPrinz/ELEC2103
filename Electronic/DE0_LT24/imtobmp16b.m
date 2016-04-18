@@ -9,9 +9,9 @@ for i=1:width
     r = image(j,i,1);
     g = image(j,i,2);
     b = image(j,i,3);
-    rcrop = r/8;
-    gcrop = g/4;
-    bcrop = b/8;
+    rcrop = r/16;%8
+    gcrop = g/8;%4
+    bcrop = b/16;%8
     %avoid overflow
     if(rcrop == 2^5)
         rcrop = rcrop-1;
