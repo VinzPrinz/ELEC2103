@@ -1,24 +1,5 @@
-<!DOCTYPE html>
-<!--
-TEMPLATE
-Name: Zoo Planet
-Version: 1.0
-Created: 23 January 2014
+<meta charset="UTF-8"> 
 
-AUTHOR
-Design and code by: http://www.bootshape.com
-Free stock photos by: http://www.bootshape.com
-
-Read full license: http://www.bootshape.com/license.php
-
-CREDITS
-Background: http://subtlepatterns.com/ (extra_clean_paper)
-Fonts: http://www.google.com/fonts (Actor, Duru_Sans)
-
-SUPPORT
-E-mail: bootshape.com@gmail.com
-Contact: http://www.bootshape.com/contact.php
--->
 <html>
   <head>
      <title>Age of Embedded</title>
@@ -98,14 +79,29 @@ Contact: http://www.bootshape.com/contact.php
         </a>
       </div>
     </div><!-- End Slide gallery -->
-
+    
+ 
     <!-- Content -->
     <div class="container">
-      <h3>Contacts</h3>         
-      <p> <b> Olivier Bronchain: </b> olivier.bronchain@student.uclouvain.be</p>
-      <p> <b> Vincent Schellekens: </b>
-      vincent.schellekens@student.uclouvain.be </p>
+      <h3>Game options selection</h3>
+      <p> Wich map to you want to play with ? </p> 
+           <form method="get" action="new_game.htm">
+            <select name="map">
+                <option value="1">1</option>
+                <option value="2">2</option> 
+                <option value="3">3</option>
+            </select>
+            <p> Wich game do you want to play ? </p>
+            <input type="checkbox" name="game1" value="1"> Play Speed <br> 
+            <input type="checkbox" name="game2" value="1"> Play Pattern <br> 
+            <input type="checkbox" name="game3" value="1"> Play Curve Fever <br> 
+            <input type="submit" value="Start new game"
+                                 style="margin-top:5px;"> 
+           </form>
+
     </div><!-- End Content -->
+
+    
     <!-- Footer -->
     <div class="footer text-center">
         <p>&copy; 2015-2016 , Ecole Polytechnique de Louvain  <a class="green"
@@ -121,6 +117,7 @@ Contact: http://www.bootshape.com/contact.php
     <script src="js/mchp.js"></script>
   </body>
 </html>
+
 <script type="text/javascript">
 <!--
 // Parses the xmlResponse from status.xml and updates the status box
@@ -151,9 +148,6 @@ function updateStatus(xmlData) {
 
 	// Update the POT value
 //	document.getElementById('pot0').innerHTML = getXMLValue(xmlData, 'pot0');
-//    document.getElementById('P1gold').innerHTML = getXMLValue(xmlData, 'P1gold');
-//    document.getElementById('P1sol').innerHTML = getXMLValue(xmlData, 'P1sol');
-//    document.getElementById('P2gold').innerHTML = getXMLValue(xmlData, 'P2gold');
 //    document.getElementById('P2sol').innerHTML = getXMLValue(xmlData, 'P2sol');
 //    document.getElementById('timer_round').innerHTML = getXMLValue(xmlData, 'timer_round');
 
@@ -164,11 +158,3 @@ function updateStatus(xmlData) {
 setTimeout("newAJAXCommand('status.xml', updateStatus, true)",500);
 //-->
 </script>
-
-<script type="text/javascript">
-<!--
-document.getElementById('hello').innerHTML = "~hellomsg~";
-//-->
-</script>
-
-

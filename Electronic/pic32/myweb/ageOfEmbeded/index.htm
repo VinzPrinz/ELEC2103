@@ -20,6 +20,7 @@ E-mail: bootshape.com@gmail.com
 Contact: http://www.bootshape.com/contact.php
 -->
 <meta charset="UTF-8"> 
+
 <html>
   <head>
      <title>Age of Embedded</title>
@@ -67,6 +68,7 @@ Contact: http://www.bootshape.com/contact.php
               </ul>
             </li>
             <li><a href="rules.htm">Rules</a></li>
+            <li><a href="new_game.htm">New Game</a></li>
             <li><a href="contacts.htm">Contacts</a></li>
           </ul>
         </nav>
@@ -159,6 +161,11 @@ Contact: http://www.bootshape.com/contact.php
       </div>
       <input type="submit" value="Save" style="margin-top:5px;">
       </form>
+        <form action="index.htm" method="post">
+            <p>
+            <input type="submit" value="Buy" />
+            </p>
+        </form>
     </div><!-- End Shop -->
 
  
@@ -184,6 +191,7 @@ Contact: http://www.bootshape.com/contact.php
     <script src="js/mchp.js"></script>
   </body>
 </html>
+
 <script type="text/javascript">
 <!--
 // Parses the xmlResponse from status.xml and updates the status box
@@ -227,5 +235,3 @@ function updateStatus(xmlData) {
 setTimeout("newAJAXCommand('status.xml', updateStatus, true)",500);
 //-->
 </script>
-
-
