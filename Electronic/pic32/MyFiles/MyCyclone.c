@@ -66,6 +66,11 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
     MyCyclone_Write(0x13,0x00);
     //delayLol();
     MyCyclone_Write(0x13,0x00);
+    MyCyclone_Write(0x17 ,0x00);
+    MyCyclone_Write(0x17 ,0x00);
+    MyCyclone_Write(0x17 ,0x00);
+    MyCyclone_Write(0x17 ,0x00);
+
     char send[2];
     sprintf(str, "This is readed from spi addr:%d -> %d \n" , addr , data);
     int i;
@@ -89,6 +94,8 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
                             MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_End_coin,1);
                         delayLol();
                         changePlayer= (cnt!=0);
+                        currentPlayer_PD = 0;
+                        turnChange = 1;
                         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
                         printf("New Round, changing player 2 data: %d \n" , data);
                    }
@@ -96,7 +103,8 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
                        if(cnt != 0)
                             MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_End_coin,1);
                        delayLol();
-                       changePlayer = (cnt !=0);
+                       currentPlayer_PD = 1;
+                       turnChange = 1;
                         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
                         printf("New Round, changing player 1 data: %d \n" , data);
                    }
@@ -107,6 +115,7 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
                         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_fight2,1);
                         printf("Start Fight \n");
                    }
+                MyCyclone_Write(0x18 , 0);
                    break;
         case 0x07:  i = 1; //Use to send data to lt24 screen during the Snake game
                     if(data > 128){ /// the direction and the user;
@@ -118,13 +127,17 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
                     MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*)send , myMIWI_Snake_dir,4);
                    
                    break;
-        case 0x08: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_Snake_Winner,1); // Send The winner of the fight
-                    break;
-                    
         case 0x06: // we send the number of soldiers
                     Player1.soldiers = data%16;
                     Player2.soldiers = data/16;
                     break;
+        case 0x08: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_Snake_Winner,1); // Send The winner of the fight
+                   break;
+        case 0x09:  MyCyclone_Write(0x9 ,0x00);
+                    break;
+
+                    
+                    
     }
 
     cnt ++;

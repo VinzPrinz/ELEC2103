@@ -357,8 +357,8 @@ void MyMIWI_Ack(BOOL enableBroadcast, char tag)
     
     MiApp_WriteData(myMIWI_Ack);
     MiApp_WriteData(tag);
-    MiApp_WriteData(0);
-    MiApp_WriteData(0);
+    MiApp_WriteData(42);
+    MiApp_WriteData(42);
 
     if (enableBroadcast) {
 
@@ -458,8 +458,8 @@ void MyMIWI_TxMsg_Mode(BOOL enableBroadcast, char *theMsg, char MODE)
     
     data[0] = MODE;
     data[1] = tag;
-    data[2] = 0;
-    data[3] = 0;
+    data[2] = 42;
+    data[3] = 42;
     
     tag ++;
     
@@ -494,8 +494,8 @@ void MyMIWI_TxMsg_Mode_Size(BOOL enableBroadcast, void *theMsg, char MODE , int 
     // Write the first 32 bits word (get words align @ receiver)
     data[0] = MODE;
     data[1] = tag;
-    data[2] = 0;
-    data[3] = 0;
+    data[2] = 42;
+    data[3] = 42;
     
     tag++;
     pChar = (char *)theMsg;
@@ -510,6 +510,7 @@ void MyMIWI_TxMsg_Mode_Size(BOOL enableBroadcast, void *theMsg, char MODE , int 
 
  
 }
+
 
 
 /******************************************************************************/
@@ -531,6 +532,9 @@ BYTE SPIGet(void)   { return ((BYTE) MySPI_GetC()); }
  *          -myMIWI_Image_Info: Will display an image on the MTL screen given the 
  *                       informations. To do so we recover the structur Image_Info 
  */
+
+
+
 void MyMIWI_Task(void) {
 
     char theData[64], theStr[128];
@@ -539,6 +543,9 @@ void MyMIWI_Task(void) {
         MODE = theData[0];
         struct Image_Info *pimage_info;
         struct Image *pimage;
+        
+        if(theData[2] != 42 || theData[3] != 42)
+            return;
         
         unsigned char seck_num = (unsigned char) theData[1];
         unsigned char seck_next = received_tag+1;
@@ -663,8 +670,14 @@ void MyMIWI_Task(void) {
                 if(received_tag +1 == seck_num){
                     sprintf(theStr , "end of coin %d \n" , theData[4]);
                     MyCyclone_Write(0x12,myCyclone_End_Coin_lt24);
+                            int i = 0;
+        while(i<3000000){
+            i = i+2;
+            i--;
+        }
                     MyConsole_SendMsg(theStr);
                     received_tag++;
+                    
                 }
                 break;
             case myMIWI_Snake_dir: // mtl -> lt24 with the counter
@@ -684,17 +697,22 @@ void MyMIWI_Task(void) {
              case myMIWI_End_coin_reply: // lt24 -> mtl with the counter
                 MyMIWI_Ack(myMIWI_EnableBroadcast , seck_num);
                 if( received_tag +1 == seck_num){
-                    sprintf(theStr , "end of coin reply%d \n player is %d \n" , theData[4], currentPlayer);
+                    sprintf(theStr , "end of coin reply%d \n player is %d \n" , theData[4], 42);
                     
-                    if(currentPlayer){
-                        Player1.gold = Player1.gold+theData[4];
+                    if((!currentPlayer_PD && turnChange) || (currentPlayer_PD && !turnChange)){
+                        Player1.gold = newTurn ? 0 : Player1.gold+theData[4];
                     }
                     else {
-                        Player2.gold = Player2.gold+theData[4];
+                        Player2.gold = newTurn ? 0 : Player2.gold+theData[4];
                     }
                     
-                    if(changePlayer)
-                        currentPlayer = !currentPlayer;
+                    if(newTurn){
+                        Player1.gold = NCOIN;
+                        Player2.gold = NCOIN;
+                    }
+                    turnChange = 0;
+                    newTurn = 0;
+                    
                     
                     changePlayer = 0;
                     

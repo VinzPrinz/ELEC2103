@@ -62,6 +62,9 @@
 #define  FLASH_HOLD BIT_7
 
 
+#define NCOIN 20
+
+
 /*******************************************************************************
 * My Priorities for Interrupts                                                 *
 *******************************************************************************/
@@ -123,7 +126,12 @@ MyAPP_EXT  int      MyCyclone_Switch;
 
 MyAPP_EXT  char     MyWebMessage[64];
 
-MyAPP_EXT int currentPlayer;
+MyAPP_EXT int turnChange;
+MyAPP_EXT int currentPlayer_PD;
+MyAPP_EXT int newTurn;
+
+
+
 
 struct Player{
     int gold;
@@ -146,6 +154,7 @@ MyAPP_EXT  int      changePlayer;
 #define	GetSystemClock() 		(80000000ul)
 #define	GetPeripheralClock()		(GetSystemClock()/(1 << OSCCONbits.PBDIV))
 #define	GetInstructionClock()		(GetSystemClock())
+#define COST_SOLDIER 5
 
 /*******************************************************************************
 * Functions Prototypes                                                         *

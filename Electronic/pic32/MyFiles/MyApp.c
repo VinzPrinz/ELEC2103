@@ -90,7 +90,7 @@ int main(void)
  //   MyConsole_SendMsg("MyTemperature_Init() passed\n");
     MyMIWI_Init();
 //    MyConsole_SendMsg("MyMIWI_Init() passed\n");
-  // MyWIFI_Init();
+   MyWIFI_Init();
 //    MyConsole_SendMsg("MyWIFI_Init() passed\n");
     MyMDDFS_Init();
     
@@ -105,18 +105,20 @@ int main(void)
 
     // Start Wireless and Camera connections
     MyMIWI_Start();
- //   MyWIFI_Start();
+    MyWIFI_Start();
     //MyCamera_Start();
    
-    Player1.gold = 0;
+    Player1.gold = NCOIN;
     Player1.soldiers = 0;
     
-    Player2.gold = 0;
+    Player2.gold = NCOIN;
     Player2.soldiers =0;
     timer_round = 240;
     
-    currentPlayer = 0;
+    currentPlayer_PD = 0;
     changePlayer = 0;
+    turnChange = 0;
+    newTurn = 0;
     // Execute forever
     while (1)
     {
@@ -126,9 +128,9 @@ int main(void)
      //   MyConsole_SendMsg("MyConsole_Task Passed \n");
         MyCAN_Task();
    //     MyConsole_SendMsg("MyCAN_Task Passed \n");
-      MyMIWI_Task();
+     MyMIWI_Task();
  //       MyConsole_SendMsg("MyMIWI_Task Passed \n");
- //       MyWIFI_Task();
+       MyWIFI_Task();
  //       MyConsole_SendMsg("MyWIFI_Task Passed \n");
         MyMiniProjet_Task();
 //        MyConsole_SendMsg("MyMiniProjet_Task Passed \n");

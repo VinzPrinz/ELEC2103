@@ -140,7 +140,6 @@ void MyConsole_Task(void)
         //if(cnt !=0)
         int i = 0;
         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_End_coin,1);                      
-        currentPlayer = currentPlayer +1 %2;
         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
     }
     else if (strcmp(theCmd, "StartFightMIWI")==0){
@@ -169,7 +168,6 @@ void MyConsole_Task(void)
         MyCyclone_Write(0x12,myCyclone_End_Snake_lt24);
     }
     else if (strcmp(theCmd, "StartCoinMIWI")==0){
-        currentPlayer = currentPlayer +1 %2;
         int i = 0;
         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
     }

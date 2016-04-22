@@ -213,21 +213,55 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
 	
         }
        
-        MyConsole_SendMsg("Receive a forms\n");
+ /*       MyConsole_SendMsg("Receive a forms\n");
         ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"Sol");
 		if(ptr){
 			MyConsole_SendMsg(ptr);
-            if(currentPlayer)
+            if(currentPlayer_PD)
                 Player1.soldiers = Player1.soldiers+atoi(ptr);
             else
                 Player2.soldiers = Player2.soldiers+atoi(ptr);
 
             MyConsole_SendMsg("Match Sol \n");
         }
-
+*/
         ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"EPL");
 		if(ptr)
 			MyConsole_SendMsg(ptr);
+    }
+    char val = 0;
+    
+    	if(!memcmppgm2ram(filename, "new_game.htm", 9))
+	{
+        ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"map");
+		if(ptr){
+			MyConsole_SendMsg(ptr);
+            val = val + atoi(ptr)*8;
+        }
+        
+        ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"game1");
+		if(ptr){
+			MyConsole_SendMsg(ptr);
+            val = val + 4;
+        } 
+       
+        ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"game2");
+		if(ptr){
+			MyConsole_SendMsg(ptr);
+            val = val + 2;
+        }
+        
+        ptr = HTTPGetROMArg(curHTTP.data, (ROM BYTE *)"game3");
+		if(ptr){
+			MyConsole_SendMsg(ptr);
+            val = val +1;
+        }
+        newTurn = 1;
+        char strlol[64];
+        sprintf(strlol , "the val value to reset game is %x  \n" , val);
+        MyConsole_SendMsg(strlol);
+        MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &newTurn , myMIWI_End_coin,1);
+        MyCyclone_Write(0x17 , val);
     }
 	
 	
@@ -284,20 +318,7 @@ HTTP_IO_RESULT HTTPExecuteGet(void)
   Section:
 	POST Form Handlers
   ***************************************************************************/
-void  HTTPPostShop(void)
-{
-	static BYTE *ptrDDNS;
-    int ptr = curHTTP.smPost;
-    char lol[42];
-    sprintf(lol , "This is the ptr %d \n" , ptr);
-			MyConsole_SendMsg(ptr);
-            if(currentPlayer)
-                Player1.soldiers = Player1.soldiers+atoi(ptr);
-            else
-                Player2.soldiers = Player2.soldiers+atoi(ptr);
 
-            MyConsole_SendMsg("Match Sol \n");
-}
 
 #if defined(HTTP_USE_POST)
 
@@ -345,12 +366,35 @@ HTTP_IO_RESULT HTTPExecutePost(void)
 	if(!strcmppgm2ram((char*)filename, "dyndns/index.htm"))
 		return HTTPPostDDNSConfig();
 #endif
-    MyConsole_SendMsg("in post \n");
-	if(!memcmppgm2ram(filename, "index.htm", 9))
-	{   
-        HTTPPostShop();
-    }
+MyConsole_SendMsg("in post \n");
 
+    switch(currentPlayer_PD)
+    {
+        case 0: if(Player1.gold >= COST_SOLDIER)
+                {
+                    MyConsole_SendMsg("Red player buys a soldier! \n");
+                    Player1.gold -= 5;
+                    Player1.soldiers += 1;
+                    MyCyclone_Write(0x09,1);
+                }
+                else
+                {
+                    MyConsole_SendMsg("You don't have enough gold to do this! \n");
+                }
+                break;
+        case 1: if(Player2.gold >= COST_SOLDIER)
+                {
+                    MyConsole_SendMsg("Blue player buys a soldier! \n");
+                    Player2.gold -= 5;
+                    Player2.soldiers += 1;
+                    MyCyclone_Write(0x09,1);
+                }
+                else
+                {
+                    MyConsole_SendMsg("You don't have enough gold to do this! \n");
+                }
+                break;
+    }
 	return HTTP_IO_DONE;
 }
 
@@ -1949,6 +1993,6 @@ void HTTPPrint_P2sol(void){
 
 void HTTPPrint_timer_round(void){
     BYTE str[64];
-    sprintf(str , "On LT24 , Player %d , On MTL Player %d", currentPlayer , !currentPlayer);
+    sprintf(str , "On LT24 , Player %d , On MTL Player %d", currentPlayer_PD , !currentPlayer_PD);
     TCPPutString(sktHTTP , str);
 }
