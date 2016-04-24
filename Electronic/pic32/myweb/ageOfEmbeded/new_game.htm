@@ -82,26 +82,40 @@
     
  
     <!-- Content -->
+
+    <form method="get" action="new_game.htm">
     <div class="container">
-      <h3>Game options selection</h3>
-      <p> Wich map to you want to play with ? </p> 
-           <form method="get" action="new_game.htm">
+      <h3>Map Selection</h3>
+      <p> Wich map to you want to play with ? You have the choice between 3
+      different maps. Try them ! </p> 
             <select name="map">
                 <option value="1">1</option>
                 <option value="2">2</option> 
                 <option value="3">3</option>
             </select>
-            <p> Wich game do you want to play ? </p>
-            <input type="checkbox" name="game1" value="1"> Play Speed <br> 
-            <input type="checkbox" name="game2" value="1"> Play Pattern <br> 
-            <input type="checkbox" name="game3" value="1"> Play Curve Fever <br> 
-            <input type="submit" value="Start new game"
-                                 style="margin-top:5px;"> 
-           </form>
-
     </div><!-- End Content -->
 
+    <div class="container">
+        <h3> Games Selection </h3>
+        <p>Which game do you want to play ? </p>
+            <p> <input type="checkbox" name="game1" value="1"> <b>Play Speed</b> <br>
+            is a game where 12 boxes will appear on you
+            screen. The goal will be to touch all of them in a minimum amount
+            of time. </p>
+            
+            <p>  <input type="checkbox" name="game2" value="1"> <b> Play Pattern </b> <br> is a game where a pattern will appear on
+            you screen. The goal will be to redo the pattern without any error
+            in a minimum amount of time </p>
+            
+            <p> <input type="checkbox" name="game3" value="1"> <b> Play Curve
+                Fever </b> <br> is a game where each player control a snake.
+            The first one that touch him self, a boarder or the enemy lost the
+            fight </p>
+            <input type="submit" value="Start new game" style="margin-top:5px;"> 
+    </div><!-- End Content -->
     
+    </form>
+
     <!-- Footer -->
     <div class="footer text-center">
         <p>&copy; 2015-2016 , Ecole Polytechnique de Louvain  <a class="green"
