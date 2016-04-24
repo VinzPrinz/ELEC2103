@@ -187,7 +187,7 @@ wire [31:0]	LT24_counter , LT24_coin_x , LT24_coin_x0 , LT24_coin_y , LT24_coin_
 wire [11:0] LT24_pattern , LT24_pattern_0;
 wire [31:0] VX , VY;
 
-assign LED[7] = LT24_finish;
+assign LED[7] = RST_N;
 
 assign LED[6:0] = 7'd42;
 //=======================================================
@@ -240,8 +240,8 @@ assign GPIO_2[7]		= Config[6] ? PIC32_C1RX : 1'bz;
 assign PIC32_SCL3A	= GPIO_2[8];
 assign PIC32_SDA3A	= GPIO_2[9];
 
-//assign PIC32_RESET	= GPIO_2[10];
-assign PIC32_RESET	= ~KEY[0];
+assign PIC32_RESET	= GPIO_2[10];
+//assign PIC32_RESET	= ~KEY[0];
 
 
 
@@ -260,7 +260,7 @@ always @ (posedge CLOCK_50)
 //  Structural coding
 //=======================================================
 
-assign RST_N       = KEY[1];
+assign RST_N       = ~(PIC32_RESET || ~KEY[1]);
 assign LT24_LCD_ON = 1'b1; //default on
 
 wire pll_clk;
