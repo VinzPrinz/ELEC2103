@@ -13,21 +13,25 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define myCyclone_Start_Fight    1
-#define myCyclone_End_Fight      2
-#define myCyclone_Start_Coin     3
-#define myCyclone_End_Coin       4
-#define myCyclone_Wait			 5
-#define myCyclone_Snake_Right       9
-#define myCyclone_Snake_Left        10
-#define myCyclone_Snake_Up          11
-#define myCyclone_Snake_Down        12
-#define myCyclone_Start_Snake 		13
+#define myCyclone_Start_Fight    	1
+#define myCyclone_End_Fight      	2
+#define myCyclone_Start_Coin    	3
+#define myCyclone_End_Coin       	4
+#define myCyclone_Wait			 	5
+#define myCyclone_Snake_Right    	9
+#define myCyclone_Snake_Left     	10
+#define myCyclone_Snake_Up       	11
+#define myCyclone_Snake_Down     	12
+#define myCyclone_Start_Snake    	13
 #define myCyclone_End_Snake 		14
-#define myCyclone_Start_Fight2    15
+#define myCyclone_Start_Fight2    	15
 
+#define myCyclone_Opp_Addr 			0x12
 
-
+#define LT24_mode_Fight1			0
+#define LT24_mode_Coins				1
+#define LT24_mode_Snake				2
+#define LT24_mode_Fight2			3
 
 
 /* Definition of Task Stacks*/
@@ -83,29 +87,33 @@ alt_video_display Display;
 TOUCH_HANDLE *pTouch;
 void sendSnake();
 void clearSnake();
-void updateSnake();
+void updateSnake(int firstTime);
 
 void LT24_ISR(void *context){
-	IOWR(LT24_INTERFACE_IRQ_0_BASE + (4*7),0 , 321);
+	// reset the LT24_buffer
+	IOWR(LT24_INTERFACE_IRQ_0_BASE + (4*7),0 , 0);
+
+	// get the timer
 	int cnt = IORD(COUNTER_0_BASE,0);
 
 	char str[64];
 	counter++;
 	if(Operation == myCyclone_Start_Coin ||Operation == myCyclone_End_Fight){
-		coins++;
+		coins ++;
 		myOp = myCyclone_Start_Coin;
 	}
 	else if (Operation == myCyclone_Start_Fight || Operation == myCyclone_End_Coin || Operation == myCyclone_Start_Fight2){
 		myOp = myCyclone_Wait;
 	}
 	if(Operation == myCyclone_Start_Fight){
-		 IOWR(CYCLONESPI_BASE+(4*0x02) , 0 ,cnt/(256*256*32));
-		 myOp = myCyclone_Start_Coin;
+		IOWR(CYCLONESPI_BASE+(4*0x02) , 0 ,cnt/(256*256*32));
+		myOp = myCyclone_Start_Coin;
 	}
 	else if(Operation == myCyclone_Start_Fight2){
-		 IOWR(CYCLONESPI_BASE+(4*0x02) , 0 ,cnt/(256*256));
-		 myOp = myCyclone_Start_Coin;
+		IOWR(CYCLONESPI_BASE+(4*0x02) , 0 ,cnt/(256*256));
+		myOp = myCyclone_Start_Coin;
 	}
+
 	OSMboxPost(Flag2, (void*)&myOp);
 	Clr_BUFFER_FLAG();
 
@@ -114,10 +122,9 @@ void LT24_ISR(void *context){
 int init(){
 	Clr_BUFFER_FLAG();
 
-	// register irq
 	int reg_ret = alt_iic_isr_register(LT24_INTERFACE_IRQ_0_IRQ_INTERRUPT_CONTROLLER_ID,
-										LT24_INTERFACE_IRQ_0_IRQ,
-										&LT24_ISR , (void *)&LT24_state , NULL);
+			LT24_INTERFACE_IRQ_0_IRQ,
+			&LT24_ISR , (void *)&LT24_state , NULL);
 	if(!reg_ret) {
 		printf("Button interrupt service routine (ISR) well registered \n");
 	} else {
@@ -137,9 +144,9 @@ int init(){
 
 	bool bSuccess;
 
-    bSuccess = ADXL345_SPI_Init(GSENSOR_SPI_BASE);
-    if(!bSuccess)
-    	printf("error init gsensor\n");
+	bSuccess = ADXL345_SPI_Init(GSENSOR_SPI_BASE);
+	if(!bSuccess)
+		printf("error init gsensor\n");
 
 	// LCD INITIALIZATION
 	LCD_Init();
@@ -169,9 +176,6 @@ int main(void)
 {
 	init();
 	clearSnake();
-	//IOWR(CYCLONESPI_BASE+(4*0x08) , 0 ,42);
-
-
 
 	OSTaskCreateExt(task_send_data,
 			NULL,
@@ -210,29 +214,30 @@ int main(void)
 void task_game_over(void* pdata)
 {
 
-	 unsigned int *X, *Y;
-	 int err;
+	unsigned int *X, *Y;
+	int err;
 
-	 while(1){
-		 OSSemPend(Screen, 0,&err);
-		 Clr_BUFFER_FLAG();
+	while(1){
+		OSSemPend(Screen, 0,&err);
+		Clr_BUFFER_FLAG();
 
-		 Display.interlace = 0;
-		 Display.bytes_per_pixel = 2;
-		 Display.color_depth = 16;
-		 Display.height = SCREEN_HEIGHT;
-		 Display.width = SCREEN_WIDTH;
+		Display.interlace = 0;
+		Display.bytes_per_pixel = 2;
+		Display.color_depth = 16;
+		Display.height = SCREEN_HEIGHT;
+		Display.width = SCREEN_WIDTH;
 
-		 vid_draw_box (0, 0,SCREEN_WIDTH, SCREEN_HEIGHT, 0x00f80000, 1, &Display);
-		 vid_print_string_alpha(0, 0, 0xff00ff, 0xffffff, tahomabold_20, &Display, "Next Turn");
+		vid_draw_box (0, 0,SCREEN_WIDTH, SCREEN_HEIGHT, 0x00f80000, 1, &Display);
+		vid_print_string_alpha(0, 0, 0xff00ff, 0xffffff, tahomabold_20, &Display, "Next Turn");
 
+		int *lol = (int *)OSMboxPend(GameOverBox , 0 , &err);
+		OSSemPost(Screen);
 
-		 int *lol = (int *)OSMboxPend(GameOverBox , 0 , &err);
-		 OSSemPost(Screen);
-
-		 OSTimeDly(DELAY);
-	 }
+		OSTimeDly(DELAY);
+	}
 }
+
+
 /* Used  to send data from touch or accel to the mailboxes*/
 void task_send_data(void* pdata)
 {
@@ -246,64 +251,66 @@ void task_send_data(void* pdata)
 	int dir = 255;
 
 	while(1){
+
+		//Send the data from touch to task
 		if(Touch_GetXY(pTouch, &X, &Y)){
 			OSMboxPost(touchY , (void*)&Y);
 			OSMboxPost(touchX , (void*)&X);
 		}
-	    if (ADXL345_SPI_IsDataReady(GSENSOR_SPI_BASE) && ADXL345_SPI_XYZ_Read(GSENSOR_SPI_BASE, szXYZ)){
-	    	OSMboxPost(Accel , (void*) szXYZ);
-	    }
+
+		//Send the data from accelerometer to task
+		if (ADXL345_SPI_IsDataReady(GSENSOR_SPI_BASE) && ADXL345_SPI_XYZ_Read(GSENSOR_SPI_BASE, szXYZ)){
+			OSMboxPost(Accel , (void*) szXYZ);
+		}
 
 		OSTimeDly(DELAY);
 
+		// retreiving the operation from pic32
 		previousOp = newOp;
-		newOp = IORD(CYCLONESPI_BASE+(4*0x12),0); // read the op asked by pic32
-		int *opIrq = (int *)OSMboxAccept(Flag2);
+		newOp = IORD(CYCLONESPI_BASE+(4*myCyclone_Opp_Addr),0); // read the op asked by pic32
+		int *opIrq = (int *)OSMboxAccept(Flag2); // read the op from irq
 
-		if (newOp != Operation && newOp != previousOp && newOp !=0 && (Operation==myCyclone_Wait|| Operation == myCyclone_End_Fight || Operation == myCyclone_End_Coin || Operation == myCyclone_Start_Coin || Operation == myCyclone_End_Snake )){
+
+
+
+		if (newOp != Operation && newOp != previousOp && newOp !=0){
 			switch(newOp){
-				case myCyclone_Start_Fight: OSSemPost(Game2); game_on = 0;
-											restartcoin = (Operation == myCyclone_Start_Coin);
-											IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
-											coins =0;
-											break;
-				case myCyclone_Start_Fight2: OSSemPost(Game2); game_on = 0;
-											 restartcoin = (Operation == myCyclone_Start_Coin);
-											 IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
-											 coins =0;
-											 break;
-				case myCyclone_Start_Coin: OSSemPost(Game1); game_on = 1;
-										   coins=0;
-										   break;
-				case myCyclone_End_Coin: //OSMboxPost(Flag1 , (void*)&game_on);
-										 IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
-										 coins =0;
-										 break;
-				case myCyclone_Start_Snake:	OSSemPost(Game2); game_on = 0;
-				 	 	 	 	 	 	 	restartcoin = (Operation == myCyclone_Start_Coin);
-				 	 	 	 	 	 	 	IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
-				 	 	 	 	 	 	 	coins =0;
-				 	 	 	 	 	 	 	clearSnake();
-											break;
-				default:OSSemPost(Game1); game_on = 1;
-						break;
+			case myCyclone_Start_Fight: OSSemPost(Game2); game_on = 0;
+			restartcoin = (Operation == myCyclone_Start_Coin);
+			IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
+			coins =0;
+			break;
+			case myCyclone_Start_Fight2: OSSemPost(Game2); game_on = 0;
+			restartcoin = (Operation == myCyclone_Start_Coin);
+			IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
+			coins =0;
+			break;
+			case myCyclone_Start_Coin: OSSemPost(Game1); game_on = 1;
+			coins= (opIrq!=NULL) ? coins : 0;
+			break;
+			case myCyclone_End_Coin: IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
+			coins =0;
+			break;
+			case myCyclone_Start_Snake:	OSSemPost(Game2); game_on = 0;
+			restartcoin = (Operation == myCyclone_Start_Coin);
+			IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
+			coins =0;
+			clearSnake();
+			break;
+			default:OSSemPost(Game1); game_on = 1;
+			break;
 			}
-			/// Force end of game over
 
+			// there is a new op from the irq handler
 			if(opIrq != NULL)
 				newOp = *opIrq;
 
-			if(Operation == myCyclone_Wait || Operation == myCyclone_End_Coin || newOp == myCyclone_Start_Fight || newOp==myCyclone_Start_Fight2 || newOp == myCyclone_Start_Coin || newOp == myCyclone_Start_Snake){
-				OSMboxPost(GameOverBox , (void *)&Operation);
-			}
+			OSMboxPost(Flag1 , (void*) &newOp);
+			Operation = newOp;
 
-			if(opIrq == NULL){
-				OSMboxPost(Flag1, (void*)&newOp);
-				Operation = newOp;
-			}
-			else{
-				OSMboxPost(Flag1 , (void*) opIrq);
-				Operation = *opIrq;
+			// Send the new operation to GameOver Task meaning to stop his task
+			if( newOp == myCyclone_Start_Fight || newOp==myCyclone_Start_Fight2 || newOp == myCyclone_Start_Coin || newOp == myCyclone_Start_Snake){
+				OSMboxPost(GameOverBox , (void *)&Operation);
 			}
 
 		}else if(opIrq !=NULL){
@@ -320,113 +327,140 @@ void task_send_data(void* pdata)
  * Readdata from mailbox and send it to hardware*/
 void task_game1(void* pdata)
 {
-    alt_16 *szXYZ;
-    int err;
+	alt_16 *szXYZ;
+	int err;
 	unsigned int *X, *Y;
-    int  *op;
-    int acctualOp = myCyclone_Wait ;
-    int dir;
+	int  *op;
+	int acctualOp = myCyclone_Wait ;
+	int dir;
 
 
-	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*9),0 , 0); // set default speed to 1
+	// show the default speed of the coin
+	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*9),0 , 0);
 	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*10),0 , 0);
 
 	srand(time(NULL)); // initialisation of rand
-	Set_BUFFER_FLAG();
+
+
 	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*7),0 , rand() % 220);
 	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*8),0 , rand() % 300);
 
-    while(1){
-    	op = NULL;
-    	OSSemPend(Screen , 0 , &err);
-    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 1); // select the first game
+	while(1){
+		op = NULL;
+		OSSemPend(Screen , 0 , &err);
+		IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 1); // select the first game
 
 		Set_BUFFER_FLAG();
 
-    	while(op==NULL || *op == myCyclone_Start_Coin || *op == myCyclone_Start_Fight || *op == myCyclone_Start_Fight2 || *op == myCyclone_End_Fight || *op == myCyclone_Start_Snake || *op == myCyclone_End_Snake){
+		while(op==NULL || *op == myCyclone_Start_Coin || *op == myCyclone_Start_Fight || *op == myCyclone_Start_Fight2 || *op == myCyclone_End_Fight || *op == myCyclone_Start_Snake || *op == myCyclone_End_Snake){
 
 			int vx = IORD(LT24_INTERFACE_IRQ_0_BASE+(4*5),0);
 			int vy = IORD(LT24_INTERFACE_IRQ_0_BASE+(4*6),0);
 
+			// if statement to init the games
 			if(op != NULL && *op == myCyclone_Start_Coin ){
-			    			int vx = rand()%3 -1;
-			    			int vy = rand()%3 -1;
-			    			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*9),0 , vx);
-			    			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*10),0 , vy);
-			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 1);
-			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*7),0 , rand() % 220);
-			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*8),0 , rand() % 300);
-			    			Clr_BUFFER_FLAG();
-			    			Set_BUFFER_FLAG();
-			    			acctualOp = *op;
-			    		}
-			    		else if (op!=NULL && *op==myCyclone_Start_Fight){
-			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 0); /// PATTERN  3
-			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*11),0, rand()%4000 + 500 ); /// PATTERN  3
+				// set mode to the screen
+				IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, LT24_mode_Coins);
 
-			    	    	IOWR(COUNTER_0_BASE+8, 0 , 0);
-			    	    	int cnt = IORD(COUNTER_0_BASE,0);
-			    	    	int i = 0;
-			    	    	i ++;
-			    	    	int cnt2 = IORD(COUNTER_0_BASE,0);
-			    	    	Clr_BUFFER_FLAG();
-			    	    	Set_BUFFER_FLAG();
-			    			X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
-			    			Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
+				// set random position
+				IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*7),0 , rand() % 220);
+				IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*8),0 , rand() % 300);
 
-			    			acctualOp = *op;
-			    		}
-			    		else if (op!=NULL && *op==myCyclone_Start_Fight2){
-			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 3); /// PATTERN  3
-			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*11),0, rand()%4000 + 500 ); /// PATTERN  3
+				// set random speed to the coin
+				int vx = rand()%3 -1;
+				int vy = rand()%3 -1;
+				IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*9),0 , vx);
+				IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*10),0 , vy);
 
-			    	    	IOWR(COUNTER_0_BASE+8, 0 , 0);
-			    	    	int cnt = IORD(COUNTER_0_BASE,0);
-			    	    	int i = 0;
-			    	    	i ++;
-			    	    	int cnt2 = IORD(COUNTER_0_BASE,0);
-			    	    	Clr_BUFFER_FLAG();
-			    	    	Set_BUFFER_FLAG();
-			    			X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
-			    			Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
+				Clr_BUFFER_FLAG();
+				Set_BUFFER_FLAG();
+				acctualOp = *op;
+			}
+			else if (op!=NULL && *op==myCyclone_Start_Fight){
+				// set mode to the screen
+				IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, LT24_mode_Fight1);
 
-			    			acctualOp = *op;
-			    		}
-			    		else if (op != NULL && *op == myCyclone_Start_Snake){
-			    	    	IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, 2);
-			    	    	clearSnake();
-			    	    	Snake1J = rand() % 32;
-			    	    	Snake1I = rand() % 24;
-			    	    	Snake2J = rand() % 32;
-			    	    	Snake2I = rand() % 24;
-			    		}
-    		if(acctualOp == myCyclone_Start_Coin || acctualOp == myCyclone_End_Fight || acctualOp == myCyclone_End_Snake){
-    			szXYZ = (alt_16 *) OSMboxPend(Accel , 0 , &err);
-    			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/50);
-    			IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/50);
-    		}
+				// reset the counter
+				IOWR(COUNTER_0_BASE+8, 0 , 0);
 
-    		else if (acctualOp == myCyclone_Start_Fight || acctualOp==myCyclone_Start_Fight2){
-    			X = (unsigned int *)OSMboxAccept(touchX);
-    			if(X !=NULL){
-    				Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
-    				LCD_WR_DATA(*Y);
-    				LCD_WR_REG(*X);
-    			}
-    		}
-    		else if(acctualOp == myCyclone_Start_Snake){
-    			updateSnake();
-    		}
+				// clear the screen
+				Clr_BUFFER_FLAG();
+				Set_BUFFER_FLAG();
 
-    		OSTimeDly(DELAY);
+				// clean the touch buffer
+				X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
+				Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
 
-    		op = (int *)OSMboxAccept(Flag1);
-    		if(op != NULL){
-    			acctualOp = *op;
-    		}
-    	}
+				acctualOp = *op;
+			}
+			else if (op!=NULL && *op==myCyclone_Start_Fight2){
+				// set mode to the screen
+				IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, LT24_mode_Fight2);
 
-    	OSSemPost(Screen);
+				// send random pattern
+				IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*11),0, rand()%4000 + 500 ); /// PATTERN  3
+
+				// reset the counter
+				IOWR(COUNTER_0_BASE+8, 0 , 0);
+
+				// clear the screen
+				Clr_BUFFER_FLAG();
+				Set_BUFFER_FLAG();
+
+				// clean the touch buffer
+				X = (unsigned int *)OSMboxPend(touchX , 0 , &err);
+				Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
+
+				acctualOp = *op;
+			}
+			else if (op != NULL && *op == myCyclone_Start_Snake){
+				//set the mode to the screen
+				IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*2),0, LT24_mode_Snake);
+
+				// clear the snake game (Snake[][])
+				clearSnake();
+
+				// set random position to the snake
+				Snake1J = (rand() % 28) +2;
+				Snake1I = (rand() % 20) +2;
+				Snake2J = (rand() % 28) +2;
+				Snake2I = (rand() % 20) +2;
+				updateSnake(1);
+
+			}
+
+
+			// this if statement is to play normaly the game
+			if(acctualOp == myCyclone_Start_Coin || acctualOp == myCyclone_End_Fight || acctualOp == myCyclone_End_Snake){
+				// send to data from accel to the screen
+				szXYZ = (alt_16 *) OSMboxPend(Accel , 0 , &err);
+				IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*4),0, -szXYZ[0]/50);
+				IOWR(LT24_INTERFACE_IRQ_0_BASE+(4*3),0, -szXYZ[1]/50);
+			}
+			else if (acctualOp == myCyclone_Start_Fight || acctualOp==myCyclone_Start_Fight2){
+
+				// send the data from touch to the screen if new
+				X = (unsigned int *)OSMboxAccept(touchX);
+				if(X !=NULL){
+					Y = (unsigned int *)OSMboxPend(touchY , 0 , &err);
+					LCD_WR_DATA(*Y);
+					LCD_WR_REG(*X);
+				}
+
+			}
+			else if(acctualOp == myCyclone_Start_Snake){
+				updateSnake(0);
+			}
+
+			OSTimeDly(DELAY);
+
+			op = (int *)OSMboxAccept(Flag1);
+			if(op != NULL){
+				acctualOp = *op;
+			}
+		}
+
+		OSSemPost(Screen);
 		OSTimeDly(DELAY);
 	}
 }
@@ -438,6 +472,10 @@ void checkSnake(int j , int i , int snake){
 	}
 }
 
+
+/*
+ * check if touch a boarder of the screen, if yes, change operation
+ */
 void boarderSnake(int j , int i  ,int dir, int snake){
 
 	if(dir == myCyclone_Snake_Right && i == 23){
@@ -462,6 +500,10 @@ void boarderSnake(int j , int i  ,int dir, int snake){
 	}
 }
 
+/*
+ * Check is the next is in possible or not. If possible, return the next dir
+ * else return the oldone
+ */
 int dirCheck(int dir, int oldDir){
 	if(dir == myCyclone_Snake_Right && oldDir == myCyclone_Snake_Left)
 		dir = oldDir;
@@ -475,13 +517,19 @@ int dirCheck(int dir, int oldDir){
 	return dir;
 }
 
-void updateSnake(){
+void updateSnake(int firstTime){
 	int dir1 , dir2;
 	static int oldDir1 , oldDir2;
+
+	// set the speed of the snakes
 	OSTimeDlyHMSM(0, 0, 0, 400);
 
-	dir1 = IORD(CYCLONESPI_BASE+(4*0x13),0); // read the op asked by pic32
-	dir2 = IORD(CYCLONESPI_BASE+(4*0x14),0); // read the op asked by pic32
+	dir1 = IORD(CYCLONESPI_BASE+(4*0x13),0); // read the dir asked by pic32
+	dir2 = IORD(CYCLONESPI_BASE+(4*0x14),0); // read the dir asked by pic32
+
+	if((dir1==0 ||dir2 == 0) && !firstTime){
+		return;
+	}
 
 	dir1 = dirCheck(dir1 , oldDir1);
 	dir2 = dirCheck(dir2 , oldDir2);
@@ -535,6 +583,10 @@ void updateSnake(){
 
 }
 
+
+/*
+ * Clear the Snake[][] and clear the LT24 screen
+ */
 void clearSnake(){
 	int i = 0;
 	int j = 0;
@@ -546,6 +598,11 @@ void clearSnake(){
 	}
 }
 
+
+/*
+ * function to send Snake[][] to hardware in order
+ * to display the snake on the LT24 screen
+ */
 void sendSnake(){
 	int i = 0;
 	int j = 0;
@@ -570,7 +627,6 @@ void sendSnake(){
 		}
 
 		IOWR(SNAKE_MEM_BASE, j*2 +1 , data);
-
 	}
 }
 

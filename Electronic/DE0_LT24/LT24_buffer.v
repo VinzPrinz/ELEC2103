@@ -572,18 +572,6 @@ always @ (posedge clk)
 		else	
 			Y1 <= Y1;
 			
-/*		if(rst)
-			Y1 <= 10;
-		else if (negY1[31] && VY[31])
-			Y1 <= 0;
-		else if	(Y1+VY >= 320-L1 && VY[31])
-			Y1 <= 320-L1;
-		else if( Y1+VY >= (320-L1))
-			Y1 <= 320-L1;
-		else if( cnt == 32'h000ffffe)
-			Y1 <= Y1+VY;
-		else
-			Y1 <= Y1;*/
 			
 	wire [31:0] negX1;
 	assign negX1 = (X1) -(~VX+32'd1);
@@ -772,6 +760,7 @@ always @(posedge clk)
 			pattern_cnt <= pattern_cnt + 32'd1;
 		else
 			pattern_cnt <= pattern_cnt;
+		
 		
 wire rompiece_q;
 rompiece (
