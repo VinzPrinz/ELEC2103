@@ -37,6 +37,7 @@
         <nav role="navigation" class="collapse navbar-collapse navbar-right">
           <ul class="navbar-nav nav">
             <li class="active"><a href="index.htm">Home</a></li>
+			<li><a href="new_game.htm">New Game</a></li>
             <li class="dropdown">
               <a data-toggle="dropdown" href="#" class="dropdown-toggle">Team<b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -47,7 +48,6 @@
               </ul>
             </li>
             <li><a href="rules.htm">Rules</a></li>
-            <li><a href="new_game.htm">New Game</a></li>
             <li><a href="contacts.htm">Contacts</a></li>
           </ul>
         </nav>
@@ -55,30 +55,11 @@
     </div><!-- End Navigation bar -->
 
 
-    <!-- Slide gallery -->
-    <div class="jumbotron">
-      <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-          <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-        </ol>
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner">
-          <div class="item active">
-            <img src="img/carousel1.jpg" alt="",  width="100%" >
-            <div class="carousel-caption">
-            </div>
-          </div>
-        </div>
-        <!-- Controls -->
-        <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
-          <span class="glyphicon glyphicon-chevron-left"></span>
-        </a>
-        <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
-          <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-      </div>
-    </div><!-- End Slide gallery -->
+        <!-- Slide gallery -->
+   	<div class="jumbotron">
+	<img src="img/carousel1.jpg" alt="" , width="100%" >
+	</div>
+	<!-- End Slide gallery -->
     
  
     <!-- Content -->
@@ -86,18 +67,18 @@
     <form method="get" action="new_game.htm">
     <div class="container">
       <h3>Map Selection</h3>
-      <p> Wich map to you want to play with ? You have the choice between 3
-      different maps. Try them ! </p> 
+      <p> On wich ma will you battle your opponent ? You have the choice between 3
+      different maps. Try them out ! </p> 
             <select name="map">
-                <option value="1">1</option>
-                <option value="2">2</option> 
-                <option value="3">3</option>
+                <option value="1">The siege of the capital</option>
+                <option value="2">The smelly swamp region</option> 
+                <option value="3">The high pass in the mountains</option>
             </select>
     </div><!-- End Content -->
 
     <div class="container">
         <h3> Games Selection </h3>
-        <p>Which game do you want to play ? </p>
+        <p>Which game do you want to play ? You ought to select at least one (or else we will choose for you...).</p>
             <p> <input type="checkbox" name="game1" value="1"> <b>Play Speed</b> <br>
             is a game where 12 boxes will appear on you
             screen. The goal will be to touch all of them in a minimum amount
