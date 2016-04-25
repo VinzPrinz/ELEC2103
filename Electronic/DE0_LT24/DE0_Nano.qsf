@@ -553,5 +553,8 @@ set_global_assignment -name SIGNALTAP_FILE stp1.stp
 set_global_assignment -name VERILOG_FILE DE0_LT24_SOPC/synthesis/submodules/counter.v -library DE0_LT24_SOPC
 set_global_assignment -name HEX_FILE piece.hex
 set_global_assignment -name QIP_FILE rompiece.qip
+set_global_assignment -name QIP_FILE shieldrom.qip
+set_global_assignment -name QIP_FILE shield_rom2.qip
+set_global_assignment -name QIP_FILE shieldB.qip
 set_global_assignment -name SLD_FILE db/stp1_auto_stripped.stp
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

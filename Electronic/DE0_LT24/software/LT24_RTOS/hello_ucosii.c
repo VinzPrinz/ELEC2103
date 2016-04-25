@@ -251,7 +251,6 @@ void task_send_data(void* pdata)
 	int dir = 255;
 
 	while(1){
-
 		//Send the data from touch to task
 		if(Touch_GetXY(pTouch, &X, &Y)){
 			OSMboxPost(touchY , (void*)&Y);
@@ -260,7 +259,8 @@ void task_send_data(void* pdata)
 
 		//Send the data from accelerometer to task
 		if (ADXL345_SPI_IsDataReady(GSENSOR_SPI_BASE) && ADXL345_SPI_XYZ_Read(GSENSOR_SPI_BASE, szXYZ)){
-			OSMboxPost(Accel , (void*) szXYZ);
+			//if(szXYZ[0] > -255 && szXYZ[0] < 255 && szXYZ[1] > -255 && szXYZ < 255 )
+				OSMboxPost(Accel , (void*) szXYZ);
 		}
 
 		OSTimeDly(DELAY);
@@ -275,7 +275,7 @@ void task_send_data(void* pdata)
 
 		if (newOp != Operation && newOp != previousOp && newOp !=0){
 			switch(newOp){
-			case myCyclone_Start_Fight: OSSemPost(Game2); game_on = 0;
+			case myCyclone_Start_Fight: OSSemPost(Game2);game_on = 0;
 			restartcoin = (Operation == myCyclone_Start_Coin);
 			IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
 			coins =0;

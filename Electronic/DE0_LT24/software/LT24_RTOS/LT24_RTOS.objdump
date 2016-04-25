@@ -10730,7 +10730,6 @@ void task_send_data(void* pdata)
  20063d4:	e0bff815 	stw	r2,-32(fp)
 
 	while(1){
-
 		//Send the data from touch to task
 		if(Touch_GetXY(pTouch, &X, &Y)){
  20063d8:	d12e0d17 	ldw	r4,-18380(gp)
@@ -10766,7 +10765,8 @@ void task_send_data(void* pdata)
  2006438:	100b883a 	mov	r5,r2
  200643c:	2000d7c0 	call	2000d7c <ADXL345_SPI_XYZ_Read>
  2006440:	10000526 	beq	r2,zero,2006458 <task_send_data+0xb4>
-			OSMboxPost(Accel , (void*) szXYZ);
+			//if(szXYZ[0] > -255 && szXYZ[0] < 255 && szXYZ[1] > -255 && szXYZ < 255 )
+				OSMboxPost(Accel , (void*) szXYZ);
  2006444:	d0ee1417 	ldw	r3,-18352(gp)
  2006448:	e0bffc04 	addi	r2,fp,-16
  200644c:	1809883a 	mov	r4,r3
