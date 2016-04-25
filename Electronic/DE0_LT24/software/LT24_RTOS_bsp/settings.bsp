@@ -2,10 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>ucosii</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Apr 12, 2016 2:46:40 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1460465200600</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24/software/LT24_RTOS_bsp</BspGeneratedLocation>
-        <BspSettingsFile>settings.bsp</BspSettingsFile>
+        <BspSettingsFile>/home/obronchain/git_projects/ELEC2103/Electronic/DE0_LT24/software/LT24_RTOS_bsp/settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../DE0_LT24_SOPC.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
         <Cpu>CPU</Cpu>
@@ -146,7 +144,7 @@
                 <SettingName>hal.linker.exception_stack_memory_region_name</SettingName>
                 <Identifier>none</Identifier>
                 <Type>UnquotedString</Type>
-                <Value>SDRAM_Controler</Value>
+                <Value>epcs_flash_controller_0</Value>
                 <DefaultValue>none</DefaultValue>
                 <DestinationFile>none</DestinationFile>
                 <Description>Name of the existing memory region that will be divided up to create the 'exception_stack' memory region. The selected region name will be adjusted automatically when the BSP is generated to create the 'exception_stack' memory region.</Description>
@@ -1726,6 +1724,12 @@
                 <Enabled>false</Enabled>
                 <Group xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
         </Setting>
+        <MemoryMap>
+                <slaveDescriptor>epcs_flash_controller_0</slaveDescriptor>
+                <addressRange>0x00000000 - 0x000007FF</addressRange>
+                <addressSpan>2048</addressSpan>
+                <attributes>flash, memory, non-volatile</attributes>
+        </MemoryMap>
         <MemoryMap>
                 <slaveDescriptor>snake_mem</slaveDescriptor>
                 <addressRange>0x00010000 - 0x000102F7</addressRange>

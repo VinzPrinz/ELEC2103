@@ -368,8 +368,12 @@ DE0_LT24_SOPC DE0_LT24_SOPC_inst(
 		.snake_mem_clken                             (snake_mem_clken),                             //                                     .clken
 		.snake_mem_write                             (snake_mem_write),                             //                                     .write
 		.snake_mem_readdata                          (snake_mem_readdata),                          //                                     .readdata
-		.snake_mem_writedata                         (snake_mem_writedata)                          //                                     .writedata
-
+		.snake_mem_writedata                         (snake_mem_writedata),                       //                                     .writedata
+		
+		.epcs_flash_controller_0_external_dclk  (EPCS_DCLK),  
+		.epcs_flash_controller_0_external_sce   (EPCS_NCSO),  
+		.epcs_flash_controller_0_external_sdo   (EPCS_ASDO),  
+		.epcs_flash_controller_0_external_data0 (EPCS_DATA0)
 	);
 	
 	

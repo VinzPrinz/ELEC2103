@@ -73,6 +73,10 @@
 		.snake_mem_write                             (<connected-to-snake_mem_write>),                             //                                     .write
 		.snake_mem_readdata                          (<connected-to-snake_mem_readdata>),                          //                                     .readdata
 		.snake_mem_writedata                         (<connected-to-snake_mem_writedata>),                         //                                     .writedata
-		.to_led_export                               (<connected-to-to_led_export>)                                //                               to_led.export
+		.to_led_export                               (<connected-to-to_led_export>),                               //                               to_led.export
+		.epcs_flash_controller_0_external_dclk       (<connected-to-epcs_flash_controller_0_external_dclk>),       //     epcs_flash_controller_0_external.dclk
+		.epcs_flash_controller_0_external_sce        (<connected-to-epcs_flash_controller_0_external_sce>),        //                                     .sce
+		.epcs_flash_controller_0_external_sdo        (<connected-to-epcs_flash_controller_0_external_sdo>),        //                                     .sdo
+		.epcs_flash_controller_0_external_data0      (<connected-to-epcs_flash_controller_0_external_data0>)       //                                     .data0
 	);
 

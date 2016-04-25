@@ -74,7 +74,11 @@
 			snake_mem_write                             : in    std_logic                     := 'X';             -- write
 			snake_mem_readdata                          : out   std_logic_vector(7 downto 0);                     -- readdata
 			snake_mem_writedata                         : in    std_logic_vector(7 downto 0)  := (others => 'X'); -- writedata
-			to_led_export                               : out   std_logic_vector(7 downto 0)                      -- export
+			to_led_export                               : out   std_logic_vector(7 downto 0);                     -- export
+			epcs_flash_controller_0_external_dclk       : out   std_logic;                                        -- dclk
+			epcs_flash_controller_0_external_sce        : out   std_logic;                                        -- sce
+			epcs_flash_controller_0_external_sdo        : out   std_logic;                                        -- sdo
+			epcs_flash_controller_0_external_data0      : in    std_logic                     := 'X'              -- data0
 		);
 	end component DE0_LT24_SOPC;
 
@@ -154,6 +158,10 @@
 			snake_mem_write                             => CONNECTED_TO_snake_mem_write,                             --                                     .write
 			snake_mem_readdata                          => CONNECTED_TO_snake_mem_readdata,                          --                                     .readdata
 			snake_mem_writedata                         => CONNECTED_TO_snake_mem_writedata,                         --                                     .writedata
-			to_led_export                               => CONNECTED_TO_to_led_export                                --                               to_led.export
+			to_led_export                               => CONNECTED_TO_to_led_export,                               --                               to_led.export
+			epcs_flash_controller_0_external_dclk       => CONNECTED_TO_epcs_flash_controller_0_external_dclk,       --     epcs_flash_controller_0_external.dclk
+			epcs_flash_controller_0_external_sce        => CONNECTED_TO_epcs_flash_controller_0_external_sce,        --                                     .sce
+			epcs_flash_controller_0_external_sdo        => CONNECTED_TO_epcs_flash_controller_0_external_sdo,        --                                     .sdo
+			epcs_flash_controller_0_external_data0      => CONNECTED_TO_epcs_flash_controller_0_external_data0       --                                     .data0
 		);
 

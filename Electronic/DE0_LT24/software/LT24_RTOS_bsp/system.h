@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'DE0_LT24_SOPC'
  * SOPC Builder design path: ../../DE0_LT24_SOPC.sopcinfo
  *
- * Generated: Tue Apr 12 14:46:41 CEST 2016
+ * Generated: Mon Apr 25 14:27:59 CEST 2016
  */
 
 /*
@@ -101,7 +101,7 @@
 #define ALT_CPU_INST_ADDR_WIDTH 0x1b
 #define ALT_CPU_NAME "CPU"
 #define ALT_CPU_NUM_OF_SHADOW_REG_SETS 0
-#define ALT_CPU_RESET_ADDR 0x02000000
+#define ALT_CPU_RESET_ADDR 0x00000000
 
 
 /*
@@ -133,7 +133,7 @@
 #define NIOS2_INITDA_SUPPORTED
 #define NIOS2_INST_ADDR_WIDTH 0x1b
 #define NIOS2_NUM_OF_SHADOW_REG_SETS 0
-#define NIOS2_RESET_ADDR 0x02000000
+#define NIOS2_RESET_ADDR 0x00000000
 
 
 /*
@@ -141,6 +141,7 @@
  *
  */
 
+#define __ALTERA_AVALON_EPCS_FLASH_CONTROLLER
 #define __ALTERA_AVALON_JTAG_UART
 #define __ALTERA_AVALON_NEW_SDRAM_CONTROLLER
 #define __ALTERA_AVALON_ONCHIP_MEMORY2
@@ -539,6 +540,21 @@
 #define CYCLONESPI_NAME "/dev/cycloneSPI"
 #define CYCLONESPI_SPAN 1024
 #define CYCLONESPI_TYPE "cycloneSPI"
+
+
+/*
+ * epcs_flash_controller_0 configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_epcs_flash_controller_0 altera_avalon_epcs_flash_controller
+#define EPCS_FLASH_CONTROLLER_0_BASE 0x0
+#define EPCS_FLASH_CONTROLLER_0_IRQ 8
+#define EPCS_FLASH_CONTROLLER_0_IRQ_INTERRUPT_CONTROLLER_ID 0
+#define EPCS_FLASH_CONTROLLER_0_NAME "/dev/epcs_flash_controller_0"
+#define EPCS_FLASH_CONTROLLER_0_REGISTER_OFFSET 1024
+#define EPCS_FLASH_CONTROLLER_0_SPAN 2048
+#define EPCS_FLASH_CONTROLLER_0_TYPE "altera_avalon_epcs_flash_controller"
 
 
 /*

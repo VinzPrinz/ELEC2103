@@ -74,7 +74,11 @@ module DE0_LT24_SOPC (
 	snake_mem_write,
 	snake_mem_readdata,
 	snake_mem_writedata,
-	to_led_export);	
+	to_led_export,
+	epcs_flash_controller_0_external_dclk,
+	epcs_flash_controller_0_external_sce,
+	epcs_flash_controller_0_external_sdo,
+	epcs_flash_controller_0_external_data0);	
 
 	input		alt_pll_areset_conduit_export;
 	output		alt_pll_c1_clk;
@@ -151,4 +155,8 @@ module DE0_LT24_SOPC (
 	output	[7:0]	snake_mem_readdata;
 	input	[7:0]	snake_mem_writedata;
 	output	[7:0]	to_led_export;
+	output		epcs_flash_controller_0_external_dclk;
+	output		epcs_flash_controller_0_external_sce;
+	output		epcs_flash_controller_0_external_sdo;
+	input		epcs_flash_controller_0_external_data0;
 endmodule

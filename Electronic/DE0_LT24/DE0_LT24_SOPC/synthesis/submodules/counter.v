@@ -21,18 +21,9 @@ module counter (
 	);
 
 	// TODO: Auto-generated HDL template
-	// TODO: Auto-generated HDL template
-	reg [31:0] avs_s0_readdata_reg , counter;
-	assign avs_s0_readdata = counter;
+
+	assign avs_s0_readdata = 32'b00000000000000000000000000000000;
+
 	assign avs_s0_waitrequest = 1'b0;
-	
-	always @(posedge clock_clk)
-		if(reset_reset)
-			begin
-				counter <= 32'b0;
-			end
-		else if (avs_s0_write)
-			counter <= 32'b0000000;
-		else
-			counter <= counter+  32'b000001;
+
 endmodule

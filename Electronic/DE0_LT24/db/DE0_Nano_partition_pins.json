@@ -92,6 +92,18 @@
 					"strict" : false
 				},
 				{
+					"name" : "EPCS_ASDO",
+					"strict" : false
+				},
+				{
+					"name" : "EPCS_DCLK",
+					"strict" : false
+				},
+				{
+					"name" : "EPCS_NCSO",
+					"strict" : false
+				},
+				{
 					"name" : "G_SENSOR_CS_N",
 					"strict" : false
 				},
@@ -305,6 +317,10 @@
 				},
 				{
 					"name" : "LT24_ADC_BUSY",
+					"strict" : false
+				},
+				{
+					"name" : "EPCS_DATA0",
 					"strict" : false
 				},
 				{

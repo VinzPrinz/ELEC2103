@@ -21,6 +21,10 @@
 			cyclonespi_spi_interface_data_out_enable    : out   std_logic;                                        -- data_out_enable
 			cyclonespi_spi_interface_config             : out   std_logic_vector(7 downto 0);                     -- config
 			cyclonespi_spi_interface_spi_irq            : out   std_logic;                                        -- spi_irq
+			epcs_flash_controller_0_external_dclk       : out   std_logic;                                        -- dclk
+			epcs_flash_controller_0_external_sce        : out   std_logic;                                        -- sce
+			epcs_flash_controller_0_external_sdo        : out   std_logic;                                        -- sdo
+			epcs_flash_controller_0_external_data0      : in    std_logic                     := 'X';             -- data0
 			from_key_export                             : in    std_logic                     := 'X';             -- export
 			gsensor_int_external_connection_export      : in    std_logic                     := 'X';             -- export
 			gsensor_spi_conduit_end_SDIO                : inout std_logic                     := 'X';             -- SDIO

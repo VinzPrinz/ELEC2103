@@ -44,15 +44,15 @@
 
 module DE0_LT24_SOPC_mm_interconnect_0_router_001_default_decode
   #(
-     parameter DEFAULT_CHANNEL = 1,
+     parameter DEFAULT_CHANNEL = 2,
                DEFAULT_WR_CHANNEL = -1,
                DEFAULT_RD_CHANNEL = -1,
                DEFAULT_DESTID = 12 
    )
   (output [93 - 89 : 0] default_destination_id,
-   output [23-1 : 0] default_wr_channel,
-   output [23-1 : 0] default_rd_channel,
-   output [23-1 : 0] default_src_channel
+   output [24-1 : 0] default_wr_channel,
+   output [24-1 : 0] default_rd_channel,
+   output [24-1 : 0] default_src_channel
   );
 
   assign default_destination_id = 
@@ -63,7 +63,7 @@ module DE0_LT24_SOPC_mm_interconnect_0_router_001_default_decode
       assign default_src_channel = '0;
     end
     else begin : default_channel_assignment
-      assign default_src_channel = 23'b1 << DEFAULT_CHANNEL;
+      assign default_src_channel = 24'b1 << DEFAULT_CHANNEL;
     end
   endgenerate
 
@@ -73,8 +73,8 @@ module DE0_LT24_SOPC_mm_interconnect_0_router_001_default_decode
       assign default_rd_channel = '0;
     end
     else begin : default_rw_channel_assignment
-      assign default_wr_channel = 23'b1 << DEFAULT_WR_CHANNEL;
-      assign default_rd_channel = 23'b1 << DEFAULT_RD_CHANNEL;
+      assign default_wr_channel = 24'b1 << DEFAULT_WR_CHANNEL;
+      assign default_rd_channel = 24'b1 << DEFAULT_RD_CHANNEL;
     end
   endgenerate
 
@@ -103,7 +103,7 @@ module DE0_LT24_SOPC_mm_interconnect_0_router_001
     // -------------------
     output                          src_valid,
     output reg [107-1    : 0] src_data,
-    output reg [23-1 : 0] src_channel,
+    output reg [24-1 : 0] src_channel,
     output                          src_startofpacket,
     output                          src_endofpacket,
     input                           src_ready
@@ -119,7 +119,7 @@ module DE0_LT24_SOPC_mm_interconnect_0_router_001
     localparam PKT_PROTECTION_H = 97;
     localparam PKT_PROTECTION_L = 95;
     localparam ST_DATA_W = 107;
-    localparam ST_CHANNEL_W = 23;
+    localparam ST_CHANNEL_W = 24;
     localparam DECODER_TYPE = 0;
 
     localparam PKT_TRANS_WRITE = 65;
@@ -134,8 +134,9 @@ module DE0_LT24_SOPC_mm_interconnect_0_router_001
     // Figure out the number of bits to mask off for each slave span
     // during address decoding
     // -------------------------------------------------------
-    localparam PAD0 = log2ceil(64'h4000000 - 64'h2000000); 
-    localparam PAD1 = log2ceil(64'h4005000 - 64'h4004800); 
+    localparam PAD0 = log2ceil(64'h800 - 64'h0); 
+    localparam PAD1 = log2ceil(64'h4000000 - 64'h2000000); 
+    localparam PAD2 = log2ceil(64'h4005000 - 64'h4004800); 
     // -------------------------------------------------------
     // Work out which address bits are significant based on the
     // address range of the slaves. If the required width is too
@@ -165,7 +166,7 @@ module DE0_LT24_SOPC_mm_interconnect_0_router_001
     assign src_startofpacket = sink_startofpacket;
     assign src_endofpacket   = sink_endofpacket;
     wire [PKT_DEST_ID_W-1:0] default_destid;
-    wire [23-1 : 0] default_src_channel;
+    wire [24-1 : 0] default_src_channel;
 
 
 
@@ -189,15 +190,21 @@ module DE0_LT24_SOPC_mm_interconnect_0_router_001
         // Sets the channel and destination ID based on the address
         // --------------------------------------------------
 
+    // ( 0x0 .. 0x800 )
+    if ( {address[RG:PAD0],{PAD0{1'b0}}} == 27'h0   ) begin
+            src_channel = 24'b001;
+            src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 17;
+    end
+
     // ( 0x2000000 .. 0x4000000 )
-    if ( {address[RG:PAD0],{PAD0{1'b0}}} == 27'h2000000   ) begin
-            src_channel = 23'b10;
+    if ( {address[RG:PAD1],{PAD1{1'b0}}} == 27'h2000000   ) begin
+            src_channel = 24'b100;
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 12;
     end
 
     // ( 0x4004800 .. 0x4005000 )
-    if ( {address[RG:PAD1],{PAD1{1'b0}}} == 27'h4004800   ) begin
-            src_channel = 23'b01;
+    if ( {address[RG:PAD2],{PAD2{1'b0}}} == 27'h4004800   ) begin
+            src_channel = 24'b010;
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 1;
     end
 

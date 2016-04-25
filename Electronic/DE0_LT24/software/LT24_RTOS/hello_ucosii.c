@@ -98,6 +98,7 @@ void LT24_ISR(void *context){
 
 	char str[64];
 	counter++;
+
 	if(Operation == myCyclone_Start_Coin ||Operation == myCyclone_End_Fight){
 		coins ++;
 		myOp = myCyclone_Start_Coin;
@@ -106,11 +107,15 @@ void LT24_ISR(void *context){
 		myOp = myCyclone_Wait;
 	}
 	if(Operation == myCyclone_Start_Fight){
-		IOWR(CYCLONESPI_BASE+(4*0x02) , 0 ,cnt/(256*256*32));
+		int tosend = cnt/(256*256*32);
+		tosend = (tosend==0) ? 1 : tosend;
+		IOWR(CYCLONESPI_BASE+(4*0x02) , 0 ,tosend);
 		myOp = myCyclone_Start_Coin;
 	}
 	else if(Operation == myCyclone_Start_Fight2){
-		IOWR(CYCLONESPI_BASE+(4*0x02) , 0 ,cnt/(256*256));
+		int tosend = cnt/(256*256*64); // 256*256
+		tosend = (tosend==0) ? 1 : tosend;
+		IOWR(CYCLONESPI_BASE+(4*0x02) , 0 ,tosend);
 		myOp = myCyclone_Start_Coin;
 	}
 
@@ -271,33 +276,34 @@ void task_send_data(void* pdata)
 
 
 
-
 		if (newOp != Operation && newOp != previousOp && newOp !=0){
+			printf("new op %d \n" , newOp);
+			IOWR(CYCLONESPI_BASE+(4*myCyclone_Opp_Addr),0 , 0); // read the op asked by pic32
 			switch(newOp){
 			case myCyclone_Start_Fight: OSSemPost(Game2);game_on = 0;
-			restartcoin = (Operation == myCyclone_Start_Coin);
-			IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
-			coins =0;
-			break;
+				restartcoin = (Operation == myCyclone_Start_Coin);
+				IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
+				coins =0;
+				break;
 			case myCyclone_Start_Fight2: OSSemPost(Game2); game_on = 0;
-			restartcoin = (Operation == myCyclone_Start_Coin);
-			IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
-			coins =0;
-			break;
+				restartcoin = (Operation == myCyclone_Start_Coin);
+				IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
+				coins =0;
+				break;
 			case myCyclone_Start_Coin: OSSemPost(Game1); game_on = 1;
-			coins= (opIrq!=NULL) ? coins : 0;
-			break;
+				coins= (opIrq!=NULL) ? coins : 0;
+				break;
 			case myCyclone_End_Coin: IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
-			coins =0;
-			break;
+				coins =0;
+				break;
 			case myCyclone_Start_Snake:	OSSemPost(Game2); game_on = 0;
-			restartcoin = (Operation == myCyclone_Start_Coin);
-			IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
-			coins =0;
-			clearSnake();
-			break;
+				restartcoin = (Operation == myCyclone_Start_Coin);
+				IOWR(CYCLONESPI_BASE+(4*0x03) , 0 , coins);
+				coins =0;
+				clearSnake();
+				break;
 			default:OSSemPost(Game1); game_on = 1;
-			break;
+				break;
 			}
 
 			// there is a new op from the irq handler

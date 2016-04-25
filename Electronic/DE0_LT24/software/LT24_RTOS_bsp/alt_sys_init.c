@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'DE0_LT24_SOPC'
  * SOPC Builder design path: ../../DE0_LT24_SOPC.sopcinfo
  *
- * Generated: Sat Mar 12 11:55:21 CET 2016
+ * Generated: Mon Apr 25 14:27:59 CEST 2016
  */
 
 /*
@@ -59,6 +59,7 @@
  */
 
 #include "altera_nios2_qsys_irq.h"
+#include "altera_avalon_epcs_flash_controller.h"
 #include "altera_avalon_jtag_uart.h"
 #include "altera_avalon_spi.h"
 #include "altera_avalon_timer.h"
@@ -68,6 +69,7 @@
  */
 
 ALTERA_NIOS2_QSYS_IRQ_INSTANCE ( CPU, CPU);
+ALTERA_AVALON_EPCS_FLASH_CONTROLLER_INSTANCE ( EPCS_FLASH_CONTROLLER_0, epcs_flash_controller_0);
 ALTERA_AVALON_JTAG_UART_INSTANCE ( JTAG_UART, JTAG_UART);
 ALTERA_AVALON_SPI_INSTANCE ( LT24_TOUCH_SPI, LT24_TOUCH_SPI);
 ALTERA_AVALON_TIMER_INSTANCE ( SYS_CLK_TIMER, sys_clk_timer);
@@ -98,6 +100,7 @@ void alt_sys_init( void )
     ALTERA_AVALON_TIMER_INIT ( SYS_CLK_TIMER, sys_clk_timer);
     ALTERA_AVALON_TIMER_INIT ( TIMER, TIMER);
     ALTERA_AVALON_TIMER_INIT ( TIMER_TIMESTAMP, timer_timestamp);
+    ALTERA_AVALON_EPCS_FLASH_CONTROLLER_INIT ( EPCS_FLASH_CONTROLLER_0, epcs_flash_controller_0);
     ALTERA_AVALON_JTAG_UART_INIT ( JTAG_UART, JTAG_UART);
     ALTERA_AVALON_SPI_INIT ( LT24_TOUCH_SPI, LT24_TOUCH_SPI);
 }

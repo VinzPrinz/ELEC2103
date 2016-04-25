@@ -4,7 +4,7 @@
  * Machine generated for CPU 'CPU' in SOPC Builder design 'DE0_LT24_SOPC'
  * SOPC Builder design path: ../../DE0_LT24_SOPC.sopcinfo
  *
- * Generated: Tue Apr 12 14:46:41 CEST 2016
+ * Generated: Mon Apr 25 14:27:59 CEST 2016
  */
 
 /*
@@ -50,14 +50,17 @@
 
 MEMORY
 {
+    reset : ORIGIN = 0x0, LENGTH = 32
+    epcs_flash_controller_0 : ORIGIN = 0x20, LENGTH = 2016
     snake_mem : ORIGIN = 0x10000, LENGTH = 760
-    reset : ORIGIN = 0x2000000, LENGTH = 32
+    SDRAM_Controler_BEFORE_EXCEPTION : ORIGIN = 0x2000000, LENGTH = 32
     SDRAM_Controler : ORIGIN = 0x2000020, LENGTH = 33554400
     background_mem : ORIGIN = 0x4000000, LENGTH = 9600
     pic_mem : ORIGIN = 0x4006400, LENGTH = 400
 }
 
 /* Define symbols for each memory base-address */
+__alt_mem_epcs_flash_controller_0 = 0x0;
 __alt_mem_snake_mem = 0x10000;
 __alt_mem_SDRAM_Controler = 0x2000000;
 __alt_mem_background_mem = 0x4000000;
@@ -313,7 +316,24 @@ SECTIONS
      *
      */
 
-    .snake_mem : AT ( LOADADDR (.bss) + SIZEOF (.bss) )
+    .epcs_flash_controller_0 : AT ( LOADADDR (.bss) + SIZEOF (.bss) )
+    {
+        PROVIDE (_alt_partition_epcs_flash_controller_0_start = ABSOLUTE(.));
+        *(.epcs_flash_controller_0 .epcs_flash_controller_0. epcs_flash_controller_0.*)
+        . = ALIGN(4);
+        PROVIDE (_alt_partition_epcs_flash_controller_0_end = ABSOLUTE(.));
+    } > epcs_flash_controller_0
+
+    PROVIDE (_alt_partition_epcs_flash_controller_0_load_addr = LOADADDR(.epcs_flash_controller_0));
+
+    /*
+     *
+     * This section's LMA is set to the .text region.
+     * crt0 will copy to this section's specified mapped region virtual memory address (VMA)
+     *
+     */
+
+    .snake_mem : AT ( LOADADDR (.epcs_flash_controller_0) + SIZEOF (.epcs_flash_controller_0) )
     {
         PROVIDE (_alt_partition_snake_mem_start = ABSOLUTE(.));
         *(.snake_mem .snake_mem. snake_mem.*)

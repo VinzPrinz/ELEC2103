@@ -1,0 +1,16 @@
+BLOCK		START ADDRESS		END ADDRESS
+
+hwimage.hex		0x00000000		0x0004F301
+swimage.hex		0x0004F302		0x00090CD9
+
+
+Configuration device: EP4CE22
+Configuration mode: Active Serial
+Quad-Serial configuration device dummy clock cycle: 0
+
+
+Notes:
+
+- Data checksum for this conversion is 0x78EDD166
+
+- All the addresses in this file are byte addresses
