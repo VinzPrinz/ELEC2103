@@ -10765,7 +10765,6 @@ void task_send_data(void* pdata)
  2006438:	100b883a 	mov	r5,r2
  200643c:	2000d7c0 	call	2000d7c <ADXL345_SPI_XYZ_Read>
  2006440:	10000526 	beq	r2,zero,2006458 <task_send_data+0xb4>
-			//if(szXYZ[0] > -255 && szXYZ[0] < 255 && szXYZ[1] > -255 && szXYZ < 255 )
 				OSMboxPost(Accel , (void*) szXYZ);
  2006444:	d0ee1417 	ldw	r3,-18352(gp)
  2006448:	e0bffc04 	addi	r2,fp,-16
@@ -10831,7 +10830,7 @@ void task_send_data(void* pdata)
  2006500:	020065c4 	movi	r8,407
  2006504:	02006600 	call	200660 <__alt_mem_snake_mem+0x1f0660>
  2006508:	02006544 	movi	r8,405
-			case myCyclone_Start_Fight: OSSemPost(Game2); game_on = 0;
+			case myCyclone_Start_Fight: OSSemPost(Game2);game_on = 0;
  200650c:	d0ae1317 	ldw	r2,-18356(gp)
  2006510:	1009883a 	mov	r4,r2
  2006514:	201fb240 	call	201fb24 <OSSemPost>

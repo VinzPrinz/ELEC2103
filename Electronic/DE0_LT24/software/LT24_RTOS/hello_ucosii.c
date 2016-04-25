@@ -259,7 +259,6 @@ void task_send_data(void* pdata)
 
 		//Send the data from accelerometer to task
 		if (ADXL345_SPI_IsDataReady(GSENSOR_SPI_BASE) && ADXL345_SPI_XYZ_Read(GSENSOR_SPI_BASE, szXYZ)){
-			//if(szXYZ[0] > -255 && szXYZ[0] < 255 && szXYZ[1] > -255 && szXYZ < 255 )
 				OSMboxPost(Accel , (void*) szXYZ);
 		}
 

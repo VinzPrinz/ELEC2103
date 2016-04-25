@@ -669,26 +669,26 @@ always
 		if(lt24_pattern[1:0] == 2'b10)
 				Game1_Color <= {snake2   ,snake1}; // snake show
 		else if(lt24_pattern[1:0] == 2'b11) // pattern game
-				if(pattern_state)
+				if(pattern_state) 
 					if(Case_Wire[11])
 						case(Counter_Wire)
-							2'b00: Game1_Color <= shield_q ? 16'h0f00 : 16'h0000; 
-							2'b01: Game1_Color <= shield_q ? 16'h0f00 : 16'h0000;
-							2'b11: Game1_Color <= shield_q ? 16'h00aa : 16'h0000;
-							2'b10: Game1_Color <= shield_q ? 16'h00aa : 16'h0000;
+							2'b00: Game1_Color <= bow_q ? 16'h0f00 : 16'h0000; 
+							2'b01: Game1_Color <= bow_q ? 16'h0f00 : 16'h0000;
+							2'b11: Game1_Color <= bow_q ? 16'h00aa : 16'h0000;
+							2'b10: Game1_Color <= bow_q ? 16'h00aa : 16'h0000;
 						endcase
 					else
-						Game1_Color <= 16'haa00;
+						Game1_Color <= target_touched_q ? 16'haa00:16'h0000;
 				else
 					if(pattern_moving[11])
 						case(Counter_Wire)
-							2'b00: Game1_Color <= shield_q ? 16'h0f00 : 16'h0000;
-							2'b01: Game1_Color <= shield_q ? 16'h0f00 : 16'h0000;
-							2'b11: Game1_Color <= shield_q ? 16'h00aa : 16'h0000;
-							2'b10: Game1_Color <= shield_q ? 16'h00aa : 16'h0000;
+							2'b00: Game1_Color <= bow_q ? 16'h0f00 : 16'h0000;
+							2'b01: Game1_Color <= bow_q ? 16'h0f00 : 16'h0000;
+							2'b11: Game1_Color <= bow_q ? 16'h00aa : 16'h0000;
+							2'b10: Game1_Color <= bow_q ? 16'h00aa : 16'h0000;
 						endcase
 					else
-						Game1_Color <= 16'hf0ff;
+						Game1_Color <= target_q ? 16'hf0ff : 16'h0000;
 		else if(lt24_pattern[0]) // coin game
 			case({displayCharact , displayCoin})
 				2'b11: Game1_Color <= 16'h0000;
@@ -767,10 +767,9 @@ rompiece (
 	pic_mem_s2_address,
 	clk,
 	rompiece_q);
-	
-	
+
 wire [12:0] address_shield;
-wire shield_q , shield_broken_q;
+wire shield_q , shield_broken_q , bow_q  , target_q , target_touched_q;
 assign address_shield = ({2'b0,posX} % 13'd80) + (13'd80*({2'b0,posY} % 13'd80));
 //assign address_shield_lol = Counter_X_Reg + 80*Counter_Y_Reg; 
 
@@ -783,5 +782,20 @@ shieldB (
 	address_shield,
 	clk,
 	shield_broken_q);
+	
+bow_rom(
+	address_shield,
+	clk,
+	bow_q);
+	
+target_rom(
+	address_shield,
+	clk,
+	target_q);
+
+target_touched_rom(
+	address_shield,
+	clk,
+	target_touched_q);
 
 endmodule
