@@ -62,7 +62,7 @@
 #define  FLASH_HOLD BIT_7
 
 
-#define NCOIN 20
+#define NCOIN 3
 
 
 /*******************************************************************************
@@ -101,7 +101,8 @@
 #define My_INT_EXTERNAL_4_SUB_PRIORITY  INT_SUB_PRIORITY_LEVEL_0
 #define My_INT_EXTERNAL_4_IPL           ipl7
 
-
+#define PIC32 1
+#define DEBUG 1
 
 /*******************************************************************************
 * Global Variables                                                             *
@@ -109,7 +110,7 @@
 
 #ifdef   MyAPP
 #define  MyAPP_EXT
-#define  MyAPP_INIT =FALSE
+#define  MyAPP_INIT = FALSE
 #else
 #define  MyAPP_EXT  extern
 #define  MyAPP_INIT
@@ -154,7 +155,7 @@ MyAPP_EXT  int      changePlayer;
 #define	GetSystemClock() 		(80000000ul)
 #define	GetPeripheralClock()		(GetSystemClock()/(1 << OSCCONbits.PBDIV))
 #define	GetInstructionClock()		(GetSystemClock())
-#define COST_SOLDIER 5
+#define COST_SOLDIER 10
 
 /*******************************************************************************
 * Functions Prototypes                                                         *

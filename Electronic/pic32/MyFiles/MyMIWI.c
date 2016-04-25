@@ -303,6 +303,8 @@ BOOL MyMIWI_RxMsg(char *theMsg) {
     // If a packet has been received, following code prints out some of
     // the information available in rxMessage.
     /*******************************************************************/
+    
+    #if DEBUG == 2
     if( rxMessage.flags.bits.secEn )
         ConsolePutROMString((ROM char *)"Secured ");
 
@@ -323,13 +325,16 @@ BOOL MyMIWI_RxMsg(char *theMsg) {
                 PrintChar(rxMessage.SourceAddress[MY_ADDRESS_LENGTH-1-i]);
          }
     }
+    #endif 
 
-    ConsolePutROMString((ROM char *)" : ");
+   // ConsolePutROMString((ROM char *)" : ");
     for(i = 0; i < rxMessage.PayloadSize; i++) {
-        ConsolePut(rxMessage.Payload[i]);
+        #if DEBUG   
+        //ConsolePut(rxMessage.Payload[i]); 
+        #endif
         *theMsg++ = rxMessage.Payload[i];
     }
-    ConsolePutROMString((ROM char *)"\n");
+    //ConsolePutROMString((ROM char *)"\n");
     *theMsg = '\0';
 
     /*******************************************************************/
@@ -533,7 +538,30 @@ BYTE SPIGet(void)   { return ((BYTE) MySPI_GetC()); }
  *                       informations. To do so we recover the structur Image_Info 
  */
 
-
+#if DEBUG
+int displayGoal_MIWI(int mode ){
+    switch(mode){
+        case myMIWI_Chat: MyConsole_SendMsg("Chat"); break;
+        case myMIWI_Data:MyConsole_SendMsg("Data"); break;
+        case myMIWI_Web:MyConsole_SendMsg("Web"); break;               
+        case myMIWI_Image_Info:MyConsole_SendMsg("Image_Info"); break;
+        case myMIWI_Image:MyConsole_SendMsg("Image"); break;
+        case myMIWI_Ack:MyConsole_SendMsg("Ack");  break;
+        case myMIWI_Start_fight:MyConsole_SendMsg("StartFight"); return 1; break;
+        case myMIWI_End_fight:MyConsole_SendMsg("EndFight"); break;
+        case myMIWI_Start_coin:MyConsole_SendMsg("Start_coin"); break;
+        case myMIWI_End_coin:MyConsole_SendMsg("End_coin"); break;
+        case myMIWI_End_coin_reply:MyConsole_SendMsg("End_coin_reply"); return 1; break;
+        case myMIWI_Start_Snake:MyConsole_SendMsg("Start_snake"); break;
+        case myMIWI_End_Snake:MyConsole_SendMsg("End_Snake"); break;
+        case myMIWI_Snake_dir:MyConsole_SendMsg("Snake_dir"); return 1; break;
+        case myMIWI_Snake_Winner:MyConsole_SendMsg("Snake_Winner"); return 1; break;
+        case myMIWI_Start_fight2:MyConsole_SendMsg("Start_fight2"); return 1; break;
+    }
+    
+    return 0;
+}
+#endif
 
 void MyMIWI_Task(void) {
 
@@ -544,15 +572,25 @@ void MyMIWI_Task(void) {
         struct Image_Info *pimage_info;
         struct Image *pimage;
         
-        if(theData[2] != 42 || theData[3] != 42)
+        if(theData[2] != 42 || theData[3] != 42){
             return;
+        }
+            
+        MyConsole_SendMsg("Continue MIWI \n");
         
         unsigned char seck_num = (unsigned char) theData[1];
         unsigned char seck_next = received_tag+1;
         unsigned char toAck = nAck+1;
-        sprintf(theStr , "Tag %x nAck+1 %x MODE: %x , %d \n", theData[1] ,toAck, MODE , sizeof(unsigned char));
+        
+        #if DEBUG
+        sprintf(theStr , "Sequence_number %d  || Mode %d : ", theData[1] ,theData[0]);
         MyConsole_SendMsg(theStr);
-
+        if(displayGoal_MIWI(MODE))
+            sprintf(theStr , "data : %d \n",theData[4]);
+        else
+            sprintf(theStr, "\n");
+        MyConsole_SendMsg(theStr);
+               #endif
         switch(MODE){
             case myMIWI_Chat:
                 MyMIWI_Ack(myMIWI_EnableBroadcast , seck_num);
@@ -565,8 +603,6 @@ void MyMIWI_Task(void) {
             case myMIWI_Web:
                 MyMIWI_Ack(myMIWI_EnableBroadcast , seck_num);
                 if(seck_next == seck_num){
-                    sprintf(theStr, "Message for website '%s'\n", &theData[4]);
-                    MyConsole_SendMsg(theStr);
                     strcpy(MyWebMessage ,&theData[4]);
                     received_tag++;
                 }
@@ -575,109 +611,92 @@ void MyMIWI_Task(void) {
                 MyMIWI_Ack(myMIWI_EnableBroadcast , seck_num);
                 if(seck_next == seck_num){
                     pimage_info = (struct Image_Info *) &theData[4];
-                    sprintf(theStr, "New Image_Info received\nrows: %d\ncolumns %d\nn:%d\n",pimage_info->rows , pimage_info->columns, pimage_info->n);
-                    MyConsole_SendMsg(theStr);
                     MyMDDFS_InitReceive(pimage_info);
                     received_tag++;
                 }
                 break;
             case myMIWI_Image:
                 MyMIWI_Ack(myMIWI_EnableBroadcast , seck_num);
-                if(received_tag +1 == seck_num){
+                if(seck_next == seck_num){
                     pimage = (struct Image *) &theData[4];
-                    sprintf(theStr , "R:%d G:%d B:%d \n", pimage->color_r , pimage->color_g , pimage->color_b);
-                    MyConsole_SendMsg(theStr);
                     MyMDDFS_ReceiveImage(pimage);
                     received_tag++;
                 }
                 break;
             case myMIWI_Start_fight: // use to start a fight from MTL -> lt24
                 MyMIWI_Ack(myMIWI_EnableBroadcast ,seck_num);
-                if(received_tag+1 == seck_num){
+                if(seck_next == seck_num){
                     MyCyclone_Write(0x12,myCyclone_Start_Fight_lt24);
-                    MyConsole_SendMsg("fight starting\n");
                     received_tag++;
                 }
                 break; // use reply a end of fight lt24 -> mtl      
             case myMIWI_Start_fight2: // use to start a fight from MTL -> lt24
                 MyMIWI_Ack(myMIWI_EnableBroadcast ,seck_num);
-                if(received_tag+1 == seck_num){
+                if(seck_next == seck_num){
                     MyCyclone_Write(0x12,myCyclone_Start_Fight2_lt24);
-                    MyConsole_SendMsg("fight starting 2\n");
                     received_tag++;
                 }
                 break;
             case myMIWI_End_fight:
                 MyMIWI_Ack(myMIWI_EnableBroadcast ,seck_num);
-                if(received_tag+1 == seck_num){
+                if(seck_next == seck_num){
                     int i = 0;
                     MyCyclone_Write(0x13,theData[4]);
                     for(i = 0 ; i<100000 ; i++){i = i+2; i= i-2;}
                     MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
-                    
-                    sprintf(theStr , "end of fight lol %d \n" , theData[4]);
                     MyConsole_SendMsg(theStr);
                     received_tag++;
                 } 
                 break;
             case myMIWI_Snake_Winner:
                 MyMIWI_Ack(myMIWI_EnableBroadcast ,seck_num);
-                if(received_tag+1 == seck_num){
+                if(seck_next == seck_num){
                     int i = 0;
                     MyCyclone_Write(0x13,theData[4]);
                     for(i = 0 ; i<100000 ; i++){i = i+2; i= i-2;}
                     MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
-                    
-                    sprintf(theStr , "Snake Winner is %d \n" , theData[4]);
-                    MyConsole_SendMsg(theStr);
                     received_tag++;
                 }
                 break;
             case myMIWI_Start_Snake: // use to start a fight from MTL -> lt24
                 MyMIWI_Ack(myMIWI_EnableBroadcast , seck_num);
-                if(received_tag +1 == seck_num){
+                if(seck_next == seck_num){
                     MyCyclone_Write(0x14,0);
                     MyCyclone_Write(0x13,0);
                     MyCyclone_Write(0x12,myCyclone_Start_Snake_lt24);
-                    MyConsole_SendMsg("snake starting\n");
                     received_tag++;
                     
                 }
                 break; // use reply a end of fight lt24 -> mtl
             case myMIWI_End_Snake:
                 MyMIWI_Ack(myMIWI_EnableBroadcast , seck_num);
-                if(received_tag +1 == seck_num ){
+                if(seck_next == seck_num ){
                     int i = 0;
-                    //MyCyclone_Write(0x13,theData[4]);
                     for(i = 0 ; i<100000 ; i++){i = i+2; i= i-2;}
                     MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
-        
-                    sprintf(theStr , "end of snake %d \n" , theData[4]);
-                    MyConsole_SendMsg(theStr);
                     received_tag++;
                 }
                 break;
             case myMIWI_Start_coin: //  mtl -> lt24
                 MyMIWI_Ack(myMIWI_EnableBroadcast , seck_num);
-                if(received_tag +1 == seck_num){
+                if(seck_next == seck_num){
                     MyCyclone_Write(0x12,myCyclone_Start_Coin_lt24);
-                    MyConsole_SendMsg("coin starting \n");
+                    MyConsole_SendMsg("Start_Coin traiter\n");
                     received_tag++;
                 }
                 break;
             case myMIWI_End_coin: // mtl -> lt24
                 MyMIWI_Ack(myMIWI_EnableBroadcast , seck_num);
-                if(received_tag +1 == seck_num){
-                    sprintf(theStr , "end of coin %d \n" , theData[4]);
+                if(seck_next == seck_num){
                     MyCyclone_Write(0x12,myCyclone_End_Coin_lt24);
-                            int i = 0;
-        while(i<3000000){
-            i = i+2;
-            i--;
-        }
+                    MyConsole_SendMsg("End_Coin traited \n");
+                    int i = 0;
+                    while(i<3000000){
+                        i = i+2;
+                        i--;
+                    }
                     MyConsole_SendMsg(theStr);
                     received_tag++;
-                    
                 }
                 break;
             case myMIWI_Snake_dir: // mtl -> lt24 with the counter
@@ -688,16 +707,13 @@ void MyMIWI_Task(void) {
                     
                     int addr = (Snake==1) ? 0x13 : 0x14;
                     MyCyclone_Write(addr,dir);
-                    sprintf(theStr , "snake dir received \n");
-                    MyConsole_SendMsg(theStr);
                     received_tag++;
                 }
                 break;
                 
              case myMIWI_End_coin_reply: // lt24 -> mtl with the counter
                 MyMIWI_Ack(myMIWI_EnableBroadcast , seck_num);
-                if( received_tag +1 == seck_num){
-                    sprintf(theStr , "end of coin reply%d \n player is %d \n" , theData[4], 42);
+                if( seck_next == seck_num){
                     
                     if((!currentPlayer_PD && turnChange) || (currentPlayer_PD && !turnChange)){
                         Player1.gold = newTurn ? 0 : Player1.gold+theData[4];
@@ -713,10 +729,7 @@ void MyMIWI_Task(void) {
                     turnChange = 0;
                     newTurn = 0;
                     
-                    
-                    changePlayer = 0;
-                    
-                    MyConsole_SendMsg(theStr);
+                    changePlayer = 0;                    
                     received_tag++;
                 }
                 break;

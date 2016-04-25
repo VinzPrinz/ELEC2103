@@ -11,7 +11,7 @@
 *   The Console uses UART2A
 *       U2ARTS = RG6
 *       U2ARX = RG7
-*       U2ATX = RG8
+
 *       U2ACTS = RG9
 *
 *   Install Driver for FDTI chip : http://www.ftdichip.com/Drivers/VCP.htm

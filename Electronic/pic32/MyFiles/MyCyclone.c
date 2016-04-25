@@ -54,40 +54,55 @@ void MyCyclone_Init(void)
             
     }
 
+#if DEBUG
+void displayGoal(int addr){
+    switch(addr){
+        case 0x02: MyConsole_SendMsg("End fight \n"); break;
+        case 0x03:MyConsole_SendMsg("End Coin \n"); break;
+        case 0X04:MyConsole_SendMsg("End Snake \n"); break;               
+        case 0x05:MyConsole_SendMsg("Mode sharing with DEO \n"); break;
+        case 0x06:MyConsole_SendMsg("Number of soldiers update \n"); break;
+        case 0x07:MyConsole_SendMsg("Snake Dir from DEO \n");  break;
+        case 0x08:MyConsole_SendMsg("Snake Winner \n"); break;
+        case 0x09:MyConsole_SendMsg("New game info reset \n"); break;
+    }
+}
+#endif
+
 void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler(void)
 {
     // Clear the interrupt flags
     INTClearFlag(INT_INT1);
-    MyConsole_SendMsg("Interrupt received from INT1 - KEY0 LOL \n>");
+    
+    
     char str[64];
     int addr = MyCyclone_Read(0x01);
     int data = MyCyclone_Read(addr);
     
     MyCyclone_Write(0x13,0x00);
-    //delayLol();
     MyCyclone_Write(0x13,0x00);
-    MyCyclone_Write(0x17 ,0x00);
-    MyCyclone_Write(0x17 ,0x00);
     MyCyclone_Write(0x17 ,0x00);
     MyCyclone_Write(0x17 ,0x00);
 
     char send[2];
-    sprintf(str, "This is readed from spi addr:%d -> %d \n" , addr , data);
+    
+    #if DEBUG
+    sprintf(str, "Data from SPI: addr: %d -> %d " , addr , data);
+    MyConsole_SendMsg(str);
+    displayGoal(addr);
+    #endif 
     int i;
     switch(addr){
-        case 0x02: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_fight, 4); // the counter
+        case 0x02: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_fight, 4); // the end of fight
                    MyCyclone_Write(0x12,myCyclone_End_Fight_lt24); 
                    break;
         case 0x03: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_coin_reply,1); // the number of coinces
-                    printf("End coin reply"); 
-                   break;
-                   
-        case 0x04: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_Snake, 4); //
+                   break;   
+        case 0x04: MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &data , myMIWI_End_Snake, 4); // 
                    MyCyclone_Write(0x12,myCyclone_End_Snake_lt24); 
                    break;
         case 0x05: if(data == 0){
                         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_fight,1);
-                        printf("Start Fight \n");
                     }
                    else if (data==2){
                         if(cnt !=0)
@@ -97,7 +112,6 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
                         currentPlayer_PD = 0;
                         turnChange = 1;
                         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
-                        printf("New Round, changing player 2 data: %d \n" , data);
                    }
                    else if (data == 3){
                        if(cnt != 0)
@@ -106,16 +120,14 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
                        currentPlayer_PD = 1;
                        turnChange = 1;
                         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_coin,1);
-                        printf("New Round, changing player 1 data: %d \n" , data);
                    }
                    else if(data== 5){
                         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_Snake,1);
                    }
                    else if(data==4){
                         MyMIWI_TxMsg_Mode_Size(myMIWI_EnableBroadcast , (void*) &i , myMIWI_Start_fight2,1);
-                        printf("Start Fight \n");
                    }
-                MyCyclone_Write(0x18 , 0);
+                   MyCyclone_Write(0x18 , 0);
                    break;
         case 0x07:  i = 1; //Use to send data to lt24 screen during the Snake game
                     if(data > 128){ /// the direction and the user;
@@ -135,15 +147,10 @@ void __ISR(_EXTERNAL_1_VECTOR, My_INT_EXTERNAL_1_IPL) _External1InterruptHandler
                    break;
         case 0x09:  MyCyclone_Write(0x9 ,0x00);
                     break;
-
-                    
-                    
     }
 
     cnt ++;
-    
         
-    MyConsole_SendMsg(str);
 }
 
 

@@ -373,7 +373,7 @@ MyConsole_SendMsg("in post \n");
         case 0: if(Player1.gold >= COST_SOLDIER)
                 {
                     MyConsole_SendMsg("Red player buys a soldier! \n");
-                    Player1.gold -= 5;
+                    Player1.gold -= COST_SOLDIER;
                     Player1.soldiers += 1;
                     MyCyclone_Write(0x09,1);
                 }
@@ -385,7 +385,7 @@ MyConsole_SendMsg("in post \n");
         case 1: if(Player2.gold >= COST_SOLDIER)
                 {
                     MyConsole_SendMsg("Blue player buys a soldier! \n");
-                    Player2.gold -= 5;
+                    Player2.gold -= COST_SOLDIER;
                     Player2.soldiers += 1;
                     MyCyclone_Write(0x09,1);
                 }

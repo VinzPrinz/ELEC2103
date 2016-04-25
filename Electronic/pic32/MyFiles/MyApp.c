@@ -69,29 +69,21 @@ int main(void)
     
     // Do MyInitializations
     MyConsole_Init();
-//    MyConsole_SendMsg("MyConsole_Init() passed\n");
     MyCamera_Init();
- //   MyConsole_SendMsg("MyCamera_Init() passed\n");
     MyRTCC_Init();
- //   MyConsole_SendMsg("MyRTCC_Init() passed\n");
     MyLED_Init();
- //   MyConsole_SendMsg("MyLED_Init() passed\n");
     MySPI_Init();
- //   MyConsole_SendMsg("MySPI_Init() passed\n");
     MyCyclone_Init();
- //   MyConsole_SendMsg("MyCyclone_Init() passed\n");
     MyCAN_Init();
- //   MyConsole_SendMsg("MyCAN_Init() passed\n");
     MyIO_Init();
- //   MyConsole_SendMsg("MyIO_Init() passed\n");
     MyFlash_Init();
- //   MyConsole_SendMsg("MyFlash_Init() passed\n");
     MyTemperature_Init();
- //   MyConsole_SendMsg("MyTemperature_Init() passed\n");
     MyMIWI_Init();
-//    MyConsole_SendMsg("MyMIWI_Init() passed\n");
-   MyWIFI_Init();
-//    MyConsole_SendMsg("MyWIFI_Init() passed\n");
+    
+    #if PIC32 == 1 
+    MyWIFI_Init();
+    #endif
+
     MyMDDFS_Init();
     
     // Configure for multi-vectored mode
@@ -105,9 +97,10 @@ int main(void)
 
     // Start Wireless and Camera connections
     MyMIWI_Start();
+    
+    #if PIC32 == 1
     MyWIFI_Start();
-    //MyCamera_Start();
-   
+    #endif
     Player1.gold = NCOIN;
     Player1.soldiers = 0;
     
@@ -119,21 +112,18 @@ int main(void)
     changePlayer = 0;
     turnChange = 0;
     newTurn = 0;
+    
     // Execute forever
     while (1)
     {
         MyRTCC_Task();
-       // MyConsole_SendMsg("MyRTCC_Task Passed \n");
         MyConsole_Task();
-     //   MyConsole_SendMsg("MyConsole_Task Passed \n");
         MyCAN_Task();
-   //     MyConsole_SendMsg("MyCAN_Task Passed \n");
-     MyMIWI_Task();
- //       MyConsole_SendMsg("MyMIWI_Task Passed \n");
-       MyWIFI_Task();
- //       MyConsole_SendMsg("MyWIFI_Task Passed \n");
+        MyMIWI_Task();
+        #if PIC32 == 1
+        MyWIFI_Task();
+        #endif
         MyMiniProjet_Task();
-//        MyConsole_SendMsg("MyMiniProjet_Task Passed \n");
     }
 }
 
